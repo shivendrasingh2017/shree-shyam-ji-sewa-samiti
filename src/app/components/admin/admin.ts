@@ -347,12 +347,22 @@ export class Admin implements OnInit {
     this.receiptService.list(page, this.receiptLimit, 'success').subscribe(
       (res: any) => {
         if (res && res.success) {
-          this.receipts = res.data;
-          this.receiptPagination = res.pagination || { total: 0, pages: 0, page, limit: this.receiptLimit };
+          this.receipts = res.data || [];
+          // Handle pagination response
+          if (res.pagination) {
+            this.receiptPagination = res.pagination;
+          } else {
+            // Calculate pages from total if pagination not provided
+            const total = res.data?.length || 0;
+            const pages = Math.ceil(total / this.receiptLimit) || 1;
+            this.receiptPagination = { total, pages, page, limit: this.receiptLimit };
+          }
           this.updateCharts();
         }
       },
-      () => {
+      (error) => {
+        console.error('Error loading receipts:', error);
+        this.receipts = [];
         this.receiptPagination = { total: 0, pages: 0, page, limit: this.receiptLimit };
       }
     );
@@ -363,11 +373,21 @@ export class Admin implements OnInit {
     this.receiptService.list(page, this.receiptLimit, 'failed').subscribe(
       (res: any) => {
         if (res && res.success) {
-          this.failedReceipts = res.data;
-          this.failedPagination = res.pagination || { total: 0, pages: 0, page, limit: this.receiptLimit };
+          this.failedReceipts = res.data || [];
+          // Handle pagination response
+          if (res.pagination) {
+            this.failedPagination = res.pagination;
+          } else {
+            // Calculate pages from total if pagination not provided
+            const total = res.data?.length || 0;
+            const pages = Math.ceil(total / this.receiptLimit) || 1;
+            this.failedPagination = { total, pages, page, limit: this.receiptLimit };
+          }
         }
       },
-      () => {
+      (error) => {
+        console.error('Error loading failed receipts:', error);
+        this.failedReceipts = [];
         this.failedPagination = { total: 0, pages: 0, page, limit: this.receiptLimit };
       }
     );

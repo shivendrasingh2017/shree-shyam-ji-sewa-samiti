@@ -575,7 +575,7 @@
 
   .receipts-table th,
   .receipts-table td {
-    padding: 12px 10px;
+    padding: 11px 09px;
     font-size: 12px;
   }
 }
@@ -587,7 +587,7 @@
 
 .receipts-table th,
 .receipts-table td {
-  padding: 16px 18px;
+  // padding: 16px 18px;
   border-bottom: 1px solid #eaeaea;
   font-size: 13px;
   text-align: left;
@@ -607,6 +607,39 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.receipts-table .invoice-cell {
+  min-width: 180px;
+}
+
+.receipts-table .invoice-content {
+  display: flex;
+  align-items: center;
+  gap: 1px;
+  white-space: normal;
+}
+
+.receipts-table .invoice-text {
+  font-size: 13px;
+  color: #333;
+  word-break: break-all;
+  max-width: 220px;
+}
+
+.receipts-table .btn-download {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 4px 6px;
+  border-radius: 4px;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.receipts-table .btn-download:hover {
+  background: #f0f0f0;
+  transform: scale(1.05);
 }
 
 /* Empty State */

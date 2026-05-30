@@ -240,55 +240,57 @@
           <table class="receipts-table">
             <thead>
               <tr>
+                <th>#</th>
+                <th>Donor</th>
+                <th>Amount</th>
                 <th>Date</th>
                 <th>Invoice</th>
-                <th>Amount</th>
-                <th>Donor</th>
-                <th>Message</th>
                 <th>Campaign</th>
-                <th>Remaining</th>
-                <th>Days Left</th>
+                <th>Message</th>
                 <th>Order ID</th>
                 <th>Payment ID</th>
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let r of receipts">
-                <td>{{ r.createdAt | date:'dd MMM yyyy, h:mm a' }}</td>
-                <td>
-                  <div style="display:flex; align-items:center; gap:8px">
-                    <span>{{ r.invoiceNumber || '-' }}</span>
-                    <button *ngIf="r._id" class="btn-secondary" type="button" (click)="downloadInvoice(r)">📄</button>
+              <tr *ngFor="let r of receipts; let i = index">
+                <td class="serial-no">{{ (currentReceiptPage - 1) * receiptLimit + i + 1 }}</td>
+                <td>{{ r.donorFullName || 'Anonymous' }}</td>
+                <td class="amount">{{ r.amount | currency:'INR' }}</td>
+                <td class="date-cell">{{ r.createdAt | date:'dd MMM yyyy, h:mm a' }}</td>
+                <td class="invoice-cell">
+                  <div class="invoice-content">
+                    <span class="invoice-text" [title]="r.invoiceNumber || '-'">{{ r.invoiceNumber || '-' }}</span>
+                    <button *ngIf="r._id" class="btn-download" type="button" (click)="downloadInvoice(r)" title="Download Invoice">📥</button>
                   </div>
                 </td>
-                <td>{{ r.amount | currency:'INR' }}</td>
-                <td>{{ r.donorFullName || 'Anonymous' }}</td>
-                <td>{{ r.donorMessage || '—' }}</td>
                 <td>{{ r.campaignId?.title || '—' }}</td>
-                <td>{{ (r.campaignId?.goal - r.campaignId?.raised) | currency:'INR' }}</td>
-                <td>{{ r.campaignId?.daysLeft || '—' }}</td>
-                <td>{{ r.razorpay_order_id?.substring(0, 15) }}...</td>
-                <td>{{ r.razorpay_payment_id?.substring(0, 15) }}...</td>
+                <td class="message-cell">
+                  <div class="message-box" [title]="r.donorMessage || 'No message'">
+                    {{ r.donorMessage || '—' }}
+                  </div>
+                </td>
+                <td class="order-id">{{ r.razorpay_order_id || '-' }}</td>
+                <td class="payment-id">{{ r.razorpay_payment_id || '-' }}</td>
               </tr>
             </tbody>
           </table>
+        </div>
 
-          <!-- Pagination -->
-          <div class="pagination-controls">
-            <button class="btn-pagination" 
-              [disabled]="currentReceiptPage === 1"
-              (click)="loadReceipts(currentReceiptPage - 1)">
-              ← Previous
-            </button>
-            <span class="pagination-info">
-              Page {{ currentReceiptPage }} of {{ receiptPagination.pages }} ({{ receiptPagination.total }} total)
-            </span>
-            <button class="btn-pagination" 
-              [disabled]="currentReceiptPage >= receiptPagination.pages"
-              (click)="loadReceipts(currentReceiptPage + 1)">
-              Next →
-            </button>
-          </div>
+        <!-- Pagination - Always show if we have receipts or pagination data -->
+        <div *ngIf="receipts.length > 0 || receiptPagination.total > 0" class="pagination-controls">
+          <button class="btn-pagination" 
+            [disabled]="currentReceiptPage === 1"
+            (click)="loadReceipts(currentReceiptPage - 1)">
+            ← Previous
+          </button>
+          <span class="pagination-info">
+            Page {{ currentReceiptPage }} of {{ receiptPagination.pages || 1 }} ({{ receiptPagination.total || 0 }} total)
+          </span>
+          <button class="btn-pagination" 
+            [disabled]="currentReceiptPage >= (receiptPagination.pages || 1) || receiptPagination.pages === 0"
+            (click)="loadReceipts(currentReceiptPage + 1)">
+            Next →
+          </button>
         </div>
       </div>
     </div>
@@ -311,6 +313,7 @@
           <table class="receipts-table">
             <thead>
               <tr>
+                <th>#</th>
                 <th>Date</th>
                 <th>Invoice</th>
                 <th>Amount</th>
@@ -323,9 +326,15 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let r of failedReceipts">
+              <tr *ngFor="let r of failedReceipts; let i = index">
+                <td class="serial-no">{{ (currentFailedPage - 1) * receiptLimit + i + 1 }}</td>
                 <td>{{ r.createdAt | date:'dd MMM yyyy, h:mm a' }}</td>
-                <td>{{ r.invoiceNumber || '-' }}</td>
+                <td class="invoice-cell">
+                  <div class="invoice-content">
+                    <span class="invoice-text">{{ r.invoiceNumber || '-' }}</span>
+                    <button *ngIf="r._id" class="btn-download" type="button" (click)="downloadInvoice(r)" title="Download Invoice">📥</button>
+                  </div>
+                </td>
                 <td>{{ r.amount | currency:'INR' }}</td>
                 <td>{{ r.donorFullName || 'Anonymous' }}</td>
                 <td>{{ r.donorEmail || '—' }}</td>
@@ -336,23 +345,23 @@
               </tr>
             </tbody>
           </table>
+        </div>
 
-          <!-- Pagination -->
-          <div class="pagination-controls">
-            <button class="btn-pagination" 
-              [disabled]="currentFailedPage === 1"
-              (click)="loadFailedReceipts(currentFailedPage - 1)">
-              ← Previous
-            </button>
-            <span class="pagination-info">
-              Page {{ currentFailedPage }} of {{ failedPagination.pages }} ({{ failedPagination.total }} total)
-            </span>
-            <button class="btn-pagination" 
-              [disabled]="currentFailedPage >= failedPagination.pages"
-              (click)="loadFailedReceipts(currentFailedPage + 1)">
-              Next →
-            </button>
-          </div>
+        <!-- Pagination - Always show if we have failed receipts or pagination data -->
+        <div *ngIf="failedReceipts.length > 0 || failedPagination.total > 0" class="pagination-controls">
+          <button class="btn-pagination" 
+            [disabled]="currentFailedPage === 1"
+            (click)="loadFailedReceipts(currentFailedPage - 1)">
+            ← Previous
+          </button>
+          <span class="pagination-info">
+            Page {{ currentFailedPage }} of {{ failedPagination.pages || 1 }} ({{ failedPagination.total || 0 }} total)
+          </span>
+          <button class="btn-pagination" 
+            [disabled]="currentFailedPage >= (failedPagination.pages || 1) || failedPagination.pages === 0"
+            (click)="loadFailedReceipts(currentFailedPage + 1)">
+            Next →
+          </button>
         </div>
       </div>
     </div>
