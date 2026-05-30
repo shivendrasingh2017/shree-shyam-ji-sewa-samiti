@@ -1,0 +1,269 @@
+.hero {
+  position: relative;
+  padding: 0;
+  overflow: hidden;
+}
+
+.hero-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 60px;
+  align-items: center;
+  min-height: 70vh;
+  position: relative;
+  z-index: 10;
+  padding: 60px 0;
+}
+
+.eyebrow {
+  display: inline-block;
+  color: #ffffff;
+  letter-spacing: 3px;
+  font-size: 13px;
+  margin-bottom: 14px;
+}
+
+.hero-content h1 {
+  font-size: clamp(2.2rem, 5vw, 4.5rem);
+  line-height: 1.05;
+  margin-bottom: 20px;
+  color: #ffffff;
+}
+
+.hero-content h1 span {
+  color: var(--gold);
+}
+
+.hero-content p {
+  color: #fdf6ec;
+  font-size: 17px;
+  max-width: 520px;
+  margin-bottom: 30px;
+  line-height: 1.7;
+}
+
+.cta {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.stats {
+  display: flex;
+  gap: 40px;
+  margin-top: 50px;
+  padding-top: 30px;
+  border-top: 1px solid var(--border);
+}
+
+.stats>div strong {
+  display: block;
+  font-family: 'Rozha One', serif;
+  font-size: 32px;
+  color: var(--gold-2);
+}
+
+.stats>div span {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.banner-carousel {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 0;
+  overflow: hidden;
+}
+
+.banner-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.banner-slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 0.6s ease-in-out;
+}
+
+.banner-slide.active {
+  opacity: 1;
+}
+
+.banner-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.carousel-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 50px;
+  height: 50px;
+  border: none;
+  background: rgba(255, 255, 255, 0.8);
+  color: #333;
+  font-size: 28px;
+  cursor: pointer;
+  border-radius: 50%;
+  z-index: 20;
+  transition: background 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.carousel-btn:hover {
+  background: rgba(255, 255, 255, 1);
+}
+
+.carousel-btn.prev {
+  left: 15px;
+}
+
+.carousel-btn.next {
+  right: 15px;
+}
+
+.carousel-dots {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 10px;
+  z-index: 20;
+}
+
+.carousel-dots .dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.carousel-dots .dot.active {
+  background: rgba(255, 255, 255, 1);
+  border-color: rgba(255, 255, 255, 1);
+  width: 30px;
+  border-radius: 6px;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: .35
+  }
+
+  50% {
+    transform: scale(1.08);
+    opacity: .5
+  }
+}
+
+.diya-row {
+  display: flex;
+  justify-content: space-around;
+  padding: 30px 10px 20px;
+  font-size: 28px;
+  background: linear-gradient(to top, rgba(212, 162, 74, .1), transparent);
+  position: relative;
+  z-index: 15;
+}
+
+@media (max-width: 900px) {
+  .hero-grid {
+    grid-template-columns: 1fr;
+    gap: 30px;
+    text-align: center;
+    padding: 40px 0;
+    min-height: 60vh;
+  }
+
+  
+  .cta {
+    justify-content: center;
+  }
+
+  .stats {
+    justify-content: center;
+    gap: 24px;
+  }
+
+  .carousel-btn {
+    width: 44px;
+    height: 44px;
+    font-size: 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-grid {
+    min-height: 50vh;
+    padding: 30px 0;
+  }
+  .banner-slide img {
+  
+  object-fit:fill;
+ 
+}
+
+  .stats {
+    gap: 16px;
+  }
+
+  .stats>div strong {
+    font-size: 24px;
+  }
+
+  .diya-row {
+    font-size: 20px;
+  }
+
+  .carousel-btn {
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+  }
+
+  .carousel-btn.prev {
+    left: 8px;
+  }
+
+  .carousel-btn.next {
+    right: 8px;
+  }
+
+  .carousel-dots .dot {
+    width: 10px;
+    height: 10px;
+  }
+
+  .carousel-dots .dot.active {
+    width: 24px;
+  }
+}

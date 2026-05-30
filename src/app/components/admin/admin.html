@@ -1,0 +1,406 @@
+<div class="admin-panel">
+  <div *ngIf="!loggedIn" class="login-container">
+    <div class="login-box">
+      <h2>Admin Login</h2>
+      <div class="form-group">
+        <label>Username</label>
+        <input type="text" placeholder="Enter username" [(ngModel)]="user" />
+      </div>
+      <!-- Admins List -->
+      <div class="admins-card" *ngIf="admins && admins.length > 0">
+        <h3>🔒 Admin Users</h3>
+        <div class="admins-list">
+          <div *ngFor="let a of admins" class="admin-item">
+            <div class="admin-name">{{ a.username }}</div>
+            <div class="admin-created">{{ a.createdAt | date:'dd MMM yyyy' }}</div>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" placeholder="Enter password" [(ngModel)]="pass" />
+      </div>
+      <button class="btn-primary" (click)="login()">Login</button>
+    </div>
+  </div>
+
+  <div *ngIf="loggedIn" class="admin-content">
+    <!-- Header -->
+    <div class="admin-header">
+      <div class="header-left">
+        <h1>🛕 Admin Dashboard</h1>
+      </div>
+      <div class="header-right">
+        <button class="btn-logout" (click)="logout()">Logout</button>
+      </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="admin-tabs">
+      <button 
+        [class.active]="currentTab === 'dashboard'" 
+        (click)="currentTab = 'dashboard'">
+        📊 Dashboard
+      </button>
+      <button 
+        [class.active]="currentTab === 'campaigns'" 
+        (click)="currentTab = 'campaigns'">
+        🎯 Campaigns
+      </button>
+      <button 
+        [class.active]="currentTab === 'receipts'" 
+        (click)="currentTab = 'receipts'">
+        💳 Receipts
+      </button>
+      <button 
+        [class.active]="currentTab === 'failed-receipts'" 
+        (click)="currentTab = 'failed-receipts'; loadFailedReceipts()">
+        ❌ Failed Payments
+      </button>
+    </div>
+
+    <!-- DASHBOARD TAB -->
+    <div *ngIf="currentTab === 'dashboard'" class="tab-content dashboard-view">
+      <!-- Key Metrics -->
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <div class="metric-icon">💰</div>
+          <div class="metric-content">
+            <div class="metric-label">Total Raised</div>
+            <div class="metric-value">₹{{ totalRaised | number:'1.0-0' }}</div>
+          </div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-icon">👥</div>
+          <div class="metric-content">
+            <div class="metric-label">Total Donors</div>
+            <div class="metric-value">{{ totalDonors }}</div>
+          </div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-icon">📈</div>
+          <div class="metric-content">
+            <div class="metric-label">Avg Donation</div>
+            <div class="metric-value">₹{{ avgDonation | number:'1.0-0' }}</div>
+          </div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-icon">✅</div>
+          <div class="metric-content">
+            <div class="metric-label">Active Campaigns</div>
+            <div class="metric-value">{{ activeCampaigns }} / {{ campaigns.length }}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Charts Row 1 -->
+      <div class="charts-grid">
+        <!-- Campaign Progress Chart -->
+        <div class="chart-container">
+          <h3>📊 Campaign Progress (Top 5)</h3>
+          <div class="chart-wrapper">
+            <canvas 
+              baseChart
+              [data]="campaignChartData"
+              [options]="campaignChartOptions"
+              type="bar">
+            </canvas>
+          </div>
+        </div>
+
+        <!-- Campaign Performance Chart -->
+        <div class="chart-container">
+          <h3>🎯 Completion % (Top 5)</h3>
+          <div class="chart-wrapper">
+            <canvas 
+              baseChart
+              [data]="campaignPerformanceChartData"
+              [options]="campaignPerformanceChartOptions"
+              type="bar">
+            </canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Charts Row 2 -->
+      <div class="charts-grid">
+        <!-- Donation Trend Chart -->
+        <div class="chart-container full-width">
+          <h3>📈 Daily Donation Trend</h3>
+          <div class="chart-wrapper">
+            <canvas 
+              baseChart
+              [data]="donationTrendChartData"
+              [options]="donationTrendChartOptions"
+              type="line">
+            </canvas>
+          </div>
+        </div>
+
+        <!-- Donor Distribution Chart -->
+        <div class="chart-container">
+          <h3>👥 Donors by Campaign (Top 5)</h3>
+          <div class="chart-wrapper">
+            <canvas 
+              baseChart
+              [data]="donationSourceChartData"
+              [options]="donationSourceChartOptions"
+              type="doughnut">
+            </canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Receipts Summary -->
+      <div class="recent-receipts">
+        <h3>💳 Recent Donations</h3>
+        <div class="receipts-table">
+          <div *ngIf="receipts.length === 0" class="empty-state">
+            No donations yet
+          </div>
+          <div *ngFor="let r of receipts | slice:0:10" class="receipt-item">
+            <div class="receipt-date">{{ r.createdAt | date:'dd MMM yyyy, h:mm a' }}</div>
+            <div class="receipt-amount">{{ r.amount | currency:'INR' }}</div>
+            <div class="receipt-campaign">{{ r.campaignId?.title || '—' }}</div>
+            <div class="receipt-id">Order: {{ r.razorpay_order_id?.substring(0, 10) }}...</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CAMPAIGNS TAB -->
+    <div *ngIf="currentTab === 'campaigns'" class="tab-content campaigns-view">
+      <div class="campaigns-section">
+        <div class="campaigns-header-row">
+          <h2>🎯 Manage Campaigns</h2>
+          <button class="btn-primary" (click)="openNewCampaignModal()">
+            ➕ Create New Campaign
+          </button>
+        </div>
+
+        <!-- Campaign List -->
+        <div class="campaign-list-box">
+          <h3>📋 All Campaigns</h3>
+          <div *ngIf="campaigns.length === 0" class="empty-state">
+            No campaigns yet
+          </div>
+          <div class="campaigns-grid">
+            <div *ngFor="let c of campaigns" class="campaign-card">
+              <div class="campaign-header">
+                <div class="campaign-icon">{{ c.icon }}</div>
+                <div class="campaign-title">{{ c.title }}</div>
+              </div>
+
+              <div class="campaign-progress">
+                <div class="progress-bar">
+                  <div class="progress-fill" [style.width.%]="(c.raised / (c.goal || 1)) * 100"></div>
+                </div>
+                <div class="progress-text">₹{{ c.raised | number:'1.0-0' }} / ₹{{ c.goal | number:'1.0-0' }}</div>
+              </div>
+
+              <div class="campaign-details">
+                <div class="detail">👥 {{ c.donors }} donors</div>
+                <div class="detail">⏱️ {{ c.daysLeft }} days</div>
+                <div class="detail">
+                  <label class="toggle-label">
+                    <input type="checkbox" [checked]="c.active" (change)="toggleCampaignActive(c)" />
+                    <span class="toggle-status">{{ c.active ? '✅ Active' : '❌ Inactive' }}</span>
+                  </label>
+                </div>
+              </div>
+
+              <div class="campaign-actions">
+                <button class="btn-edit" (click)="edit(c)">Edit</button>
+                <button class="btn-delete" (click)="remove(c._id)">Delete</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RECEIPTS TAB -->
+    <div *ngIf="currentTab === 'receipts'" class="tab-content receipts-view">
+      <div class="receipts-section">
+        <div class="receipts-header-row">
+          <h2>💳 Donation Receipts</h2>
+          <button class="btn-secondary" type="button" (click)="exportReceiptsCsv()">
+            📥 Export CSV
+          </button>
+        </div>
+
+        <div *ngIf="receipts.length === 0" class="empty-state">
+          No receipts found
+        </div>
+
+        <div *ngIf="receipts.length > 0" class="receipts-list">
+          <table class="receipts-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Invoice</th>
+                <th>Amount</th>
+                <th>Donor</th>
+                <th>Message</th>
+                <th>Campaign</th>
+                <th>Remaining</th>
+                <th>Days Left</th>
+                <th>Order ID</th>
+                <th>Payment ID</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let r of receipts">
+                <td>{{ r.createdAt | date:'dd MMM yyyy, h:mm a' }}</td>
+                <td>
+                  <div style="display:flex; align-items:center; gap:8px">
+                    <span>{{ r.invoiceNumber || '-' }}</span>
+                    <button *ngIf="r._id" class="btn-secondary" type="button" (click)="downloadInvoice(r)">📄</button>
+                  </div>
+                </td>
+                <td>{{ r.amount | currency:'INR' }}</td>
+                <td>{{ r.donorFullName || 'Anonymous' }}</td>
+                <td>{{ r.donorMessage || '—' }}</td>
+                <td>{{ r.campaignId?.title || '—' }}</td>
+                <td>{{ (r.campaignId?.goal - r.campaignId?.raised) | currency:'INR' }}</td>
+                <td>{{ r.campaignId?.daysLeft || '—' }}</td>
+                <td>{{ r.razorpay_order_id?.substring(0, 15) }}...</td>
+                <td>{{ r.razorpay_payment_id?.substring(0, 15) }}...</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- Pagination -->
+          <div class="pagination-controls">
+            <button class="btn-pagination" 
+              [disabled]="currentReceiptPage === 1"
+              (click)="loadReceipts(currentReceiptPage - 1)">
+              ← Previous
+            </button>
+            <span class="pagination-info">
+              Page {{ currentReceiptPage }} of {{ receiptPagination.pages }} ({{ receiptPagination.total }} total)
+            </span>
+            <button class="btn-pagination" 
+              [disabled]="currentReceiptPage >= receiptPagination.pages"
+              (click)="loadReceipts(currentReceiptPage + 1)">
+              Next →
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FAILED RECEIPTS TAB -->
+    <div *ngIf="currentTab === 'failed-receipts'" class="tab-content receipts-view">
+      <div class="receipts-section">
+        <div class="receipts-header-row">
+          <h2>❌ Failed Donation Payments</h2>
+          <button class="btn-secondary" type="button" (click)="exportFailedReceiptsCsv()">
+            📥 Export CSV
+          </button>
+        </div>
+
+        <div *ngIf="failedReceipts.length === 0" class="empty-state">
+          No failed payments found
+        </div>
+
+        <div *ngIf="failedReceipts.length > 0" class="receipts-list">
+          <table class="receipts-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Invoice</th>
+                <th>Amount</th>
+                <th>Donor</th>
+                <th>Email</th>
+                <th>Mobile</th>
+                <th>Campaign</th>
+                <th>Failure Reason</th>
+                <th>Order ID</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let r of failedReceipts">
+                <td>{{ r.createdAt | date:'dd MMM yyyy, h:mm a' }}</td>
+                <td>{{ r.invoiceNumber || '-' }}</td>
+                <td>{{ r.amount | currency:'INR' }}</td>
+                <td>{{ r.donorFullName || 'Anonymous' }}</td>
+                <td>{{ r.donorEmail || '—' }}</td>
+                <td>{{ r.donorMobile || '—' }}</td>
+                <td>{{ r.campaignId?.title || '—' }}</td>
+                <td><span class="failure-badge">{{ r.failureReason || 'Payment failed' }}</span></td>
+                <td>{{ r.razorpay_order_id?.substring(0, 15) }}...</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- Pagination -->
+          <div class="pagination-controls">
+            <button class="btn-pagination" 
+              [disabled]="currentFailedPage === 1"
+              (click)="loadFailedReceipts(currentFailedPage - 1)">
+              ← Previous
+            </button>
+            <span class="pagination-info">
+              Page {{ currentFailedPage }} of {{ failedPagination.pages }} ({{ failedPagination.total }} total)
+            </span>
+            <button class="btn-pagination" 
+              [disabled]="currentFailedPage >= failedPagination.pages"
+              (click)="loadFailedReceipts(currentFailedPage + 1)">
+              Next →
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- NEW CAMPAIGN MODAL -->
+    <div *ngIf="showNewCampaignModal" class="modal-overlay" (click)="closeNewCampaignModal()">
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h3>{{ editId ? '✏️ Edit Campaign' : '➕ Create New Campaign' }}</h3>
+          <button class="btn-close" (click)="closeNewCampaignModal()">✕</button>
+        </div>
+
+        <div class="modal-body">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Title *</label>
+              <input placeholder="Campaign title" [(ngModel)]="title" />
+            </div>
+            <div class="form-group">
+              <label>Icon</label>
+              <input placeholder="🛕" style="width:100px" [(ngModel)]="icon" />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Goal Amount (₹) *</label>
+              <input placeholder="100000" type="number" [(ngModel)]="goal" />
+            </div>
+            <div class="form-group">
+              <label>Days Left</label>
+              <input placeholder="30" type="number" [(ngModel)]="daysLeft" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Description *</label>
+            <textarea placeholder="Campaign description" [(ngModel)]="description"></textarea>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn-secondary" (click)="closeNewCampaignModal()">Cancel</button>
+          <button class="btn-primary" (click)="saveCampaign()">
+            {{ editId ? '💾 Update' : '✨ Create' }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,23 @@
+<div class="scroll-btns">
+
+    <!-- Scroll UP -->
+    @if (showUp()) {
+    <button class="scroll-btn up" (click)="scrollUp()" aria-label="Scroll to top">
+        <svg class="dashed-ring" viewBox="0 0 56 56">
+            <circle cx="28" cy="28" r="26" />
+        </svg>
+        <i class="fas fa-angles-up"></i>
+    </button>
+    }
+
+    <!-- Scroll DOWN -->
+    @if (showDown()) {
+    <button class="scroll-btn down" (click)="scrollDown()" aria-label="Scroll to bottom">
+        <svg class="dashed-ring" viewBox="0 0 56 56">
+            <circle cx="28" cy="28" r="26" />
+        </svg>
+        <i class="fas fa-angles-down"></i>
+    </button>
+    }
+
+</div>

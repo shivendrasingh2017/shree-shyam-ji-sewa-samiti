@@ -1,0 +1,21 @@
+<section class="our-puja">
+    <div class="container">
+        <div class="puja-head">
+            <h2>Our Puja</h2>
+            <ul class="tabs">
+                <li *ngFor="let t of tabs" [class.active]="active===t" (click)="active=t">{{ t }}</li>
+            </ul>
+        </div>
+
+        <div class="puja-grid">
+            <article class="puja-card" *ngFor="let p of filtered">
+                <img [src]="p.img" [alt]="p.title" />
+                <span class="plus">+</span>
+                <div class="overlay">
+                    <h3>{{ p.title }}</h3>
+                    <p>{{ p.desc }}</p>
+                </div>
+            </article>
+        </div>
+    </div>
+</section>

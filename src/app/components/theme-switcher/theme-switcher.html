@@ -1,0 +1,27 @@
+<button class="fab" (click)="toggle()" aria-label="Theme">🎨</button>
+
+<aside class="panel" [class.open]="open()">
+    <header>
+        <h3>FESTIVAL MODE</h3>
+        <button class="close" (click)="toggle()">✕</button>
+    </header>
+    <p class="hint">Preview how the site transforms for each Hindu festival. Click any tab to switch.</p>
+
+    <div class="grid">
+        @for (f of festivals; track f.id) {
+        <button class="tile" [class.active]="theme.festival() === f.id" (click)="theme.setFestival(f.id)">
+            <div class="ico">{{ f.icon }}</div>
+            <strong>{{ f.name }}</strong>
+            <small>{{ f.sub }}</small>
+            @if (theme.festival() === f.id) { <span class="check">✓</span> }
+        </button>
+        }
+    </div>
+
+    <div class="dark-toggle">
+        <span>{{ theme.dark() ? '🌙 Dark Mode' : '☀ Light Mode' }}</span>
+        <button (click)="theme.toggleDark()" class="switch" [class.on]="theme.dark()">
+            <span></span>
+        </button>
+    </div>
+</aside>

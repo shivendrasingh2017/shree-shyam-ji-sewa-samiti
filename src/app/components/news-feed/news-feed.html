@@ -1,0 +1,22 @@
+<section class="news" [style.backgroundImage]="'url(assets/news/news_background.webp)'">
+    <div class="container">
+        <div class="section-title">
+            <span class="sub">🕉 &nbsp; BLOG &nbsp; 🕉</span>
+            <h2>News Feed</h2>
+        </div>
+
+        <div class="grid">
+            <article class="card" *ngFor="let p of posts">
+                <img [src]="p.img" [alt]="p.title" />
+                <div class="body">
+                    <p class="meta"><span class="tag">🕉 {{ p.tag }}</span> &nbsp; 📅 {{ p.date }}</p>
+                    <h3>{{ p.title }}</h3>
+                    <div class="author">
+                        <img [src]="p.avatar" alt="" />
+                        <span>By <b>{{ p.author }}</b></span>
+                    </div>
+                </div>
+            </article>
+        </div>
+    </div>
+</section>

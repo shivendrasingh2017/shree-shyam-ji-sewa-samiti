@@ -1,0 +1,56 @@
+<footer class="footer">
+  <div class="container grid">
+    <div>
+      <h4>About Us</h4>
+      <p class="lead">
+        Shree Shyam Ji Sewa Samiti — Baba Khatu Shyam ji ki seva, bhakti aur
+        samaj kalyan ko samarpit ek aastha parivaar.
+      </p>
+      <p>📞 +91 98765-43210</p>
+      <p>📧 info&#64;shyamjisewasamiti.org</p>
+      <!-- <p>📍 Khatu Shyam Mandir Marg, Sikar, </p> -->
+    </div>
+
+    <div>
+      <h4>Information</h4>
+      <ul>
+        <li>Shyam Aarti</li>
+        <li>Sevayein</li>
+        <li>Mandir Darshan</li>
+        <li>Phagun Mela</li>
+        <li>Sevadar</li>
+        <li>Daan</li>
+      </ul>
+    </div>
+
+    <div>
+      <h4>Others</h4>
+      <ul>
+        <li>Prasad Shop</li>
+        <li>Online Daan</li>
+        <li>Sampark</li>
+        <li>Blog</li>
+      </ul>
+    </div>
+
+    <div>
+      <h4>Recent Posts</h4>
+      @for (i of images; track $index) {
+      <div class="post">
+        <img [src]="i.src" [alt]="i.alt" />
+
+        <div>
+          <p class="d">📅 May 20, 2026</p>
+          <p class="t">Baba Shyam ki kripa se naya adhyay shuru</p>
+        </div>
+      </div>
+      }
+    </div>
+  </div>
+
+  <div class="copy container">
+    <span>COPYRIGHT © SHREE SHYAM JI SEWA SAMITI 2026</span>
+    <div class="logo">🪔 shyamjisewasamiti.org 🪔</div>
+    <div class="social">f &nbsp; in &nbsp; t &nbsp; ig</div>
+  </div>
+</footer>

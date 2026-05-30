@@ -1,0 +1,41 @@
+<section class="help-section">
+    <div class="overlay"></div>
+
+    <div class="container">
+        <div class="head">
+            <span class="eyebrow">
+                <span class="num">33</span> SERVICE
+            </span>
+            <h2 class="title">How We Can Help</h2>
+        </div>
+
+        <div class="cards">
+            <div *ngFor="let c of cards; let i = index" class="card" [class.mauve]="c.variant === 'mauve'"
+                [class.red]="c.variant === 'red'" [class.white]="c.variant === 'white'"
+                [style.transform]="'translateY(' + (i === 1 ? '-30px' : i === 2 ? '-60px' : '0') + ')'">
+                <div class="icon">
+                    <img [src]="c.icon" [alt]="c.title" />
+                </div>
+                <h3 class="card-title">{{ c.title }}</h3>
+                <p class="card-desc">{{ c.desc }}</p>
+                <a [href]="c.link" class="learn">
+                    LEARN MORE
+                    <svg width="18" height="10" viewBox="0 0 18 10" fill="none">
+                        <path d="M1 5h15M12 1l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round" />
+                    </svg>
+                </a>
+            </div>
+        </div>
+
+        <div class="cta-row">
+            <a href="/donation" class="get-started">
+                GET STARTED NOW
+                <svg width="18" height="10" viewBox="0 0 18 10" fill="none">
+                    <path d="M1 5h15M12 1l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                </svg>
+            </a>
+        </div>
+    </div>
+</section>

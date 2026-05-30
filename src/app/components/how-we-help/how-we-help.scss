@@ -1,0 +1,218 @@
+.help-section {
+    position: relative;
+    padding: 110px 0 140px;
+    background: url('/assets/home/banner1.webp') center/cover no-repeat;
+    overflow: hidden;
+    isolation: isolate;
+
+    .overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(135deg,
+                rgba(90, 30, 25, 0.85) 0%,
+                rgba(120, 50, 30, 0.65) 50%,
+                rgba(90, 30, 25, 0.85) 100%);
+        z-index: -1;
+    }
+}
+
+.container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+/* ---------- Heading ---------- */
+.head {
+    margin-bottom: 70px;
+    color: #fff;
+
+    .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: 3px;
+        color: rgba(255, 255, 255, 0.55);
+        margin-bottom: 18px;
+
+        .num {
+            font-family: 'Rozha One', serif;
+            font-size: 22px;
+            color: rgba(255, 255, 255, 0.45);
+        }
+    }
+
+    .title {
+        font-family: 'Rozha One', serif;
+        font-size: clamp(36px, 5vw, 64px);
+        line-height: 1.05;
+        font-weight: 400;
+        margin: 0;
+    }
+}
+
+/* ---------- Cards ---------- */
+.cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 28px;
+    align-items: start;
+}
+
+.card {
+    position: relative;
+    padding: 48px 38px 42px;
+    border-radius: 6px;
+    transition: transform .4s ease, box-shadow .4s ease;
+    min-height: 320px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+
+    .icon {
+        width: 64px;
+        height: 64px;
+        margin-bottom: 60px;
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+    }
+
+    .card-title {
+        font-family: 'Rozha One', serif;
+        font-size: 30px;
+        font-weight: 400;
+        margin: 0;
+    }
+
+    .card-desc {
+        font-size: 15px;
+        line-height: 1.65;
+        margin: 0;
+        opacity: .9;
+    }
+
+    .learn {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        margin-top: 14px;
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 2px;
+        text-decoration: none;
+        transition: gap .3s ease;
+
+        &:hover {
+            gap: 16px;
+        }
+    }
+
+    &.mauve {
+        background: #8a5a66;
+        color: #fff;
+
+        .icon img {
+            filter: brightness(0) invert(1) opacity(.85);
+        }
+
+        .learn {
+            color: #fff;
+        }
+    }
+
+    &.red {
+        background: #e0574f;
+        color: #fff;
+
+        .icon img {
+            filter: brightness(0) invert(1) opacity(.9);
+        }
+
+        .learn {
+            color: #fff;
+        }
+    }
+
+    &.white {
+        background: #fff;
+        color: #2a2a2a;
+        box-shadow: 0 25px 60px rgba(0, 0, 0, .25);
+
+        .card-title,
+        .learn {
+            color: #e0574f;
+        }
+
+        .card-desc {
+            color: #6b6b6b;
+        }
+    }
+
+    &:hover {
+        box-shadow: 0 30px 70px rgba(0, 0, 0, .35);
+    }
+}
+
+/* ---------- CTA ---------- */
+.cta-row {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 40px;
+
+    .get-started {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        color: #fff;
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 3px;
+        transition: gap .3s ease;
+
+        &:hover {
+            gap: 18px;
+        }
+    }
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 1024px) {
+    .cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .card {
+        transform: none !important;
+    }
+}
+
+@media (max-width: 640px) {
+    .help-section {
+        padding: 70px 0 90px;
+    }
+
+    .cards {
+        grid-template-columns: 1fr;
+        gap: 22px;
+    }
+
+    .card {
+        min-height: auto;
+        padding: 36px 28px;
+    }
+
+    .head {
+        margin-bottom: 40px;
+    }
+
+    .cta-row {
+        justify-content: center;
+    }
+}

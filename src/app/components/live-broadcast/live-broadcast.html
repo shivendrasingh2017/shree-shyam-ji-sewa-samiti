@@ -1,0 +1,40 @@
+<section id="live-aarti" class="live-broadcast">
+    <div class="container">
+        <div class="section-title">
+            <span class="sub">🕉 &nbsp; WATCH VIDEO &nbsp; 🕉</span>
+            <h2>Our Live Broadcast</h2>
+        </div>
+
+        <div class="broadcast-grid">
+            <div class="video-thumb">
+                <ng-container *ngIf="!isPlaying(); else player">
+                    <button type="button" class="video-preview" (click)="playVideo()"
+                        aria-label="Play Live Aarti video">
+                        <img src="https://img.youtube.com/vi/7sLWpidRCOI/maxresdefault.jpg"
+                            alt="Khatu Shyam Aarti Live thumbnail" />
+                        <span class="play-btn" aria-hidden="true">▶</span>
+                    </button>
+                </ng-container>
+
+                <ng-template #player>
+                    <div class="video-frame">
+                        <iframe src="https://www.youtube.com/embed/7sLWpidRCOI?autoplay=1&rel=0"
+                            title="Khatu Shyam Aarti Live" allow="autoplay; encrypted-media" allowfullscreen>
+                        </iframe>
+                    </div>
+                </ng-template>
+            </div>
+
+            <div class="broadcast-info">
+                <p class="date">Aug 12, 2026</p>
+                <h3>Serving the Devotees of Khatu Shyam Ji</h3>
+                <p class="desc">
+                    Shree Shyam Ji Sewa Samiti har Ekadashi par live aarti, bhajan
+                    sandhya, and Shyam Baba ke darshan aapke ghar tak pahunchata hai.
+                    "Haare ka Sahara — Baba Shyam Hamara".
+                </p>
+                <button type="button" class="btn-pill" (click)="playVideo()">WATCH VIDEO</button>
+            </div>
+        </div>
+    </div>
+</section>

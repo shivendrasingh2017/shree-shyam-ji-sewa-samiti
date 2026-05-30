@@ -1,0 +1,18 @@
+<section class="volunteers" [style.backgroundImage]="'url(assets/volunteers/volunteers_background.webp)'" [style.backgroundSize]="'cover'" [style.backgroundPosition]="'center'" [style.backgroundAttachment]="'fixed'">
+  <div class="container">
+    <div class="section-title">
+      <span class="sub">🕉 &nbsp; WHO &nbsp; 🕉</span>
+      <h2>Our Sevadars</h2>
+    </div>
+    <div class="grid">
+      <div class="card" *ngFor="let m of members">
+        <div class="img-wrap">
+          <img [src]="m.img" [alt]="m.name" />
+          <span class="plus">+</span>
+        </div>
+        <p class="role">{{ m.role }}</p>
+        <h4>{{ m.name }}</h4>
+      </div>
+    </div>
+  </div>
+</section>

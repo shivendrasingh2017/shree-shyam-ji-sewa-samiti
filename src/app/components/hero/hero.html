@@ -1,0 +1,50 @@
+<section class="hero">
+  <div class="hero-background">
+    <div class="banner-carousel">
+      <div class="banner-container">
+        @for (banner of banners; track $index) {
+          <div class="banner-slide" [class.active]="currentBanner === $index">
+            <img [src]="banner" [alt]="'Banner ' + ($index + 1)" />
+          </div>
+        }
+      </div>
+
+      <button class="carousel-btn prev" (click)="prevBanner()" aria-label="Previous banner">‹</button>
+      <button class="carousel-btn next" (click)="nextBanner()" aria-label="Next banner">›</button>
+
+      <div class="carousel-dots">
+        @for (dot of [0, 1, 2]; track dot) {
+          <button
+            class="dot"
+            [class.active]="currentBanner === dot"
+            (click)="goToBanner(dot)"
+            [attr.aria-label]="'Go to banner ' + (dot + 1)"
+          ></button>
+        }
+      </div>
+    </div>
+  </div>
+
+  <div class="container hero-grid">
+    <div class="hero-content">
+      <span class="eyebrow">॥ जय श्री श्याम ॥</span>
+      <h1>Haare ka Sahara<br><span>Baba Shyam</span> Hamara</h1>
+      <p>Khatu Naresh Shree Shyam Baba ke charno me sewa, bhakti aur daan. Aaiye, milkar samiti ke karyon me sahbhagi
+        banein.</p>
+      <div class="cta">
+        <a routerLink="/aarti" class="btn">Live Aarti →</a>
+        <a routerLink="/donation" class="btn">Donate Now</a>
+      </div>
+      <div class="stats">
+        <div><strong>25+</strong><span>Years of Seva</span></div>
+        <div><strong>10K+</strong><span>Bhakts</span></div>
+        <div><strong>365</strong><span>Days Aarti</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- <div class="diya-row" aria-hidden="true">
+   @for (d of [1,2,3,4,5,6,7,8,9,10,11,12,13,14]; track d) { <span>🪔</span> }
+
+  </div> -->
+</section>

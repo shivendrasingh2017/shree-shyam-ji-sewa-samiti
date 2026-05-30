@@ -1,0 +1,11 @@
+<section class="features">
+    <div class="container grid">
+        <div class="card" *ngFor="let f of items; index as i">
+            <div class="icon-circle">
+                <img src="{{ f.icon }}" alt="{{ f.title }} icon" />
+            </div>
+            <h3>{{ f.title }}</h3>
+            <p>{{ f.desc }}</p>
+        </div>
+    </div>
+</section>

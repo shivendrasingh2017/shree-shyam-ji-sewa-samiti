@@ -1,0 +1,95 @@
+.testi {
+    background: var(--bg-dark);
+    padding: 90px 0;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 50px;
+    align-items: center;
+}
+
+.left {
+    .sub {
+        color: var(--gold);
+        letter-spacing: 3px;
+        font-weight: 600;
+    }
+
+    h2 {
+        font-family: 'Rozha One', serif;
+        font-size: 60px;
+        color: var(--gold);
+        margin: 14px 0 24px;
+        text-shadow: 0 0 30px rgba(245, 180, 90, .3);
+    }
+
+    p {
+        color: #cfc1aa;
+        line-height: 1.9;
+    }
+}
+
+.card {
+    position: relative;
+    background: linear-gradient(135deg, #e89a3c, #c97826);
+    border-radius: 14px;
+    padding: 60px 40px 40px;
+    color: #fff;
+
+    .murti {
+        position: absolute;
+        top: -90px;
+        right: 40px;
+        width: 200px;
+
+        img {
+            width: 100%;
+        }
+    }
+
+    .quote {
+        font-size: 80px;
+        line-height: .5;
+        color: #fff8;
+        font-family: serif;
+    }
+
+    .say {
+        line-height: 1.8;
+        margin: 20px 0;
+        color: #fff;
+    }
+
+    .name {
+        font-weight: 700;
+    }
+}
+
+@media(max-width:900px) {
+    .grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 640px) {
+    .testi {
+        padding: 60px 0;
+    }
+
+    .card {
+        padding: 40px 20px 20px;
+    }
+
+    .murti {
+        position: static;
+        margin-bottom: 24px;
+        width: 160px;
+        right: auto;
+    }
+
+    .quote {
+        font-size: 56px;
+    }
+}

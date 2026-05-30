@@ -1,1 +1,205 @@
-/* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Rozha+One&family=Poppins:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --bg: #d8c3b6;
+  --bg-2: #2a1810;
+  --card: #2d1b10;
+  --text: #f5e6d3;
+  --muted: #b8a48a;
+  --gold: #d4a24a;
+  --gold-2: #f4c97a;
+  --accent: #c9302c;
+  --border: rgba(212, 162, 74, .25);
+  --radius: 14px;
+}
+
+/* Festival palettes */
+[data-festival="shyam"] {
+  --gold: #d4a24a;
+  --gold-2: #f4c97a;
+  --accent: #1e4d8c;
+}
+
+[data-festival="diwali"] {
+  --gold: #ffb547;
+  --gold-2: #ffd87a;
+  --accent: #e85d2f;
+}
+
+[data-festival="holi"] {
+  --gold: #f06292;
+  --gold-2: #ffca28;
+  --accent: #7b1fa2;
+}
+
+[data-festival="navratri"] {
+  --gold: #ff7043;
+  --gold-2: #ffb74d;
+  --accent: #c2185b;
+}
+
+[data-festival="hanuman"] {
+  --gold: #ff5722;
+  --gold-2: #ff8a50;
+  --accent: #b71c1c;
+}
+
+[data-festival="janmashtami"] {
+  --gold: #42a5f5;
+  --gold-2: #80d8ff;
+  --accent: #1565c0;
+}
+
+[data-festival="ganesh"] {
+  --gold: #ff9800;
+  --gold-2: #ffcc80;
+  --accent: #d84315;
+}
+
+:root:not(.dark) {
+  --bg: #fdf6ec;
+  --bg-2: #f7eeda;
+  --card: #ffffff;
+  --text: #2a1810;
+  --muted: #6b5a45;
+  --border: rgba(0, 0, 0, .08);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Poppins', sans-serif;
+  scroll-behavior: smooth;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: 'Rozha One', serif;
+  font-weight: 400;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+.container {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 28px;
+  border-radius: 999px;
+  font-weight: 600;
+  background: linear-gradient(135deg, var(--gold), var(--gold-2));
+  color: #1a0f08;
+  border: none;
+  cursor: pointer;
+  transition: transform .25s, box-shadow .25s;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(212, 162, 74, .4);
+}
+
+.btn.ghost {
+  background: transparent;
+  color: var(--text);
+  border: 2px solid var(--gold);
+}
+
+/* breakpoints helper */
+@media (max-width: 1024px) {
+  .container {
+    padding: 0 16px;
+  }
+}
+
+section {
+  padding: clamp(48px, 6vw, 80px) 0;
+}
+
+@media (max-width: 1024px) {
+  section {
+    padding: clamp(40px, 8vw, 70px) 0;
+  }
+}
+
+@media (max-width: 768px) {
+  section {
+    padding: clamp(36px, 8vw, 58px) 0;
+  }
+}
+
+@media (max-width: 480px) {
+  section {
+    padding: clamp(28px, 10vw, 40px) 0;
+  }
+
+  h2 {
+    font-size: clamp(1.8rem, 6vw, 2.2rem) !important;
+  }
+}
+
+img,
+video {
+  height: auto;
+}
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+}
+
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+@media (max-width: 900px) {
+
+  .grid-3,
+  .grid-4 {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .grid-2 {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 560px) {
+
+  .grid-3,
+  .grid-4 {
+    grid-template-columns: 1fr;
+  }
+}

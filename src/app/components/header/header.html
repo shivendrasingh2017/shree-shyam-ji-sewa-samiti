@@ -1,0 +1,54 @@
+<header class="site-header">
+  <div class="topbar">
+    <div class="container topbar-inner">
+      <div class="left">
+        <span><i class="fas fa-phone"></i> +91 0000000000</span>
+        <span><i class="fas fa-envelope"></i> info&#64;shyamjisewasamiti.org</span>
+      </div>
+      <div class="right">
+        <a routerLink="/" fragment="live-aarti" class="live" (click)="close()">
+          <span class="live-dot"></span> LIVE AARTI
+        </a>
+        <div class="social-icons">
+          <a href="#" aria-label="Facebook" class="social-icon facebook">
+            <i class="fab fa-facebook-f"></i>
+          </a>
+          <a href="#" aria-label="X (Twitter)" class="social-icon twitter">
+            <i class="fab fa-x-twitter"></i>
+          </a>
+          <a href="#" aria-label="Instagram" class="social-icon instagram">
+            <i class="fab fa-instagram"></i>
+          </a>
+          <a href="#" aria-label="YouTube" class="social-icon youtube">
+            <i class="fab fa-youtube"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mainbar">
+    <div class="container mainbar-inner">
+      <a routerLink="/" class="logo">
+        <img src="assets/logo/logo.svg" alt="Shree Shyam Ji Logo" class="logo-img" />
+      </a>
+
+      <nav class="nav" [class.open]="open()">
+        <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}" (click)="close()">Home</a>
+        <a routerLink="/about" routerLinkActive="active" (click)="close()">About</a>
+        <a routerLink="/aarti" routerLinkActive="active" (click)="close()">Aarti</a>
+        <a routerLink="/puja" routerLinkActive="active" (click)="close()">Puja</a>
+        <a routerLink="/gallery" routerLinkActive="active" (click)="close()">Gallery</a>
+        <a routerLink="/donation" routerLinkActive="active" (click)="close()">Donation</a>
+        <a routerLink="/contact" routerLinkActive="active" (click)="close()">Contact</a>
+      </nav>
+
+      <div class="actions">
+        <a routerLink="/donation" class="btn">Donate</a>
+        <button class="hamburger" (click)="toggle()" aria-label="Menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </div>
+</header>

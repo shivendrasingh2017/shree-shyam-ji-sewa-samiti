@@ -1,0 +1,114 @@
+/* ── Scroll Buttons — fixed bottom-right ── */
+
+.scroll-btns {
+    position: fixed;
+    bottom: 28px;
+    right: 24px;
+    z-index: 900;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+}
+
+/* ── Each button ── */
+.scroll-btn {
+    position: relative;
+    width: 56px;
+    height: 56px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    outline: none;
+
+    /* Chevron icon */
+    i {
+        color: var(--gold, #e07b2a);
+        font-size: 18px;
+        position: relative;
+        z-index: 2;
+        transition: transform .2s;
+    }
+
+    /* Hover — icon nudge */
+    &.up:hover i {
+        transform: translateY(-3px);
+    }
+
+    &.down:hover i {
+        transform: translateY(3px);
+    }
+}
+
+/* ── Dashed spinning ring (SVG) ── */
+.dashed-ring {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+
+    circle {
+        fill: none;
+        stroke: var(--gold, #e07b2a);
+        stroke-width: 2;
+        stroke-dasharray: 8 5;
+        /* dashes */
+        stroke-linecap: round;
+        transform-origin: center;
+        animation: spin-ring 8s linear infinite;
+    }
+}
+
+/* Reverse spin for DOWN button */
+.scroll-btn.down .dashed-ring circle {
+    animation-direction: reverse;
+}
+
+/* Hover — speed up spin */
+.scroll-btn:hover .dashed-ring circle {
+    animation-duration: 2s;
+}
+
+@keyframes spin-ring {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ── Fade-in animation ── */
+.scroll-btn {
+    animation: fadeInBtn .3s ease both;
+}
+
+@keyframes fadeInBtn {
+    from {
+        opacity: 0;
+        transform: scale(.7);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* ── Mobile: slightly smaller ── */
+@media (max-width: 600px) {
+    .scroll-btns {
+        bottom: 16px;
+        right: 14px;
+    }
+
+    .scroll-btn {
+        width: 46px;
+        height: 46px;
+
+        i {
+            font-size: 15px;
+        }
+    }
+}
