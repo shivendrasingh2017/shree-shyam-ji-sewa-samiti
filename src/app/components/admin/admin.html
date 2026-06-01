@@ -326,39 +326,32 @@
             <thead>
               <tr>
                 <th>#</th>
+                <th>Donor</th>
+                <th>Pan Card</th>
+                <th>Amount</th>
                 <th>Date</th>
                 <th>Invoice</th>
-                <th>Amount</th>
-                <th>Donor</th>
-                <th>PAN</th>
-                <th>Email</th>
-                <th>Mobile</th>
                 <th>Campaign</th>
                 <th>Address</th>
                 <th>Message</th>
-                <th>Failure Reason</th>
                 <th>Order ID</th>
+                <th>Payment ID</th>
               </tr>
             </thead>
             <tbody>
               <tr *ngFor="let r of failedReceipts; let i = index">
                 <td class="serial-no">{{ (currentFailedPage - 1) * receiptLimit + i + 1 }}</td>
-                <td>{{ r.createdAt | date:'dd MMM yyyy, h:mm a' }}</td>
+                <td>{{ r.donorFullName || 'Anonymous' }}</td>
+                <td >
+                  <div class="message-content">{{ r.donorPAN || '—' }}</div>
+                </td>
+                <td>{{ r.amount | currency:'INR' }}</td>
+                <td class="date-cell">{{ r.createdAt | date:'dd MMM yyyy, h:mm a' }}</td>
                 <td class="invoice-cell">
                   <div class="invoice-content">
                     <span class="invoice-text">{{ r.invoiceNumber || '-' }}</span>
-                    <!-- <button *ngIf="r._id" class="btn-download" type="button" (click)="downloadInvoice(r)" title="Download Invoice">📥</button> -->
                   </div>
                 </td>
-                <td>{{ r.amount | currency:'INR' }}</td>
-                <td>{{ r.donorFullName || 'Anonymous' }}</td>
-                <td >
-                 
-                    <div class="message-content">{{ r.donorPAN || '—' }}</div>
-
-                </td>
-                <td>{{ r.donorEmail || '—' }}</td>
-                <td>{{ r.donorMobile || '—' }}</td>
                 <td>{{ r.campaignId?.title || '—' }}</td>
                 <td class="address-cell">
                   <div class="message-box">
@@ -370,12 +363,8 @@
                     <div class="message-content">{{ r.donorMessage || '—' }}</div>
                   </div>
                 </td>
-                <td class="failure-reason-cell">
-                  <div class="message-box">
-                    <div class="message-content">{{ r.failureReason || 'Payment failed' }}</div>
-                  </div>
-                </td>
-                <td>{{ (r.razorpay_order_id || '') | slice:0:15 }}{{ r.razorpay_order_id ? '...' : '-' }}</td>
+                <td>{{ r.razorpay_order_id || '-' }}</td>
+                <td>{{ r.razorpay_payment_id || '-' }}</td>
               </tr>
             </tbody>
           </table>

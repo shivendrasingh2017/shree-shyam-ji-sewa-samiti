@@ -673,13 +673,36 @@
   overflow-x: auto;
   overflow-y: hidden;
   -webkit-overflow-scrolling: touch;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  display: block;
+
+  &::-webkit-scrollbar {
+    height: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #f0f0f0;
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #999;
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: #666;
+  }
 }
 
 .receipts-table {
   width: 100%;
   border-collapse: collapse;
-  min-width: 720px;
-  table-layout: fixed;
+  min-width: 900px;
+  table-layout: auto;
+  display: table;
 }
 
 .receipts-table th,
@@ -690,17 +713,27 @@
   text-align: left;
   vertical-align: middle;
   word-break: break-word;
+  min-width: 80px;
+  white-space: normal;
 }
 
 @media (max-width: 960px) {
+  .receipts-list {
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+  }
+
   .receipts-table {
-    min-width: 100%;
+    min-width: 900px;
+    table-layout: auto;
   }
 
   .receipts-table th,
   .receipts-table td {
-    padding: 11px 09px;
+    padding: 10px 8px;
     font-size: 12px;
+    min-width: 75px;
   }
 }
 
@@ -1225,6 +1258,26 @@
     padding: 20px;
   }
 
+  .receipts-list {
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    margin: 0;
+    padding: 0;
+  }
+
+  .receipts-table {
+    min-width: 900px;
+    table-layout: auto;
+  }
+
+  .receipts-table th,
+  .receipts-table td {
+    padding: 10px 8px;
+    font-size: 12px;
+    min-width: 70px;
+  }
+
   .campaign-details {
     flex-wrap: wrap;
     gap: 8px;
@@ -1257,10 +1310,25 @@
     font-size: 20px;
   }
 
+  .receipts-list {
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    border-radius: 8px;
+    margin: 0;
+    padding: 0;
+  }
+
+  .receipts-table {
+    min-width: 950px;
+    table-layout: auto;
+  }
+
   .receipts-table th,
   .receipts-table td {
-    padding: 10px 8px;
-    font-size: 12px;
+    padding: 8px 6px;
+    font-size: 11px;
+    min-width: 65px;
   }
 
   .pagination-controls {

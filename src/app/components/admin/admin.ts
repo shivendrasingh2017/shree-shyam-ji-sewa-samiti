@@ -445,33 +445,29 @@ export class Admin implements OnInit {
     if (!this.failedReceipts || this.failedReceipts.length === 0) return;
 
     const header = [
+      'Donor',
+      'Pan Card',
+      'Amount',
       'Date',
       'Invoice',
-      'Amount',
-      'Donor',
-      'PAN',
-      'Email',
-      'Mobile',
       'Campaign',
       'Address',
       'Message',
-      'Failure Reason',
-      'Order ID'
+      'Order ID',
+      'Payment ID'
     ];
 
     const rows = this.failedReceipts.map(r => [
-      new Date(r.createdAt).toLocaleString('en-IN'),
-      r.invoiceNumber || '',
-      r.amount || 0,
       r.donorFullName || 'Anonymous',
       r.donorPAN || '',
-      r.donorEmail || '',
-      r.donorMobile || '',
+      r.amount || 0,
+      new Date(r.createdAt).toLocaleString('en-IN'),
+      r.invoiceNumber || '',
       r.campaignId?.title || '',
       r.donorAddress || '',
       r.donorMessage || '',
-      r.failureReason || 'Payment failed',
-      r.razorpay_order_id || ''
+      r.razorpay_order_id || '',
+      r.razorpay_payment_id || ''
     ]);
 
     const csvContent = [header, ...rows]
