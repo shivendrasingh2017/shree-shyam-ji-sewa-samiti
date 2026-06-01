@@ -347,7 +347,7 @@
                 <td class="invoice-cell">
                   <div class="invoice-content">
                     <span class="invoice-text">{{ r.invoiceNumber || '-' }}</span>
-                    <button *ngIf="r._id" class="btn-download" type="button" (click)="downloadInvoice(r)" title="Download Invoice">📥</button>
+                    <!-- <button *ngIf="r._id" class="btn-download" type="button" (click)="downloadInvoice(r)" title="Download Invoice">📥</button> -->
                   </div>
                 </td>
                 <td>{{ r.amount | currency:'INR' }}</td>

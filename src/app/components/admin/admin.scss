@@ -549,20 +549,23 @@
   background: white;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  overflow: auto;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
 }
 
 .receipts-table {
   width: 100%;
   border-collapse: collapse;
   min-width: 720px;
+  table-layout: fixed;
 }
 
 .receipts-table th,
 .receipts-table td {
-  padding: 14px 12px;
+  padding: 10px 8px;
   border-bottom: 1px solid #eaeaea;
-  font-size: 13px;
+  font-size: 12px;
   text-align: left;
   vertical-align: middle;
   word-break: break-word;
@@ -604,9 +607,11 @@
 }
 
 .receipts-table td {
-  white-space: nowrap;
+  white-space: normal;
   overflow: hidden;
   text-overflow: ellipsis;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .receipts-table .invoice-cell {
@@ -1042,6 +1047,11 @@
     gap: 8px;
   }
 
+  .receipts-list {
+    margin: 0 -12px;
+    padding: 0 12px;
+  }
+
   .receipts-table {
     min-width: 100%;
   }
@@ -1049,6 +1059,7 @@
   .receipts-table th,
   .receipts-table td {
     white-space: normal;
+    padding: 10px 8px;
   }
 }
 
