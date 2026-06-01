@@ -1,17 +1,23 @@
 <section class="gallery">
-    <div class="container">
-        <div class="section-title">
-            <span class="sub">✨ &nbsp; GALLERY &nbsp; ✨</span>
-            <h2>Our Divine Moments</h2>
-        </div>
-        <div class="grid">
-            <img src="assets/gallery/g1.webp" alt="Gallery image 1" />
-            <img src="assets/gallery/g2.webp" alt="Gallery image 2" />
-            <img src="assets/gallery/g3.webp" alt="Gallery image 3" />
-            <img src="assets/gallery/g4.webp" alt="Gallery image 4" />
-            <img src="assets/gallery/g5.webp" alt="Gallery image 5" />
-            <img src="assets/gallery/g6.webp" alt="Gallery image 6" />
-            <img src="assets/gallery/g7.webp" alt="Gallery image 7" />
-        </div>
+  <div class="container">
+    <div class="section-title">
+      <span class="sub">✨ &nbsp; GALLERY &nbsp; ✨</span>
+      <h2>Our Divine Moments</h2>
     </div>
+
+    <div *ngIf="galleryItems.length === 0" class="gallery-empty">
+      <p>No active gallery images are available right now.</p>
+      <p>Visit the admin panel to add and activate images.</p>
+    </div>
+
+    <div class="grid" *ngIf="galleryItems.length > 0">
+      <div class="gallery-card" *ngFor="let item of galleryItems">
+        <img [src]="item.imageUrl" [alt]="item.title" />
+        <div class="gallery-caption">
+          <h3>{{ item.title }}</h3>
+          <p>{{ item.description }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>

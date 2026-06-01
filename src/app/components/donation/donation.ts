@@ -15,6 +15,7 @@ export interface Campaign {
   donors: number;
   daysLeft: number;
   active: boolean;
+  createdAt?: string;
 }
 
 export interface DonationRecord {
@@ -41,6 +42,7 @@ export interface DonationRecord {
 export class Donation implements OnInit, AfterViewInit {
   campaigns: Campaign[] = [];
   visibleCount = 6;
+  selectedCampaignId: string | null = null;
 
   presetAmounts: number[] = [51, 101, 501, 1001, 5001];
 
@@ -113,12 +115,36 @@ export class Donation implements OnInit, AfterViewInit {
     document.body.appendChild(script);
   }
 
+  private calculateRemainingDays(campaign: Campaign): number {
+    if (typeof campaign.daysLeft !== 'number') return 0;
+    if (!campaign.createdAt) return Math.max(0, campaign.daysLeft);
+
+    const createdAt = new Date(campaign.createdAt);
+    if (Number.isNaN(createdAt.getTime())) return Math.max(0, campaign.daysLeft);
+
+    const elapsedMs = Date.now() - createdAt.getTime();
+    const elapsedDays = Math.floor(elapsedMs / (1000 * 60 * 60 * 24));
+    return Math.max(0, campaign.daysLeft - elapsedDays);
+  }
+
   loadCampaigns(): void {
     this.campaignService.list().subscribe(
       (res: any) => {
         if (res && res.success) {
-          this.campaigns = res.data;
-          if (this.campaigns.length) this.selectCampaign(this.campaigns[0], false);
+          const activeCampaigns = (res.data || [])
+            .filter((c: Campaign) => c.active === true)
+            .map((c: Campaign) => ({
+              ...c,
+              daysLeft: this.calculateRemainingDays(c),
+            }));
+
+          this.campaigns = activeCampaigns;
+          if (this.campaigns.length) {
+            this.selectCampaign(this.campaigns[0], false);
+          } else {
+            this.selectedCampaign = null;
+            this.selectedCampaignId = null;
+          }
         }
       },
       () => {}
@@ -126,15 +152,18 @@ export class Donation implements OnInit, AfterViewInit {
   }
 
   selectCampaign(c: Campaign, openModal = true): void {
-    this.campaigns.forEach(x => (x.active = false));
-    c.active = true;
     this.selectedCampaign = c;
+    this.selectedCampaignId = c._id || null;
     this.resetForm();
     if (openModal) {
       this.step = 'select';
       this.modalOpen = true;
       document.body.style.overflow = 'hidden';
     }
+  }
+
+  isSelectedCampaign(c: Campaign): boolean {
+    return !!(c._id && this.selectedCampaignId && c._id === this.selectedCampaignId);
   }
 
   closeModal(event: MouseEvent | null): void {

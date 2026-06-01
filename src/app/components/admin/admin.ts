@@ -11,6 +11,7 @@ import {
 } from 'chart.js';
 import { CampaignService } from '../../services/campaign';
 import { ReceiptService } from '../../services/receipt';
+import { GalleryService, GalleryItem } from '../../services/gallery.service';
 import { AuthService } from '../../services/auth';
 
 // ── Chart.js controllers & elements register karo ───────────
@@ -95,7 +96,22 @@ export class Admin implements OnInit {
   currentTab = 'dashboard';
   showNewCampaignModal = false;
 
-  constructor(private campaignService: CampaignService, private receiptService: ReceiptService, private auth: AuthService) { }
+  // gallery admin
+  galleryItems: GalleryItem[] = [];
+  showGalleryModal = false;
+  galleryTitle = '';
+  galleryDescription = '';
+  galleryImageUrl = '';
+  galleryItemId: string | null = null;
+  galleryStatus: 'active' | 'inactive' = 'active';
+  galleryPreviewError = '';
+
+  constructor(
+    private campaignService: CampaignService,
+    private receiptService: ReceiptService,
+    private galleryService: GalleryService,
+    private auth: AuthService
+  ) { }
 
   ngOnInit() {
     this.loadCampaigns();
@@ -497,5 +513,95 @@ export class Admin implements OnInit {
         this.admins = res.data || [];
       }
     }, () => { this.admins = []; });
+  }
+
+  // ───────── GALLERY MANAGEMENT ─────────
+  loadGalleryItems() {
+    this.galleryItems = this.galleryService.getAll();
+  }
+
+  openAddGalleryModal() {
+    this.clearGalleryForm();
+    this.showGalleryModal = true;
+  }
+
+  openEditGalleryModal(item: GalleryItem) {
+    this.galleryItemId = item.id;
+    this.galleryTitle = item.title;
+    this.galleryDescription = item.description;
+    this.galleryImageUrl = item.imageUrl;
+    this.galleryStatus = item.status;
+    this.galleryPreviewError = '';
+    this.showGalleryModal = true;
+  }
+
+  closeGalleryModal() {
+    this.showGalleryModal = false;
+    this.clearGalleryForm();
+  }
+
+  handleGalleryImageChange(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    if (!file) {
+      return;
+    }
+
+    if (!file.type.startsWith('image/')) {
+      this.galleryPreviewError = 'Please select a valid image file.';
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.galleryImageUrl = reader.result as string;
+      this.galleryPreviewError = '';
+    };
+    reader.readAsDataURL(file);
+  }
+
+  saveGalleryItem() {
+    if (!this.galleryTitle.trim() || !this.galleryImageUrl) {
+      this.galleryPreviewError = 'Title and image are required.';
+      return;
+    }
+
+    const payload = {
+      title: this.galleryTitle.trim(),
+      description: this.galleryDescription.trim(),
+      imageUrl: this.galleryImageUrl,
+      status: this.galleryStatus
+    };
+
+    if (this.galleryItemId) {
+      this.galleryService.update(this.galleryItemId, payload);
+    } else {
+      this.galleryService.add(payload);
+    }
+
+    this.loadGalleryItems();
+    this.closeGalleryModal();
+  }
+
+  deleteGalleryItem(id: string) {
+    if (!confirm('Delete this gallery image?')) {
+      return;
+    }
+    this.galleryService.remove(id);
+    this.loadGalleryItems();
+  }
+
+  toggleGalleryStatus(item: GalleryItem) {
+    this.galleryService.toggleStatus(item.id);
+    this.loadGalleryItems();
+  }
+
+  clearGalleryForm() {
+    this.galleryItemId = null;
+    this.galleryTitle = '';
+    this.galleryDescription = '';
+    this.galleryImageUrl = '';
+    this.galleryStatus = 'active';
+    this.galleryPreviewError = '';
   }
 }

@@ -53,6 +53,11 @@
         💳 Receipts
       </button>
       <button 
+        [class.active]="currentTab === 'gallery'" 
+        (click)="currentTab = 'gallery'; loadGalleryItems()">
+        🖼️ Gallery
+      </button>
+      <button 
         [class.active]="currentTab === 'failed-receipts'" 
         (click)="currentTab = 'failed-receipts'; loadFailedReceipts()">
         ❌ Failed Payments
@@ -222,6 +227,44 @@
       </div>
     </div>
 
+    <!-- GALLERY TAB -->
+    <div *ngIf="currentTab === 'gallery'" class="tab-content gallery-view">
+      <div class="gallery-admin-section">
+        <div class="gallery-header-row">
+          <h2>🖼️ Gallery Management</h2>
+          <button class="btn-primary" (click)="openAddGalleryModal()">
+            ➕ Add Image
+          </button>
+        </div>
+
+        <div *ngIf="galleryItems.length === 0" class="empty-state">
+          No gallery images found. Add a new image to display it on the public gallery.
+        </div>
+
+        <div *ngIf="galleryItems.length > 0" class="gallery-list">
+          <div *ngFor="let item of galleryItems" class="gallery-card">
+            <div class="gallery-badge" [class.active]="item.status === 'active'">
+              {{ item.status === 'active' ? 'Active' : 'Inactive' }}
+            </div>
+            <div class="gallery-image-wrap">
+              <img [src]="item.imageUrl" [alt]="item.title" />
+            </div>
+            <div class="gallery-card-body">
+              <h3>{{ item.title }}</h3>
+              <p>{{ item.description || 'No description provided.' }}</p>
+            </div>
+            <div class="gallery-actions">
+              <button class="btn-secondary" (click)="openEditGalleryModal(item)">✏️ Edit</button>
+              <button class="btn-danger" (click)="deleteGalleryItem(item.id)">🗑️ Delete</button>
+              <button class="btn-toggle" type="button" (click)="toggleGalleryStatus(item)">
+                {{ item.status === 'active' ? 'Deactivate' : 'Activate' }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- RECEIPTS TAB -->
     <div *ngIf="currentTab === 'receipts'" class="tab-content receipts-view">
       <div class="receipts-section">
@@ -384,6 +427,52 @@
             [disabled]="currentFailedPage >= (failedPagination.pages || 1) || failedPagination.pages === 0"
             (click)="loadFailedReceipts(currentFailedPage + 1)">
             Next →
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- GALLERY IMAGE MODAL -->
+    <div *ngIf="showGalleryModal" class="modal-overlay" (click)="closeGalleryModal()">
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h3>{{ galleryItemId ? '✏️ Edit Gallery Image' : '➕ Add Gallery Image' }}</h3>
+          <button class="btn-close" (click)="closeGalleryModal()">✕</button>
+        </div>
+
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Title *</label>
+            <input placeholder="Image title" [(ngModel)]="galleryTitle" />
+          </div>
+
+          <div class="form-group">
+            <label>Description</label>
+            <textarea placeholder="Short description" [(ngModel)]="galleryDescription"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label>Image *</label>
+            <input type="file" accept="image/*" (change)="handleGalleryImageChange($event)" />
+            <div class="gallery-image-preview" *ngIf="galleryImageUrl">
+              <img [src]="galleryImageUrl" alt="Gallery preview" />
+            </div>
+            <div class="input-error" *ngIf="galleryPreviewError">{{ galleryPreviewError }}</div>
+          </div>
+
+          <div class="form-group">
+            <label>Status</label>
+            <select [(ngModel)]="galleryStatus">
+              <option value="active">Active</option>
+              <option value="inactive">Inactive</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn-secondary" (click)="closeGalleryModal()">Cancel</button>
+          <button class="btn-primary" (click)="saveGalleryItem()">
+            {{ galleryItemId ? '💾 Update Image' : '✨ Save Image' }}
           </button>
         </div>
       </div>

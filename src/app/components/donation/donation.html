@@ -21,10 +21,10 @@
       <div
         class="campaign-card"
         *ngFor="let c of campaigns | slice:0:visibleCount"
-        [class.active]="c.active"
+        [class.active]="isSelectedCampaign(c)"
         (click)="selectCampaign(c)"
         role="button"
-        [attr.aria-pressed]="c.active"
+        [attr.aria-pressed]="isSelectedCampaign(c)"
         tabindex="0"
         (keydown.enter)="selectCampaign(c)"
         style="position:relative"
