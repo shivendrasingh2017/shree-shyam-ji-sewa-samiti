@@ -401,6 +401,8 @@ export class Admin implements OnInit {
       'Invoice',
       'Amount',
       'Donor',
+      'PAN',
+      'Address',
       'Message',
       'Campaign',
       'Remaining',
@@ -414,6 +416,8 @@ export class Admin implements OnInit {
       r.invoiceNumber || '',
       r.amount || 0,
       r.donorFullName || 'Anonymous',
+      r.donorPAN || '',
+      r.donorAddress || '',
       r.donorMessage || '',
       r.campaignId?.title || '',
       r.campaignId ? (r.campaignId.goal - r.campaignId.raised) : 0,
@@ -445,9 +449,12 @@ export class Admin implements OnInit {
       'Invoice',
       'Amount',
       'Donor',
+      'PAN',
       'Email',
       'Mobile',
       'Campaign',
+      'Address',
+      'Message',
       'Failure Reason',
       'Order ID'
     ];
@@ -457,9 +464,12 @@ export class Admin implements OnInit {
       r.invoiceNumber || '',
       r.amount || 0,
       r.donorFullName || 'Anonymous',
+      r.donorPAN || '',
       r.donorEmail || '',
       r.donorMobile || '',
       r.campaignId?.title || '',
+      r.donorAddress || '',
+      r.donorMessage || '',
       r.failureReason || 'Payment failed',
       r.razorpay_order_id || ''
     ]);

@@ -242,10 +242,12 @@
               <tr>
                 <th>#</th>
                 <th>Donor</th>
+                <th>Pan Card</th>
                 <th>Amount</th>
                 <th>Date</th>
                 <th>Invoice</th>
                 <th>Campaign</th>
+                <th>Address</th>
                 <th>Message</th>
                 <th>Order ID</th>
                 <th>Payment ID</th>
@@ -255,6 +257,11 @@
               <tr *ngFor="let r of receipts; let i = index">
                 <td class="serial-no">{{ (currentReceiptPage - 1) * receiptLimit + i + 1 }}</td>
                 <td>{{ r.donorFullName || 'Anonymous' }}</td>
+                <td >
+                  
+                    <div class="message-content">{{ r.donorPAN || '—' }}</div>
+                
+                </td>
                 <td class="amount">{{ r.amount | currency:'INR' }}</td>
                 <td class="date-cell">{{ r.createdAt | date:'dd MMM yyyy, h:mm a' }}</td>
                 <td class="invoice-cell">
@@ -264,9 +271,14 @@
                   </div>
                 </td>
                 <td>{{ r.campaignId?.title || '—' }}</td>
+                <td class="address-cell">
+                  <div class="message-box">
+                    <div class="message-content">{{ r.donorAddress || '—' }}</div>
+                  </div>
+                </td>
                 <td class="message-cell">
-                  <div class="message-box" [title]="r.donorMessage || 'No message'">
-                    {{ r.donorMessage || '—' }}
+                  <div class="message-box">
+                    <div class="message-content">{{ r.donorMessage || '—' }}</div>
                   </div>
                 </td>
                 <td class="order-id">{{ r.razorpay_order_id || '-' }}</td>
@@ -318,9 +330,12 @@
                 <th>Invoice</th>
                 <th>Amount</th>
                 <th>Donor</th>
+                <th>PAN</th>
                 <th>Email</th>
                 <th>Mobile</th>
                 <th>Campaign</th>
+                <th>Address</th>
+                <th>Message</th>
                 <th>Failure Reason</th>
                 <th>Order ID</th>
               </tr>
@@ -337,11 +352,30 @@
                 </td>
                 <td>{{ r.amount | currency:'INR' }}</td>
                 <td>{{ r.donorFullName || 'Anonymous' }}</td>
+                <td >
+                 
+                    <div class="message-content">{{ r.donorPAN || '—' }}</div>
+
+                </td>
                 <td>{{ r.donorEmail || '—' }}</td>
                 <td>{{ r.donorMobile || '—' }}</td>
                 <td>{{ r.campaignId?.title || '—' }}</td>
-                <td><span class="failure-badge">{{ r.failureReason || 'Payment failed' }}</span></td>
-                <td>{{ r.razorpay_order_id?.substring(0, 15) }}...</td>
+                <td class="address-cell">
+                  <div class="message-box">
+                    <div class="message-content">{{ r.donorAddress || '—' }}</div>
+                  </div>
+                </td>
+                <td class="message-cell">
+                  <div class="message-box">
+                    <div class="message-content">{{ r.donorMessage || '—' }}</div>
+                  </div>
+                </td>
+                <td class="failure-reason-cell">
+                  <div class="message-box">
+                    <div class="message-content">{{ r.failureReason || 'Payment failed' }}</div>
+                  </div>
+                </td>
+                <td>{{ (r.razorpay_order_id || '') | slice:0:15 }}{{ r.razorpay_order_id ? '...' : '-' }}</td>
               </tr>
             </tbody>
           </table>

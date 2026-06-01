@@ -77,6 +77,10 @@ export class Donation implements OnInit, AfterViewInit {
   // Razorpay
   razorpayKey = '';
 
+  // ─── Internal flag: payment.failed event fire hua ya sirf dismiss ───
+  // Yeh flag ensure karta hai ki ek hi failed record save ho
+  private _failedRecorded = false;
+
   constructor(
     private cdr: ChangeDetectorRef,
     private campaignService: CampaignService,
@@ -93,13 +97,12 @@ export class Donation implements OnInit, AfterViewInit {
   }
 
   loadRazorpayKey(): void {
-    this.paymentService.getKey().subscribe((res: any) => {
-      if (res && res.key) {
-        this.razorpayKey = res.key;
-      }
-    }, () => {
-      console.error('Failed to load Razorpay key');
-    });
+    this.paymentService.getKey().subscribe(
+      (res: any) => {
+        if (res && res.key) this.razorpayKey = res.key;
+      },
+      () => console.error('Failed to load Razorpay key')
+    );
   }
 
   loadRazorpayScript(): void {
@@ -111,12 +114,15 @@ export class Donation implements OnInit, AfterViewInit {
   }
 
   loadCampaigns(): void {
-    this.campaignService.list().subscribe((res: any) => {
-      if (res && res.success) {
-        this.campaigns = res.data;
-        if (this.campaigns.length) this.selectCampaign(this.campaigns[0], false);
-      }
-    }, () => {});
+    this.campaignService.list().subscribe(
+      (res: any) => {
+        if (res && res.success) {
+          this.campaigns = res.data;
+          if (this.campaigns.length) this.selectCampaign(this.campaigns[0], false);
+        }
+      },
+      () => {}
+    );
   }
 
   selectCampaign(c: Campaign, openModal = true): void {
@@ -228,6 +234,8 @@ export class Donation implements OnInit, AfterViewInit {
 
     this.paymentProcessing = true;
     this.paymentError = '';
+    // Har naye payment attempt pe flag reset karo
+    this._failedRecorded = false;
 
     this.paymentService.createOrder(this.finalAmount).subscribe(
       (res: any) => {
@@ -254,6 +262,7 @@ export class Donation implements OnInit, AfterViewInit {
     }
 
     const logoUrl = 'https://shyamjisewasamiti.org/assets/logo/logo.svg';
+
     const options = {
       key: this.razorpayKey,
       amount: order.amount,
@@ -278,40 +287,79 @@ export class Donation implements OnInit, AfterViewInit {
         netbanking: true,
         wallet: true,
         emi: true,
-        bank_transfer: true
-      },
-      config: {
-        display: {
-          name: 'Shree Shyam Ji Sewa Samiti',
-          description: 'Support the community with secure UPI, QR, card, or bank payment.',
-          image: logoUrl
-        }
+        bank_transfer: true,
       },
       theme: { color: '#667eea' },
-      handler: (response: any) => this.verifyPayment(response, order),
-      modal: { ondismiss: () => this.recordFailedPayment(order) }
+
+      // ─── SUCCESS HANDLER ────────────────────────────────────────
+      handler: (response: any) => {
+        this.paymentProcessing = false;
+        this.verifyPayment(response, order);
+      },
+
+      modal: {
+        // ─── USER NE MODAL BAND KIYA (bina payment ke) ──────────
+        // Yeh tab fire hota hai jab user X button dabaye
+        // Agar payment.failed pehle fire ho chuka ho toh dobara record mat karo
+        ondismiss: () => {
+          this.paymentProcessing = false;
+          if (!this._failedRecorded) {
+            this._failedRecorded = true;
+            this.recordFailedPayment(order, {
+              reason: 'user_cancelled',
+              description: 'User closed the payment window without completing payment',
+            });
+          }
+        },
+      },
     };
 
     const rzp = new Razorpay(options);
+
+    // ─── PAYMENT FAILURE EVENT ───────────────────────────────────
+    // Card decline, insufficient funds, network error, OTP failure —
+    // yeh sab scenarios yahan capture hote hain
+    rzp.on('payment.failed', (response: any) => {
+      this.paymentProcessing = false;
+      // Flag set karo taaki ondismiss dobara record na kare
+      this._failedRecorded = true;
+
+      const errorCode = response?.error?.code || 'PAYMENT_FAILED';
+      const errorDesc =
+        response?.error?.description ||
+        response?.error?.reason ||
+        'Payment failed';
+      const razorpayPaymentId = response?.error?.metadata?.payment_id || '';
+      const razorpayOrderId   = response?.error?.metadata?.order_id   || order.id;
+
+      this.recordFailedPayment(order, {
+        reason: errorCode,
+        description: errorDesc,
+        razorpay_payment_id: razorpayPaymentId,
+        razorpay_order_id: razorpayOrderId,
+      });
+    });
+
     rzp.open();
   }
 
+  // ─── PAYMENT VERIFY (success path) ──────────────────────────────
   verifyPayment(response: any, order: any): void {
     const paymentData = {
-      razorpay_order_id: response.razorpay_order_id,
+      razorpay_order_id:   response.razorpay_order_id,
       razorpay_payment_id: response.razorpay_payment_id,
-      razorpay_signature: response.razorpay_signature,
-      amount: this.finalAmount,
-      currency: 'INR',
-      campaignId: this.selectedCampaign?._id,
-      donorFullName: this.sanitize(this.donorFullName.trim()),
-      donorCountryCode: this.sanitize(this.donorCountryCode.trim()),
-      donorMobile: this.sanitize(this.donorMobile.trim()),
-      donorEmail: this.sanitize(this.donorEmail.trim()),
-      donorNationality: this.sanitize(this.donorNationality.trim()),
-      donorPAN: this.sanitize(this.donorPAN.trim().toUpperCase()),
-      donorAddress: this.sanitize(this.donorAddress.trim()),
-      donorMessage: this.sanitize(this.donorMessage.trim()),
+      razorpay_signature:  response.razorpay_signature,
+      amount:              this.finalAmount,
+      currency:            'INR',
+      campaignId:          this.selectedCampaign?._id,
+      donorFullName:       this.sanitize(this.donorFullName.trim()),
+      donorCountryCode:    this.sanitize(this.donorCountryCode.trim()),
+      donorMobile:         this.sanitize(this.donorMobile.trim()),
+      donorEmail:          this.sanitize(this.donorEmail.trim()),
+      donorNationality:    this.sanitize(this.donorNationality.trim()),
+      donorPAN:            this.sanitize(this.donorPAN.trim().toUpperCase()),
+      donorAddress:        this.sanitize(this.donorAddress.trim()),
+      donorMessage:        this.sanitize(this.donorMessage.trim()),
     };
 
     this.paymentService.verifyPayment(paymentData).subscribe(
@@ -332,20 +380,21 @@ export class Donation implements OnInit, AfterViewInit {
     );
   }
 
+  // ─── SUCCESS RECORD ──────────────────────────────────────────────
   recordSuccessfulPayment(response: any, receipt: any): void {
     const txnId = this.generateTxnId();
     this.lastDonation = {
       txnId,
-      campaign: this.selectedCampaign?.title || '',
-      amount: this.finalAmount,
-      name: this.donorFullName.trim() || 'Anonymous',
-      message: this.donorMessage.trim(),
-      timestamp: new Date(),
-      paymentId: response.razorpay_payment_id,
-      orderId: response.razorpay_order_id,
-      receiptId: receipt._id,
+      campaign:      this.selectedCampaign?.title || '',
+      amount:        this.finalAmount,
+      name:          this.donorFullName.trim() || 'Anonymous',
+      message:       this.donorMessage.trim(),
+      timestamp:     new Date(),
+      paymentId:     response.razorpay_payment_id,
+      orderId:       response.razorpay_order_id,
+      receiptId:     receipt._id,
       invoiceNumber: receipt.invoiceNumber,
-      status: 'success'
+      status:        'success',
     };
 
     this.loadCampaigns();
@@ -353,44 +402,63 @@ export class Donation implements OnInit, AfterViewInit {
     this.cdr.detectChanges();
   }
 
-  recordFailedPayment(order: any, meta: any = {}): void {
+  // ─── FAILED RECORD ───────────────────────────────────────────────
+  // Backend pe POST /api/payment/record-failed — database mein save hoga
+  recordFailedPayment(
+    order: any,
+    meta: {
+      reason?: string;
+      description?: string;
+      razorpay_payment_id?: string;
+      razorpay_order_id?: string;
+    } = {}
+  ): void {
+    // UI update
     this.lastDonation = {
-      txnId: this.generateTxnId(),
-      campaign: this.selectedCampaign?.title || '',
-      amount: this.finalAmount,
-      name: this.donorFullName.trim() || 'Anonymous',
-      message: this.donorMessage.trim(),
+      txnId:     this.generateTxnId(),
+      campaign:  this.selectedCampaign?.title || '',
+      amount:    this.finalAmount,
+      name:      this.donorFullName.trim() || 'Anonymous',
+      message:   this.donorMessage.trim(),
       timestamp: new Date(),
-      orderId: order.id,
-      status: 'failed'
+      orderId:   meta.razorpay_order_id || order?.id || '',
+      status:    'failed',
     };
 
     this.paymentError = 'Payment was not completed. Please try again.';
     this.step = 'success';
 
+    // Database mein save karo
     const payload = {
-      amount: this.finalAmount,
-      currency: 'INR',
-      campaignId: this.selectedCampaign?._id,
-      donorFullName: this.sanitize(this.donorFullName.trim()),
+      amount:           this.finalAmount,
+      currency:         'INR',
+      campaignId:       this.selectedCampaign?._id,
+      donorFullName:    this.sanitize(this.donorFullName.trim()),
       donorCountryCode: this.sanitize(this.donorCountryCode.trim()),
-      donorMobile: this.sanitize(this.donorMobile.trim()),
-      donorEmail: this.sanitize(this.donorEmail.trim()),
+      donorMobile:      this.sanitize(this.donorMobile.trim()),
+      donorEmail:       this.sanitize(this.donorEmail.trim()),
       donorNationality: this.sanitize(this.donorNationality.trim()),
-      donorPAN: this.sanitize(this.donorPAN.trim().toUpperCase()),
-      donorAddress: this.sanitize(this.donorAddress.trim()),
-      donorMessage: this.sanitize(this.donorMessage.trim()),
-      razorpay_order_id: order.id,
-      errorCode: meta.reason || 'cancelled',
-      errorDescription: meta.description || 'User dismissed or payment failed'
+      donorPAN:         this.sanitize(this.donorPAN.trim().toUpperCase()),
+      donorAddress:     this.sanitize(this.donorAddress.trim()),
+      donorMessage:     this.sanitize(this.donorMessage.trim()),
+      // Razorpay IDs — available ho toh bhejo
+      razorpay_order_id:   meta.razorpay_order_id   || order?.id || '',
+      razorpay_payment_id: meta.razorpay_payment_id || '',
+      // Error info
+      errorCode:        meta.reason      || 'unknown',
+      errorDescription: meta.description || 'Payment not completed',
     };
 
-    this.paymentService.recordFailed(payload).subscribe(()=>{}, ()=>{});
+    this.paymentService.recordFailed(payload).subscribe(
+      () => {},
+      (err) => console.error('recordFailed API error:', err)
+    );
+
     this.cdr.detectChanges();
   }
 
   generateTxnId(): string {
-    const ts = Date.now().toString(36).toUpperCase();
+    const ts   = Date.now().toString(36).toUpperCase();
     const rand = Math.random().toString(36).substring(2, 7).toUpperCase();
     return `TXN-${ts}-${rand}`;
   }
@@ -398,6 +466,7 @@ export class Donation implements OnInit, AfterViewInit {
   donateAgain(): void {
     this.step = 'select';
     this.lastDonation = null;
+    this._failedRecorded = false;
     this.resetForm();
     this.modalOpen = false;
     document.body.style.overflow = '';
@@ -410,22 +479,23 @@ export class Donation implements OnInit, AfterViewInit {
   }
 
   resetForm(): void {
-    this.selectedAmount = null;
-    this.customAmount = '';
-    this.donorFullName = '';
+    this.selectedAmount  = null;
+    this.customAmount    = '';
+    this.donorFullName   = '';
     this.donorCountryCode = '+91';
-    this.donorMobile = '';
-    this.donorEmail = '';
+    this.donorMobile     = '';
+    this.donorEmail      = '';
     this.donorNationality = 'India';
-    this.donorPAN = '';
-    this.donorAddress = '';
-    this.donorMessage = '';
-    this.amountError = '';
-    this.nameError = '';
-    this.mobileError = '';
-    this.panError = '';
-    this.addressError = '';
-    this.paymentError = '';
+    this.donorPAN        = '';
+    this.donorAddress    = '';
+    this.donorMessage    = '';
+    this.amountError     = '';
+    this.nameError       = '';
+    this.mobileError     = '';
+    this.panError        = '';
+    this.addressError    = '';
+    this.paymentError    = '';
+    this._failedRecorded = false;
   }
 
   progressPercent(c: Campaign): number {
@@ -433,6 +503,9 @@ export class Donation implements OnInit, AfterViewInit {
   }
 
   formatINR(n: number): string {
-    return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(n);
+    return new Intl.NumberFormat('en-IN', {
+      style: 'currency',
+      currency: 'INR',
+    }).format(n);
   }
 }
