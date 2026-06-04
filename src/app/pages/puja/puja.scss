@@ -1,0 +1,138 @@
+:host {
+  display: block;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.section-space {
+  padding: 100px 0;
+}
+
+.hero-section {
+  min-height: 75vh;
+  background:
+    linear-gradient(
+      rgba(0,0,0,.65),
+      rgba(0,0,0,.65)
+    ),
+    url('/assets/images/temple-banner.jpg');
+
+  background-size: cover;
+  background-position: center;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-overlay {
+  width: 100%;
+  text-align: center;
+}
+
+.hero-badge {
+  background: rgba(212,162,74,.2);
+  color: var(--gold-2);
+  padding: 8px 18px;
+  border-radius: 30px;
+}
+
+.hero-section h1 {
+  color: #fff;
+  font-size: clamp(2.2rem, 6vw, 4.5rem);
+  margin-top: 20px;
+}
+
+.hero-section p {
+  color: #fff;
+}
+
+.theme-btn {
+  border: none;
+  border-radius: 40px;
+  padding: 12px 24px;
+
+  color: #fff;
+
+  background:
+    linear-gradient(
+      135deg,
+      var(--gold),
+      var(--gold-2)
+    );
+}
+
+.section-bg {
+  background: var(--bg-2);
+}
+
+.puja-card,
+.benefit-card,
+.upcoming-card,
+.form-wrapper,
+.step {
+  background: var(--card);
+
+  border-radius: 20px;
+
+  padding: 24px;
+
+  border: 1px solid rgba(255,255,255,.08);
+}
+
+.price {
+  color: var(--gold);
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin: 12px 0;
+}
+
+.form-control,
+.form-select {
+  min-height: 52px;
+}
+
+textarea.form-control {
+  min-height: 120px;
+}
+
+.benefits-grid {
+  display: grid;
+  grid-template-columns: repeat(4,1fr);
+  gap: 20px;
+}
+
+.process-grid {
+  display: grid;
+  grid-template-columns: repeat(4,1fr);
+  gap: 20px;
+}
+
+.step {
+  text-align: center;
+  font-weight: 600;
+}
+
+@media(max-width:991px){
+
+  .benefits-grid,
+  .process-grid{
+    grid-template-columns:repeat(2,1fr);
+  }
+}
+
+@media(max-width:767px){
+
+  .section-space{
+    padding:60px 0;
+  }
+
+  .benefits-grid,
+  .process-grid{
+    grid-template-columns:1fr;
+  }
+
+  .theme-btn{
+    width:100%;
+  }
+}

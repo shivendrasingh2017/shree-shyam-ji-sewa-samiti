@@ -1,0 +1,301 @@
+<section class="hero-section">
+
+  <div class="hero-overlay">
+
+    <div class="container text-center">
+
+      <span class="hero-badge">
+        Sacred Seva
+      </span>
+
+      <h1>Book Puja Seva</h1>
+
+      <p>
+        Participate in sacred pujas and receive divine blessings.
+      </p>
+
+      <a href="#booking-form" class="theme-btn">
+        Book Now
+      </a>
+
+    </div>
+
+  </div>
+
+</section>
+
+<section class="section-space">
+
+  <div class="container">
+
+    <div class="section-heading">
+      <h2>Puja Categories</h2>
+    </div>
+
+    <div class="row g-4">
+
+      @for(item of pujaCategories; track item.title){
+
+      <div class="col-lg-4 col-md-6">
+
+        <div class="puja-card">
+
+          <h4>{{item.title}}</h4>
+
+          <p>{{item.description}}</p>
+
+          <div class="info">
+            Duration:
+            <strong>{{item.duration}}</strong>
+          </div>
+
+          <div class="price">
+            ₹ {{item.donation}}
+          </div>
+
+          <button
+            class="theme-btn w-100"
+            (click)="selectPuja(item.title)"
+          >
+            Select Puja
+          </button>
+
+        </div>
+
+      </div>
+
+      }
+
+    </div>
+
+  </div>
+
+</section>
+
+<section
+  id="booking-form"
+  class="section-space section-bg"
+>
+
+  <div class="container">
+
+    <div class="form-wrapper">
+
+      <h2>Book Puja</h2>
+
+      <form
+        [formGroup]="pujaForm"
+        (ngSubmit)="submitBooking()"
+      >
+
+        <div class="row g-3">
+
+          <div class="col-md-6">
+            <input
+              type="text"
+              formControlName="name"
+              class="form-control"
+              placeholder="Full Name"
+            />
+          </div>
+
+          <div class="col-md-6">
+            <input
+              type="text"
+              formControlName="mobile"
+              class="form-control"
+              placeholder="Mobile Number"
+            />
+          </div>
+
+          <div class="col-md-6">
+            <input
+              type="email"
+              formControlName="email"
+              class="form-control"
+              placeholder="Email"
+            />
+          </div>
+
+          <div class="col-md-6">
+            <input
+              type="text"
+              formControlName="panNumber"
+              class="form-control"
+              placeholder="PAN Number"
+            />
+          </div>
+
+          <div class="col-12">
+            <textarea
+              rows="3"
+              formControlName="address"
+              class="form-control"
+              placeholder="Address"
+            ></textarea>
+          </div>
+
+          <div class="col-md-6">
+
+            <select
+              class="form-select"
+              formControlName="pujaType"
+            >
+
+              <option value="">
+                Select Puja
+              </option>
+
+              @for(item of pujaCategories; track item.title){
+
+              <option [value]="item.title">
+                {{item.title}}
+              </option>
+
+              }
+
+            </select>
+
+          </div>
+
+          <div class="col-md-6">
+            <input
+              type="date"
+              class="form-control"
+              formControlName="preferredDate"
+            />
+          </div>
+
+          <div class="col-12">
+            <textarea
+              rows="5"
+              class="form-control"
+              formControlName="message"
+              placeholder="Message"
+            ></textarea>
+          </div>
+
+          <div class="col-12">
+
+            <button
+              class="theme-btn w-100"
+              [disabled]="loading"
+            >
+              {{ loading
+                ? 'Processing...'
+                : 'Continue To Donation' }}
+            </button>
+
+          </div>
+
+        </div>
+
+      </form>
+
+    </div>
+
+  </div>
+
+</section>
+
+<section class="section-space">
+
+  <div class="container">
+
+    <div class="section-heading">
+      <h2>Puja Benefits</h2>
+    </div>
+
+    <div class="benefits-grid">
+
+      <div class="benefit-card">
+        Health
+      </div>
+
+      <div class="benefit-card">
+        Prosperity
+      </div>
+
+      <div class="benefit-card">
+        Family Happiness
+      </div>
+
+      <div class="benefit-card">
+        Spiritual Growth
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+<section class="section-bg section-space">
+
+  <div class="container">
+
+    <div class="section-heading">
+      <h2>Puja Process</h2>
+    </div>
+
+    <div class="process-grid">
+
+      <div class="step">
+        1. Select Puja
+      </div>
+
+      <div class="step">
+        2. Choose Date
+      </div>
+
+      <div class="step">
+        3. Make Donation
+      </div>
+
+      <div class="step">
+        4. Receive Confirmation
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+<section class="section-space">
+
+  <div class="container">
+
+    <div class="section-heading">
+      <h2>Upcoming Pujas</h2>
+    </div>
+
+    <div class="row g-4">
+
+      @for(item of upcomingPujas; track item.date){
+
+      <div class="col-lg-6">
+
+        <div class="upcoming-card">
+
+          <h5>{{item.date}}</h5>
+
+          <p>{{item.time}}</p>
+
+          <p>{{item.location}}</p>
+
+          <button class="theme-btn">
+            Register
+          </button>
+
+        </div>
+
+      </div>
+
+      }
+
+    </div>
+
+  </div>
+
+</section>

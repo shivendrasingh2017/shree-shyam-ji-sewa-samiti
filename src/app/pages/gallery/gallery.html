@@ -1,0 +1,279 @@
+<!-- HERO -->
+
+<section class="gallery-hero">
+
+  <div class="hero-overlay">
+
+    <div class="container text-center">
+
+      <span class="hero-badge">
+        NGO Activities
+      </span>
+
+      <h1>Photo Gallery</h1>
+
+      <p>
+        Explore moments of devotion, seva and community activities.
+      </p>
+
+    </div>
+
+  </div>
+
+</section>
+
+<!-- FILTERS -->
+
+<section class="section-space">
+
+  <div class="container">
+
+    <div class="gallery-filters">
+
+      @for(category of categories; track category){
+
+      <button
+        class="filter-btn"
+        [class.active]="activeCategory === category"
+        (click)="changeCategory(category)"
+      >
+        {{category}}
+      </button>
+
+      }
+
+    </div>
+
+  </div>
+
+</section>
+
+<!-- GALLERY GRID -->
+
+<section class="gallery-section">
+
+  <div class="container">
+
+    <div class="gallery-grid">
+
+      @for(item of filteredImages; track item.image){
+
+      <div
+        class="gallery-item"
+        (click)="openImage(item.image)"
+      >
+
+        <img
+          [src]="item.image"
+          [alt]="item.title"
+        >
+
+        <div class="overlay">
+
+          <i class="fa-solid fa-magnifying-glass-plus"></i>
+
+          <h5>
+            {{item.title}}
+          </h5>
+
+        </div>
+
+      </div>
+
+      }
+
+    </div>
+
+  </div>
+
+</section>
+
+<!-- VIDEO GALLERY -->
+
+<section class="section-space section-bg">
+
+  <div class="container">
+
+    <div class="section-heading">
+
+      <h2>Video Gallery</h2>
+
+      <p>
+        Bhajan Videos, Events and Live Programs
+      </p>
+
+    </div>
+
+    <div class="row g-4">
+
+      <div class="col-lg-4">
+
+        <div class="video-card">
+
+          <div class="ratio ratio-16x9">
+
+            <iframe
+              src="https://www.youtube.com/embed/YOUR_VIDEO_ID"
+              allowfullscreen
+            ></iframe>
+
+          </div>
+
+          <h5>Bhajan Videos</h5>
+
+        </div>
+
+      </div>
+
+      <div class="col-lg-4">
+
+        <div class="video-card">
+
+          <div class="ratio ratio-16x9">
+
+            <iframe
+              src="https://www.youtube.com/embed/YOUR_VIDEO_ID"
+              allowfullscreen
+            ></iframe>
+
+          </div>
+
+          <h5>Event Videos</h5>
+
+        </div>
+
+      </div>
+
+      <div class="col-lg-4">
+
+        <div class="video-card">
+
+          <div class="ratio ratio-16x9">
+
+            <iframe
+              src="https://www.youtube.com/embed/YOUR_VIDEO_ID"
+              allowfullscreen
+            ></iframe>
+
+          </div>
+
+          <h5>Live Programs</h5>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+<!-- RECENT EVENTS -->
+
+<section class="section-space">
+
+  <div class="container">
+
+    <div class="section-heading">
+
+      <h2>Recent Events</h2>
+
+    </div>
+
+    <div class="row g-4">
+
+      @for(event of recentEvents; track event.date){
+
+      <div class="col-lg-4 col-md-6">
+
+        <div class="event-card">
+
+          <img
+            [src]="event.image"
+            alt=""
+          >
+
+          <div class="content">
+
+            <span class="date">
+              {{event.date}}
+            </span>
+
+            <p>
+              {{event.description}}
+            </p>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      }
+
+    </div>
+
+  </div>
+
+</section>
+
+<!-- SOCIAL GALLERY -->
+
+<section class="section-space section-bg">
+
+  <div class="container">
+
+    <div class="section-heading">
+
+      <h2>Social Media Gallery</h2>
+
+      <p>
+        Follow our latest updates
+      </p>
+
+    </div>
+
+    <div class="row g-4">
+
+      <div class="col-lg-4">
+
+        <div class="social-card">
+
+          <i class="fab fa-instagram"></i>
+
+          <h5>Instagram Photos</h5>
+
+        </div>
+
+      </div>
+
+      <div class="col-lg-4">
+
+        <div class="social-card">
+
+          <i class="fab fa-facebook"></i>
+
+          <h5>Facebook Posts</h5>
+
+        </div>
+
+      </div>
+
+      <div class="col-lg-4">
+
+        <div class="social-card">
+
+          <i class="fab fa-youtube"></i>
+
+          <h5>YouTube Videos</h5>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>

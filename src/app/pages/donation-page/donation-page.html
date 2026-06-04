@@ -1,1 +1,127 @@
-<div style="padding:80px 0;"><app-donation></app-donation></div>
+<!-- <div style="padding:80px 0;"><app-donation></app-donation></div> -->
+
+<section class="donation-hero">
+
+  <div class="hero-overlay">
+
+    <div class="container text-center">
+
+      <span class="hero-badge">
+        Khatu Shyam Ji Seva
+      </span>
+
+      <h1>Support Our Mission</h1>
+
+      <p>
+        Your donation helps us serve society and continue
+        religious activities.
+      </p>
+
+    </div>
+
+  </div>
+
+</section>
+
+<!-- IMPACT STATS -->
+
+<section class="section-space">
+
+  <div class="container">
+
+    <div class="section-heading">
+
+      <h2>Our Impact</h2>
+
+      <p>
+        Together we are creating positive change.
+      </p>
+
+    </div>
+
+    <div class="stats-grid">
+
+      <div class="stat-card">
+        <h3>5000+</h3>
+        <p>Families Helped</p>
+      </div>
+
+      <div class="stat-card">
+        <h3>200+</h3>
+        <p>Events Organized</p>
+      </div>
+
+      <div class="stat-card">
+        <h3>1000+</h3>
+        <p>Volunteers</p>
+      </div>
+
+      <div class="stat-card">
+        <h3>50000+</h3>
+        <p>Meals Distributed</p>
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+<app-donation></app-donation>
+
+
+
+<!-- FAQ -->
+
+<section class="section-space">
+
+  <div class="container">
+
+    <div class="section-heading">
+
+      <h2>Frequently Asked Questions</h2>
+
+    </div>
+
+    <div class="faq-wrapper">
+
+      @for(faq of faqs; track faq.question; let i = $index){
+
+      <div class="faq-item">
+
+        <div
+          class="faq-header"
+          (click)="toggleFaq(i)"
+        >
+
+          <h5>
+            {{ faq.question }}
+          </h5>
+
+          <i
+            class="fa-solid"
+            [class.fa-plus]="!faq.open"
+            [class.fa-minus]="faq.open"
+          ></i>
+
+        </div>
+
+        @if(faq.open){
+
+        <div class="faq-body">
+
+          {{ faq.answer }}
+
+        </div>
+
+        }
+
+      </div>
+
+      }
+
+    </div>
+
+  </div>
+
+</section>

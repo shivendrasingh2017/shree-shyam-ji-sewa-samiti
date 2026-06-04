@@ -1,0 +1,278 @@
+<!-- HERO -->
+
+<section
+  class="hero-section"
+  [style.background-image]="'url(' + heroImage + ')'"
+>
+  <div class="hero-overlay">
+    <div class="container text-center">
+
+      <span class="hero-badge">
+        Shri Khatu Shyam Ji
+      </span>
+
+      <h1>Daily Aarti</h1>
+
+      <p>
+        Join us in divine devotion through daily Aarti and
+        seek blessings of Khatu Shyam Ji.
+      </p>
+
+      <a href="#live-broadcast" class="theme-btn">
+        Join Aarti
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<!-- QUICK NAV -->
+ <app-live-broadcast id="live-broadcast"></app-live-broadcast>
+
+
+
+<!-- TIMINGS -->
+
+<section id="timings" class="section-space">
+  <div class="container">
+
+    <div class="section-heading">
+      <h2>Today's Aarti Timings</h2>
+      <p>Join the sacred rituals at the temple.</p>
+    </div>
+
+    <div class="row g-4">
+
+      @for (item of aartiTimings; track item.name) {
+
+      <div class="col-lg-4 col-md-6">
+
+        <div class="timing-card">
+
+          <div class="lamp">
+            🪔
+          </div>
+
+          <h5>{{ item.name }}</h5>
+
+          <div class="time">
+            {{ item.time }}
+          </div>
+
+        </div>
+
+      </div>
+
+      }
+
+    </div>
+  </div>
+</section>
+
+<!-- LYRICS -->
+
+<section id="lyrics" class="section-space section-bg">
+  <div class="container">
+
+    <div class="section-heading">
+      <h2>Aarti Lyrics</h2>
+      <p>Read, print and download popular Aartis.</p>
+    </div>
+
+    <div class="row g-4">
+
+      @for (aarti of aartis; track aarti.title) {
+
+      <div class="col-lg-4">
+
+        <div class="lyrics-card">
+
+          <h4>{{ aarti.title }}</h4>
+
+          <div class="action-buttons">
+
+            <button
+              class="btn btn-outline-light"
+              (click)="readLyrics(aarti.title)"
+            >
+              Read Lyrics
+            </button>
+
+            <a
+              [href]="aarti.pdf"
+              target="_blank"
+              class="btn btn-warning"
+            >
+              Download PDF
+            </a>
+
+            <button
+              class="btn btn-outline-warning"
+              (click)="printAarti()"
+            >
+              Print
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      }
+
+    </div>
+
+  </div>
+</section>
+
+<!-- VIDEOS -->
+
+<section id="videos" class="section-space">
+  <div class="container">
+
+    <div class="section-heading">
+      <h2>Aarti Videos</h2>
+      <p>Watch devotional Aarti and Bhajan videos.</p>
+    </div>
+
+    <div class="row g-4">
+
+      <div class="col-lg-4">
+        <div class="video-card">
+          <div class="ratio ratio-16x9">
+            <iframe
+              src="https://www.youtube.com/embed/YOUR_VIDEO_ID"
+              allowfullscreen
+            ></iframe>
+          </div>
+          <h5>Daily Aarti Live</h5>
+        </div>
+      </div>
+
+      <div class="col-lg-4">
+        <div class="video-card">
+          <div class="ratio ratio-16x9">
+            <iframe
+              src="https://www.youtube.com/embed/YOUR_VIDEO_ID"
+              allowfullscreen
+            ></iframe>
+          </div>
+          <h5>Festival Aarti</h5>
+        </div>
+      </div>
+
+      <div class="col-lg-4">
+        <div class="video-card">
+          <div class="ratio ratio-16x9">
+            <iframe
+              src="https://www.youtube.com/embed/YOUR_VIDEO_ID"
+              allowfullscreen
+            ></iframe>
+          </div>
+          <h5>Special Bhajan</h5>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- LIVE -->
+
+@if(isLive){
+
+<section id="live" class="live-section">
+
+  <div class="container text-center">
+
+    <div class="live-badge">
+      LIVE NOW
+    </div>
+
+    <h2>Live Aarti Streaming</h2>
+
+    <p>
+      Watch live Aarti directly from the temple.
+    </p>
+
+    <a routerLink="/live-broadcast" class="theme-btn">
+      Watch Now
+    </a>
+
+  </div>
+
+</section>
+
+}
+
+<!-- BENEFITS -->
+
+<section id="benefits" class="section-space section-bg">
+  <div class="container">
+
+    <div class="section-heading">
+      <h2>Benefits of Aarti</h2>
+      <p>Discover the spiritual significance of daily worship.</p>
+    </div>
+
+    <div class="row g-4">
+
+      @for (benefit of benefits; track benefit.title) {
+
+      <div class="col-lg-3 col-md-6">
+
+        <div class="benefit-card">
+
+          <i [class]="benefit.icon"></i>
+
+          <h5>
+            {{ benefit.title }}
+          </h5>
+
+          <p>
+            {{ benefit.description }}
+          </p>
+
+        </div>
+
+      </div>
+
+      }
+
+    </div>
+
+  </div>
+</section>
+
+<!-- CTA -->
+
+<section id="join-aarti" class="join-section">
+
+  <div class="container text-center">
+
+    <h2>Join Daily Aarti</h2>
+
+    <p>
+      Become part of our spiritual community and seek divine blessings.
+    </p>
+
+    <div class="join-buttons">
+
+      <a routerLink="/puja" class="theme-btn">
+        Temple Visit
+      </a>
+
+      <a routerLink="/live-broadcast" class="theme-btn">
+        Join Live
+      </a>
+
+      <a routerLink="/contact" class="theme-btn">
+        Contact Us
+      </a>
+
+    </div>
+
+  </div>
+
+</section>

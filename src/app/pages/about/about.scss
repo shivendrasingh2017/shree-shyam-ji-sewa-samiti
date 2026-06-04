@@ -3,9 +3,9 @@
 ========================= */
 
 *{
-  margin: 0;
-  padding: 5px;
-  box-sizing: border-box;
+  // margin: 0;
+  // padding: 0px;
+  // box-sizing: border-box;
 }
 
 html{
@@ -496,3 +496,249 @@ html:not(.aos-init) [data-aos] {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+:host {
+  display: block;
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* COMMON */
+
+.section-space {
+  padding: 100px 0;
+}
+
+.section-dark {
+  background: var(--bg-2);
+}
+
+.section-heading {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.section-heading h2 {
+  font-weight: 700;
+}
+
+.section-heading p {
+  color: var(--muted);
+}
+
+/* HERO */
+
+.about-hero {
+  min-height: 70vh;
+
+  background:
+    linear-gradient(
+      rgba(0,0,0,.75),
+      rgba(0,0,0,.75)
+    ),
+    url('/assets/home/khatu.jpg');
+
+  background-size: cover;
+  background-position: center;
+}
+
+.hero-overlay {
+  min-height: 70vh;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-badge {
+  display: inline-block;
+
+  padding: 8px 18px;
+
+  border-radius: 30px;
+
+  border: 1px solid var(--gold);
+
+  background: rgba(212,162,74,.15);
+
+  color: var(--gold-2);
+
+  margin-bottom: 1rem;
+}
+
+.about-hero h1 {
+  color: white;
+  font-size: clamp(2.5rem, 6vw, 5rem);
+}
+
+.about-hero p {
+  color: rgba(255,255,255,.9);
+}
+
+/* IMAGE */
+
+.about-image {
+  border-radius: 24px;
+  width: 100%;
+}
+
+/* CARDS */
+
+.info-card,
+.service-card,
+.stat-card,
+.address-card {
+  background: var(--card);
+
+  border-radius: 20px;
+
+  padding: 2rem;
+
+  height: 100%;
+}
+
+.info-card i,
+.address-card i {
+  color: var(--gold);
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+/* SERVICES */
+
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 24px;
+}
+
+.service-card {
+  text-align: center;
+}
+
+.service-card i {
+  color: var(--gold);
+  margin-right: 8px;
+}
+
+/* STATS */
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4,1fr);
+  gap: 24px;
+}
+
+.stat-card {
+  text-align: center;
+}
+
+.stat-card h3 {
+  color: var(--gold);
+  font-size: 2rem;
+}
+
+/* MAP */
+
+.map-wrapper {
+  overflow: hidden;
+  border-radius: 24px;
+}
+
+.map-wrapper iframe {
+  width: 100%;
+  height: 450px;
+  border: 0;
+}
+
+/* BUTTON */
+
+.theme-btn {
+  display: inline-block;
+
+  padding: 14px 28px;
+
+  border-radius: 40px;
+
+  text-decoration: none;
+
+  color: white;
+
+  background:
+    linear-gradient(
+      135deg,
+      var(--gold),
+      var(--gold-2)
+    );
+}
+
+/* TABLET */
+
+@media (max-width: 991px) {
+
+  .section-space {
+    padding: 80px 0;
+  }
+
+  .services-grid {
+    grid-template-columns: repeat(2,1fr);
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(2,1fr);
+  }
+}
+
+/* MOBILE */
+
+@media (max-width: 767px) {
+
+  .section-space {
+    padding: 60px 0;
+  }
+
+  .services-grid,
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .map-wrapper iframe {
+    height: 320px;
+  }
+
+  .about-hero {
+    min-height: 55vh;
+  }
+
+  .hero-overlay {
+    min-height: 55vh;
+    padding: 0 1rem;
+  }
+}
+
+/* SMALL MOBILE */
+
+@media (max-width: 480px) {
+
+  .about-hero h1 {
+    font-size: 2.2rem;
+  }
+
+  .section-heading h2 {
+    font-size: 1.7rem;
+  }
+}

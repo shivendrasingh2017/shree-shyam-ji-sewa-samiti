@@ -1,0 +1,544 @@
+:host {
+  display: block;
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* ===================================
+   COMMON
+=================================== */
+
+.section-space {
+  padding: 100px 0;
+}
+
+.container {
+  max-width: 1280px;
+}
+
+.section-heading {
+  text-align: center;
+  margin-bottom: 3rem;
+
+  h2 {
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+    color: var(--text);
+  }
+
+  p {
+    color: var(--muted);
+    max-width: 700px;
+    margin: 0 auto;
+  }
+}
+
+.section-bg {
+  background: var(--bg-2);
+}
+
+/* ===================================
+   BUTTONS
+=================================== */
+
+.theme-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  cursor: pointer;
+
+  min-height: 52px;
+
+  padding: 12px 28px;
+
+  border: none;
+  border-radius: 50px;
+
+  text-decoration: none;
+
+  color: #fff;
+  font-weight: 600;
+
+  background: linear-gradient(
+    135deg,
+    var(--gold),
+    var(--gold-2)
+  );
+
+  transition: all 0.3s ease;
+}
+
+.theme-btn:hover {
+  transform: translateY(-3px);
+  color: #fff;
+}
+
+.theme-btn:active {
+  transform: translateY(0);
+}
+
+/* ===================================
+   HERO
+=================================== */
+
+.hero-section {
+//   min-height: 85vh;
+
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+
+  position: relative;
+
+  display: flex;
+  align-items: center;
+}
+
+.hero-overlay {
+  width: 100%;
+  min-height: inherit;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+//   padding: 5rem 1rem;
+
+//   background:
+//     linear-gradient(
+//       rgba(15, 10, 5, 0.75),
+//       rgba(15, 10, 5, 0.75)
+//     );
+}
+
+.hero-content {
+  max-width: 900px;
+  margin: auto;
+}
+
+.hero-badge {
+  display: inline-flex;
+
+  align-items: center;
+  gap: 8px;
+
+  padding: 10px 18px;
+
+  border-radius: 50px;
+
+  border: 1px solid var(--gold);
+
+  background: rgb(43 42 41);
+
+  color: var(--gold-2);
+
+  margin-bottom: 1.5rem;
+}
+
+.hero-section h1 {
+  font-size: clamp(2.2rem, 6vw, 4.8rem);
+  font-weight: 700;
+  line-height: 1.1;
+
+  margin-bottom: 1rem;
+
+  color: #0e0d0d;
+}
+
+.hero-section p {
+  font-size: clamp(1rem, 2vw, 1.2rem);
+
+  max-width: 700px;
+  margin: auto;
+
+  color: rgb(22 21 21 / 90%);
+
+  margin-bottom: 2rem;
+}
+
+/* ===================================
+   QUICK NAV
+=================================== */
+
+.quick-nav {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+
+  background: var(--card);
+
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+
+  backdrop-filter: blur(10px);
+
+  overflow-x: auto;
+  white-space: nowrap;
+
+  scrollbar-width: none;
+}
+
+.quick-nav::-webkit-scrollbar {
+  display: none;
+}
+
+.nav-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  gap: 1.5rem;
+
+  min-width: max-content;
+
+  padding: 1rem 0;
+}
+
+.nav-wrapper a {
+  text-decoration: none;
+  color: var(--text);
+  font-weight: 600;
+
+  transition: all 0.3s ease;
+}
+
+.nav-wrapper a:hover {
+  color: var(--gold);
+}
+
+/* ===================================
+   TIMINGS
+=================================== */
+
+.timing-card {
+  background: var(--card);
+
+  border-radius: 20px;
+
+  padding: 2rem;
+
+  text-align: center;
+
+  height: 100%;
+
+  border: 1px solid rgba(212, 162, 74, 0.15);
+
+  transition: all 0.3s ease;
+}
+
+.lamp {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.timing-card h5 {
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.time {
+  color: var(--gold-2);
+
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+@media (hover: hover) {
+  .timing-card:hover {
+    transform: translateY(-8px);
+    border-color: var(--gold);
+  }
+}
+
+/* ===================================
+   LYRICS
+=================================== */
+
+.lyrics-card {
+  background: var(--card);
+
+  border-radius: 20px;
+
+  padding: 2rem;
+
+  height: 100%;
+
+  border: 1px solid rgba(255,255,255,0.08);
+
+  transition: all 0.3s ease;
+}
+
+.lyrics-card h4 {
+  margin-bottom: 1.5rem;
+}
+
+.action-buttons {
+  display: grid;
+  gap: 12px;
+}
+
+.action-buttons .btn {
+  width: 100%;
+}
+
+@media (hover: hover) {
+  .lyrics-card:hover {
+    transform: translateY(-8px);
+  }
+}
+
+/* ===================================
+   VIDEO
+=================================== */
+
+.video-card {
+  background: var(--card);
+
+  overflow: hidden;
+
+  border-radius: 20px;
+
+  border: 1px solid rgba(255,255,255,0.08);
+
+  height: 100%;
+}
+
+.video-card iframe {
+  border: none;
+}
+
+.video-card h5 {
+  padding: 1rem;
+  margin: 0;
+  text-align: center;
+}
+
+.video-card .ratio {
+  overflow: hidden;
+}
+
+/* ===================================
+   LIVE
+=================================== */
+
+.live-section {
+  padding: 100px 0;
+
+  text-align: center;
+
+  background:
+    linear-gradient(
+      135deg,
+      var(--gold),
+      var(--gold-2)
+    );
+}
+
+.live-badge {
+  display: inline-block;
+
+  background: var(--accent);
+
+  color: #fff;
+
+  padding: 10px 22px;
+
+  border-radius: 50px;
+
+  font-weight: 700;
+
+  margin-bottom: 1.5rem;
+}
+
+.live-section h2 {
+  color: #fff;
+}
+
+.live-section p {
+  color: rgba(255,255,255,0.9);
+}
+
+/* ===================================
+   BENEFITS
+=================================== */
+
+.benefit-card {
+  background: var(--card);
+
+  border-radius: 20px;
+
+  padding: 2rem;
+
+  text-align: center;
+
+  height: 100%;
+
+  border: 1px solid rgba(255,255,255,0.08);
+
+  transition: all 0.3s ease;
+}
+
+.benefit-card i {
+  font-size: 2.5rem;
+
+  color: var(--gold);
+
+  margin-bottom: 1.2rem;
+}
+
+.benefit-card h5 {
+  margin-bottom: 1rem;
+}
+
+.benefit-card p {
+  color: var(--muted);
+  margin: 0;
+}
+
+@media (hover: hover) {
+  .benefit-card:hover {
+    transform: translateY(-8px);
+    border-color: var(--gold);
+  }
+}
+
+/* ===================================
+   CTA
+=================================== */
+
+.join-section {
+  padding: 100px 0;
+  text-align: center;
+}
+
+.join-section h2 {
+  margin-bottom: 1rem;
+}
+
+.join-section p {
+  max-width: 700px;
+  margin: 0 auto 2rem;
+  color: var(--muted);
+}
+
+.join-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.join-buttons .theme-btn {
+  min-width: 180px;
+}
+
+/* ===================================
+   TABLET
+=================================== */
+
+@media (max-width: 991px) {
+  .section-space {
+    padding: 80px 0;
+  }
+
+  .hero-section {
+    min-height: 75vh;
+  }
+
+  .hero-overlay {
+    padding: 4rem 1rem;
+  }
+
+  .section-heading {
+    margin-bottom: 2.5rem;
+  }
+
+  .timing-card,
+  .benefit-card,
+  .lyrics-card {
+    padding: 1.5rem;
+  }
+}
+
+/* ===================================
+   MOBILE
+=================================== */
+
+@media (max-width: 767px) {
+
+  .section-space {
+    padding: 60px 0;
+  }
+
+  .hero-section {
+    min-height: 65vh;
+  }
+
+  .hero-overlay {
+    padding: 3rem 1rem;
+  }
+
+  .hero-section p {
+    font-size: 0.95rem;
+  }
+
+  .section-heading h2 {
+    font-size: 1.8rem;
+  }
+
+  .section-heading p {
+    font-size: 0.95rem;
+  }
+
+  .nav-wrapper {
+    justify-content: flex-start;
+    padding-inline: 1rem;
+  }
+
+  .join-buttons {
+    flex-direction: column;
+  }
+
+  .join-buttons .theme-btn {
+    width: 100%;
+    min-width: auto;
+  }
+
+  .theme-btn {
+    width: 100%;
+  }
+}
+
+/* ===================================
+   SMALL MOBILE
+=================================== */
+
+@media (max-width: 480px) {
+
+  .hero-section h1 {
+    font-size: 2rem;
+  }
+
+  .hero-badge {
+    font-size: 0.85rem;
+  }
+
+  .timing-card,
+  .benefit-card,
+  .lyrics-card {
+    padding: 1.25rem;
+  }
+
+  .live-section {
+    padding: 70px 0;
+  }
+
+  .join-section {
+    padding: 70px 0;
+  }
+
+  .section-heading h2 {
+    font-size: 1.6rem;
+  }
+}
