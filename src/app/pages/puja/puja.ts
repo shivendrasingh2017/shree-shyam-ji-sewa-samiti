@@ -11,107 +11,82 @@ import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-puja',
-  imports: [CommonModule,
-    ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './puja.html',
   styleUrl: './puja.scss',
 })
 export class Puja {
-  private fb = inject(FormBuilder);
-  private http = inject(HttpClient);
+  private fb     = inject(FormBuilder);
+  private http   = inject(HttpClient);
   private router = inject(Router);
 
   apiUrl = 'http://localhost:3000';
 
   loading = false;
 
+  // ── Banner image path ──────────────────────────
+  // Size: 1920×500px
+  // Path: assets/puja/ folder me rakho
+  bannerImage: string = '/assets/puja/banner_puja3.jpg';
+  // ───────────────────────────────────────────────
+
   pujaForm: FormGroup = this.fb.group({
-    name: ['', [Validators.required]],
-    mobile: [
-      '',
-      [
-        Validators.required,
-        Validators.pattern(/^[6-9]\d{9}$/)
-      ]
-    ],
-    email: ['', [Validators.email]],
-    panNumber: [
-      '',
-      [
-        Validators.pattern(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/)
-      ]
-    ],
-    address: ['', Validators.required],
-    pujaType: ['', Validators.required],
+    name:          ['', [Validators.required]],
+    mobile:        ['', [Validators.required, Validators.pattern(/^[6-9]\d{9}$/)]],
+    email:         ['', [Validators.email]],
+    panNumber:     ['', [Validators.pattern(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/)]],
+    address:       ['', Validators.required],
+    pujaType:      ['', Validators.required],
     preferredDate: ['', Validators.required],
-    message: ['']
+    message:       ['']
   });
 
   pujaCategories = [
     {
-      title: 'Satyanarayan Puja',
-      duration: '2 Hours',
-      donation: 1100,
-      description:
-        'For prosperity, peace and family blessings.'
+      title:       'Satyanarayan Puja',
+      duration:    '2 Hours',
+      donation:    1100,
+      description: 'For prosperity, peace and family blessings.'
     },
     {
-      title: 'Rudrabhishek',
-      duration: '3 Hours',
-      donation: 2100,
-      description:
-        'Sacred worship of Lord Shiva.'
+      title:       'Rudrabhishek',
+      duration:    '3 Hours',
+      donation:    2100,
+      description: 'Sacred worship of Lord Shiva.'
     },
     {
-      title: 'Hanuman Puja',
-      duration: '1.5 Hours',
-      donation: 701,
-      description:
-        'Protection and strength.'
+      title:       'Hanuman Puja',
+      duration:    '1.5 Hours',
+      donation:    701,
+      description: 'Protection and strength.'
     },
     {
-      title: 'Shyam Baba Special Puja',
-      duration: '2 Hours',
-      donation: 1501,
-      description:
-        'Special blessings of Khatu Shyam Ji.'
+      title:       'Shyam Baba Special Puja',
+      duration:    '2 Hours',
+      donation:    1501,
+      description: 'Special blessings of Khatu Shyam Ji.'
     },
     {
-      title: 'Navgrah Puja',
-      duration: '2.5 Hours',
-      donation: 2501,
-      description:
-        'Balance planetary influences.'
+      title:       'Navgrah Puja',
+      duration:    '2.5 Hours',
+      donation:    2501,
+      description: 'Balance planetary influences.'
     }
   ];
 
   upcomingPujas = [
-    {
-      date: '15 Aug 2026',
-      time: '10:00 AM',
-      location: 'Main Temple'
-    },
-    {
-      date: '20 Aug 2026',
-      time: '11:00 AM',
-      location: 'Shyam Darbar Hall'
-    }
+    { date: '15 Aug 2026', time: '10:00 AM', location: 'Main Temple'       },
+    { date: '20 Aug 2026', time: '11:00 AM', location: 'Shyam Darbar Hall' }
   ];
 
   selectPuja(name: string) {
-    this.pujaForm.patchValue({
-      pujaType: name
-    });
-
+    this.pujaForm.patchValue({ pujaType: name });
     document
       .getElementById('booking-form')
-      ?.scrollIntoView({
-        behavior: 'smooth'
-      });
+      ?.scrollIntoView({ behavior: 'smooth' });
   }
 
   submitBooking() {
-
     if (this.pujaForm.invalid) {
       this.pujaForm.markAllAsTouched();
       return;
@@ -120,24 +95,15 @@ export class Puja {
     this.loading = true;
 
     this.http
-      .post(
-        `${this.apiUrl}/puja-booking-draft`,
-        this.pujaForm.value
-      )
+      .post(`${this.apiUrl}/puja-booking-draft`, this.pujaForm.value)
       .subscribe({
         next: (response: any) => {
-
-          localStorage.setItem(
-            'pujaBooking',
-            JSON.stringify(this.pujaForm.value)
-          );
-
+          localStorage.setItem('pujaBooking', JSON.stringify(this.pujaForm.value));
           this.loading = false;
-
           this.router.navigate(['/donation'], {
             queryParams: {
               purpose: 'puja',
-              amount: this.getDonationAmount()
+              amount:  this.getDonationAmount()
             }
           });
         },
@@ -149,12 +115,9 @@ export class Puja {
   }
 
   getDonationAmount(): number {
-
-    const selected =
-      this.pujaCategories.find(
-        x => x.title === this.pujaForm.value.pujaType
-      );
-
+    const selected = this.pujaCategories.find(
+      x => x.title === this.pujaForm.value.pujaType
+    );
     return selected?.donation || 501;
   }
 }

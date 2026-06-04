@@ -8,6 +8,13 @@ import { Donation } from "../../components/donation/donation";
   styleUrl: './donation-page.scss',
 })
 export class DonationPage {
+
+  // ── Banner image path ──────────────────────────
+  // Size: 1920×600px
+  // Path: assets/images/ folder me rakho
+  bannerImage: string = 'assets/donation/banner_donation1.jpg';
+  // ───────────────────────────────────────────────
+
   faqs = [
     {
       question: 'Is donation secure?',
@@ -35,14 +42,7 @@ export class DonationPage {
     }
   ];
 
-
   toggleFaq(index: number): void {
-  this.faqs[index].open = !this.faqs[index].open;
+    this.faqs[index].open = !this.faqs[index].open;
+  }
 }
- }
-
-
-
-
-
-

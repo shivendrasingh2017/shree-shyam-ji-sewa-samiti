@@ -10,6 +10,12 @@ import { CommonModule } from '@angular/common';
 })
 export class Gallery {
 
+  // ── Banner image path ──────────────────────────
+  // Size: 1920×600px
+  // Path: assets/puja/ folder me rakho
+  bannerImage: string = '/assets/gallery/banner_gallery1.jpg';
+  // ───────────────────────────────────────────────
+
   activeCategory = 'All';
 
   categories = [
@@ -25,61 +31,59 @@ export class Gallery {
 
   galleryImages = [
     {
-      image: 'assets/gallery/event1.jpg',
+      image:    'assets/gallery/event1.jpg',
       category: 'Events',
-      title: 'Annual Event'
+      title:    'Annual Event'
     },
     {
-      image: 'assets/gallery/temple1.jpg',
+      image:    'assets/gallery/temple1.jpg',
       category: 'Temple',
-      title: 'Temple Darshan'
+      title:    'Temple Darshan'
     },
     {
-      image: 'assets/gallery/aarti1.jpg',
+      image:    'assets/gallery/aarti1.jpg',
       category: 'Aarti',
-      title: 'Morning Aarti'
+      title:    'Morning Aarti'
     },
     {
-      image: 'assets/gallery/puja1.jpg',
+      image:    'assets/gallery/puja1.jpg',
       category: 'Puja',
-      title: 'Special Puja'
+      title:    'Special Puja'
     },
     {
-      image: 'assets/gallery/festival1.jpg',
+      image:    'assets/gallery/festival1.jpg',
       category: 'Festivals',
-      title: 'Janmashtami'
+      title:    'Janmashtami'
     },
     {
-      image: 'assets/gallery/food1.jpg',
+      image:    'assets/gallery/food1.jpg',
       category: 'Food Distribution',
-      title: 'Food Seva'
+      title:    'Food Seva'
     }
   ];
 
   recentEvents = [
     {
-      image: 'assets/events/event1.jpg',
-      date: '15 Aug 2026',
+      image:       'assets/events/event1.jpg',
+      date:        '15 Aug 2026',
       description: 'Special Bhajan Sandhya'
     },
     {
-      image: 'assets/events/event2.jpg',
-      date: '20 Aug 2026',
+      image:       'assets/events/event2.jpg',
+      date:        '20 Aug 2026',
       description: 'Food Distribution Camp'
     },
     {
-      image: 'assets/events/event3.jpg',
-      date: '25 Aug 2026',
+      image:       'assets/events/event3.jpg',
+      date:        '25 Aug 2026',
       description: 'Shyam Baba Mahotsav'
     }
   ];
 
   get filteredImages() {
-
     if (this.activeCategory === 'All') {
       return this.galleryImages;
     }
-
     return this.galleryImages.filter(
       item => item.category === this.activeCategory
     );

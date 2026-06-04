@@ -26,11 +26,13 @@ export class Contact implements OnInit {
 
   // ── Map ───────────────────────────────────────────────────────────────────────
   /**
-   * Replace the officeAddress with your actual NGO address.
-   * Replace YOUR_GOOGLE_MAPS_API_KEY with your Maps Embed API key.
-   * OR use the plain iframe src from Google Maps -> Share -> Embed a map.
+   * Shree ShyamJi Sewa Samiti - NGO Office
+   * Blog C-23 Sector 63 Noida U.P.
+   * Coordinates: 28.616600927748127, 77.38155745767135
    */
-  private readonly officeAddress = 'Shree+Shyam+Ji+Sewa+Samiti';
+  private readonly officeAddress = 'Shree ShyamJi Sewa Samiti, Blog C-23 Sector 63 Noida U.P.';
+  private readonly latitude = 28.616600927748127;
+  private readonly longitude = 77.38155745767135;
   mapUrl!: SafeResourceUrl;
 
   constructor(
@@ -51,9 +53,9 @@ export class Contact implements OnInit {
       message: ['', [Validators.required, Validators.minLength(10)]],
     });
 
-    // Sanitise Google Maps embed URL
+    // Sanitise Google Maps embed URL using coordinates
     const rawUrl =
-      `https://www.google.com/maps/embed/v1/place?key=YOUR_GOOGLE_MAPS_API_KEY&q=${this.officeAddress}`;
+      `https://maps.google.com/maps?q=${this.latitude},${this.longitude}&t=k&z=17&output=embed`;
     this.mapUrl = this.sanitizer.bypassSecurityTrustResourceUrl(rawUrl);
   }
 
