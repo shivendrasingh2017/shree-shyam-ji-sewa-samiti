@@ -1,8 +1,13 @@
+<!-- ================= HERO SECTION ================= -->
+
 <section class="about-hero">
 
   <div class="hero-overlay"></div>
 
-  <div class="container">
+  <!-- Banner Image -->
+  <img [src]="heroBanner" alt="Shree Shyam Ji Sewa Samiti" class="hero-banner-img" />
+
+  <div class="hero-content-wrap container">
 
     <div class="row align-items-center hero-row">
 
@@ -30,12 +35,12 @@
           <div class="hero-btns">
 
             <a routerLink="/about" class="btn-primary-custom">
-              <i class="fa-solid fa-circle-info me-2"></i>
+              <i class="fa-solid fa-circle-info"></i>
               About Us
             </a>
 
             <a routerLink="/donation" class="btn-outline-custom">
-              <i class="fa-solid fa-hand-holding-heart me-2"></i>
+              <i class="fa-solid fa-hand-holding-heart"></i>
               Our Mission
             </a>
 
@@ -62,27 +67,10 @@
           </p>
 
           <div class="stats-grid">
-
-            <div class="stat-box">
-              <h4>5000+</h4>
-              <span>Lives Helped</span>
-            </div>
-
-            <div class="stat-box">
-              <h4>100+</h4>
-              <span>Events</span>
-            </div>
-
-            <div class="stat-box">
-              <h4>24/7</h4>
-              <span>Support</span>
-            </div>
-
-            <div class="stat-box">
-              <h4>100%</h4>
-              <span>Transparency</span>
-            </div>
-
+            <div class="stat-box"><h4>5000+</h4><span>Lives Helped</span></div>
+            <div class="stat-box"><h4>100+</h4><span>Events</span></div>
+            <div class="stat-box"><h4>24/7</h4><span>Support</span></div>
+            <div class="stat-box"><h4>100%</h4><span>Transparency</span></div>
           </div>
 
         </div>
@@ -92,16 +80,6 @@
     </div>
 
   </div>
-
-  <!-- WAVE -->
-  <!-- <div class="wave-shape">
-    <svg viewBox="0 0 1440 120" preserveAspectRatio="none">
-      <path
-        fill="#ffffff"
-        d="M0,64L80,80C160,96,320,128,480,122.7C640,117,800,75,960,69.3C1120,64,1280,96,1360,112L1440,128L1440,320L0,320Z">
-      </path>
-    </svg>
-  </div> -->
 
 </section>
 
@@ -113,15 +91,11 @@
 
     <div class="row align-items-center g-5">
 
-      <!-- IMAGE -->
       <div class="col-lg-6">
 
         <div class="about-image-wrapper" data-aos="fade-up">
 
-          <img
-            src="assets/home/khatu.jpg"
-            alt="about"
-            class="img-fluid about-img">
+          <img [src]="aboutImg" alt="About Shree Shyam Ji Sewa Samiti" class="img-fluid about-img">
 
           <div class="experience-badge">
             <h3>6+</h3>
@@ -132,18 +106,14 @@
 
       </div>
 
-      <!-- CONTENT -->
       <div class="col-lg-6">
 
         <div class="about-content" data-aos="fade-left">
 
-          <span class="section-chip">
-            About Our NGO
-          </span>
+          <span class="section-chip">About Our NGO</span>
 
           <h2 class="section-title">
-            Together We Can
-            Make A Difference
+            Together We Can Make A Difference
           </h2>
 
           <p class="section-desc">
@@ -154,27 +124,22 @@
           </p>
 
           <div class="feature-list">
-
             <div class="feature-item">
               <i class="fa-solid fa-check"></i>
               <span>Food Distribution Programs</span>
             </div>
-
             <div class="feature-item">
               <i class="fa-solid fa-check"></i>
               <span>Medical & Health Camps</span>
             </div>
-
             <div class="feature-item">
               <i class="fa-solid fa-check"></i>
               <span>Educational Support</span>
             </div>
-
             <div class="feature-item">
               <i class="fa-solid fa-check"></i>
               <span>Community Welfare Programs</span>
             </div>
-
           </div>
 
         </div>
@@ -189,35 +154,7 @@
 
 <app-donation></app-donation>
 
-
-
-
-<!-- HERO -->
-
-<section class="about-hero">
-
-  <div class="hero-overlay">
-
-    <div class="container text-center">
-
-      <span class="hero-badge">
-        Shree Shyam Ji Sewa Samiti
-      </span>
-
-      <h1>About Us</h1>
-
-      <p>
-        Serving humanity through devotion,
-        compassion and community welfare.
-      </p>
-
-    </div>
-
-  </div>
-
-</section>
-
-<!-- ABOUT -->
+<!-- ================= WHO WE ARE ================= -->
 
 <section class="section-space">
 
@@ -226,21 +163,13 @@
     <div class="row align-items-center g-5">
 
       <div class="col-lg-6">
-
-        <img
-          src="assets/home/banner_temple1.webp"
-          class="img-fluid about-image"
-          alt="About NGO"
-        >
-
+        <img [src]="whoWeAreImg" class="img-fluid about-image" alt="About NGO">
       </div>
 
       <div class="col-lg-6">
 
         <div class="section-heading text-start">
-
           <h2>Who We Are</h2>
-
         </div>
 
         <p>
@@ -250,7 +179,7 @@
           food distribution, education support and community service.
         </p>
 
-        <p>
+        <p class="mt-3">
           Our mission is to spread devotion, compassion and
           positive change while preserving cultural and
           religious values.
@@ -273,37 +202,19 @@
     <div class="row g-4">
 
       <div class="col-lg-6">
-
         <div class="info-card">
-
           <i class="fa-solid fa-bullseye"></i>
-
           <h3>Our Mission</h3>
-
-          <p>
-            To serve humanity through religious activities,
-            social welfare and community development programs.
-          </p>
-
+          <p>To serve humanity through religious activities, social welfare and community development programs.</p>
         </div>
-
       </div>
 
       <div class="col-lg-6">
-
         <div class="info-card">
-
           <i class="fa-solid fa-eye"></i>
-
           <h3>Our Vision</h3>
-
-          <p>
-            To build a compassionate society where spirituality
-            and service work together for positive transformation.
-          </p>
-
+          <p>To build a compassionate society where spirituality and service work together for positive transformation.</p>
         </div>
-
       </div>
 
     </div>
@@ -311,9 +222,8 @@
   </div>
 
 </section>
-<app-abouts>
 
-</app-abouts>
+<app-abouts></app-abouts>
 
 <!-- SERVICES -->
 
@@ -322,25 +232,16 @@
   <div class="container">
 
     <div class="section-heading">
-
       <h2>What We Do</h2>
-
     </div>
 
     <div class="services-grid">
-
       @for(item of services; track item){
-
-      <div class="service-card">
-
-        <i class="fa-solid fa-check"></i>
-
-        <span>{{ item }}</span>
-
-      </div>
-
+        <div class="service-card">
+          <i class="fa-solid fa-check"></i>
+          <span>{{ item }}</span>
+        </div>
       }
-
     </div>
 
   </div>
@@ -354,25 +255,16 @@
   <div class="container">
 
     <div class="section-heading">
-
       <h2>Our Impact</h2>
-
     </div>
 
-    <div class="stats-grid">
-
+    <div class="impact-grid">
       @for(item of stats; track item.title){
-
-      <div class="stat-card">
-
-        <h3>{{ item.value }}</h3>
-
-        <p>{{ item.title }}</p>
-
-      </div>
-
+        <div class="stat-card">
+          <h3>{{ item.value }}</h3>
+          <p>{{ item.title }}</p>
+        </div>
       }
-
     </div>
 
   </div>
@@ -386,51 +278,33 @@
   <div class="container">
 
     <div class="section-heading">
-
       <h2>Our Office Location</h2>
-
     </div>
 
     <div class="row g-4">
 
       <div class="col-lg-5">
-
         <div class="address-card">
-
           <i class="fa-solid fa-location-dot"></i>
-
           <h4>Office Address</h4>
-
           <p>
             Office No: 09<br>
-            Anjuman House<br>
-            VDS Building<br>
-            Block C-23<br>
-            Sector 63<br>
+            Anjuman House, VDS Building<br>
+            Block C-23, Sector 63<br>
             Noida, Uttar Pradesh
           </p>
-
-          <p>
-            Coordinates:
-            28.61653, 77.38147
-          </p>
-
+          <p class="mt-2">Coordinates: 28.61653, 77.38147</p>
         </div>
-
       </div>
 
       <div class="col-lg-7">
-
         <div class="map-wrapper">
-
           <iframe
             src="https://maps.google.com/maps?q=28.61653,77.38147&z=15&output=embed"
             loading="lazy"
             allowfullscreen>
           </iframe>
-
         </div>
-
       </div>
 
     </div>
@@ -445,23 +319,13 @@
 
   <div class="container text-center">
 
-    <h2>
-      Join Us in Serving Humanity
-    </h2>
+    <h2>Join Us in Serving Humanity</h2>
+    <p>Together we can make a positive impact.</p>
 
-    <p>
-      Together we can make a positive impact.
-    </p>
-
-    <a
-      routerLink="/donation"
-      class="theme-btn"
-    >
+    <a routerLink="/donation" class="theme-btn">
       Donate Now
     </a>
 
   </div>
 
 </section>
-
-

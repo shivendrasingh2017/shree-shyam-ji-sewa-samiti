@@ -31,32 +31,32 @@ export class Gallery {
 
   galleryImages = [
     {
-      image:    'assets/gallery/event1.jpg',
+      image:    'assets/gallery/gallery01.jpg',
       category: 'Events',
       title:    'Annual Event'
     },
     {
-      image:    'assets/gallery/temple1.jpg',
+      image:    'assets/gallery/gallery02.jpg',
       category: 'Temple',
       title:    'Temple Darshan'
     },
     {
-      image:    'assets/gallery/aarti1.jpg',
+      image:    'assets/gallery/gallery03.jpg',
       category: 'Aarti',
       title:    'Morning Aarti'
     },
     {
-      image:    'assets/gallery/puja1.jpg',
+      image:    'assets/gallery/gallery04.jpg',
       category: 'Puja',
       title:    'Special Puja'
     },
     {
-      image:    'assets/gallery/festival1.jpg',
+      image:    'assets/gallery/gallery05.jpg',
       category: 'Festivals',
       title:    'Janmashtami'
     },
     {
-      image:    'assets/gallery/food1.jpg',
+      image:    'assets/gallery/gallery06.jpg',
       category: 'Food Distribution',
       title:    'Food Seva'
     }
@@ -64,18 +64,18 @@ export class Gallery {
 
   recentEvents = [
     {
-      image:       'assets/events/event1.jpg',
-      date:        '15 Aug 2026',
+      image:       'assets/gallery/event0.jpg',
+      date:        '15 May 2026',
       description: 'Special Bhajan Sandhya'
     },
     {
-      image:       'assets/events/event2.jpg',
-      date:        '20 Aug 2026',
+      image:       'assets/gallery/event2.jpg',
+      date:        '18 May 2026',
       description: 'Food Distribution Camp'
     },
     {
-      image:       'assets/events/event3.jpg',
-      date:        '25 Aug 2026',
+      image:       'assets/gallery/event3.jpg',
+      date:        '19 May 2026',
       description: 'Shyam Baba Mahotsav'
     }
   ];

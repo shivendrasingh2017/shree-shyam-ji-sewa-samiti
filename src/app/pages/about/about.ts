@@ -1,4 +1,3 @@
-
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { Abouts } from "../../components/abouts/abouts";
@@ -13,54 +12,36 @@ import { Donation } from "../../components/donation/donation";
   templateUrl: './about.html',
   styleUrl: './about.scss',
 })
-export class About  implements OnInit, AfterViewInit {
+export class About implements OnInit, AfterViewInit {
 
+  // ── Image Paths ───────────────────────────────────────────
+  readonly heroBanner    = 'assets/home/banner_temple1.webp'; // hero section banner image
+  readonly aboutImg      = 'assets/home/khatu.jpg';           // about section left image
+  readonly whoWeAreImg   = 'assets/home/banner_temple1.webp'; // "Who We Are" section image
+
+  // ── Stats ─────────────────────────────────────────────────
   stats = [
-    {
-      value: '5000+',
-      title: 'Families Helped'
-    },
-    {
-      value: '200+',
-      title: 'Events Organized'
-    },
-    {
-      value: '1000+',
-      title: 'Volunteers'
-    },
-    {
-      value: '50000+',
-      title: 'Meals Distributed'
-    }
+    { value: '5000+',  title: 'Families Helped'   },
+    { value: '200+',   title: 'Events Organized'  },
+    { value: '1000+',  title: 'Volunteers'         },
+    { value: '50000+', title: 'Meals Distributed' },
   ];
 
+  // ── Services ──────────────────────────────────────────────
   services = [
     'Religious Activities',
     'Food Distribution',
     'Education Support',
     'Medical Assistance',
     'Festival Celebrations',
-    'Gau Seva'
+    'Gau Seva',
   ];
 
   ngOnInit(): void {
-
-    AOS.init({
-      duration: 800,
-      once: true,
-      offset: 100
-    });
-
+    AOS.init({ duration: 800, once: true, offset: 100 });
   }
 
   ngAfterViewInit(): void {
-
-    setTimeout(() => {
-      AOS.refreshHard();
-    }, 300);
-
+    setTimeout(() => AOS.refreshHard(), 300);
   }
-
-  
-
 }
