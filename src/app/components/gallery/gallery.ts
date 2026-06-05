@@ -12,6 +12,8 @@ import { GalleryService, GalleryItem } from '../../services/gallery.service';
 export class Gallery implements OnInit {
   galleryItems: GalleryItem[] = [];
 
+  private readonly apiBase = 'https://api.shyamjisewasamiti.org';
+
   constructor(private galleryService: GalleryService) {}
 
   ngOnInit() {
@@ -19,6 +21,16 @@ export class Gallery implements OnInit {
   }
 
   loadGalleryItems() {
-    this.galleryItems = this.galleryService.getActive();
+    this.galleryService.getActive().subscribe(items => {
+      this.galleryItems = items;
+    });
+  }
+
+  getImageUrl(imageUrl: string): string {
+    if (!imageUrl) return 'assets/placeholder.png';
+    // Agar already full URL hai toh as-is return karo
+    if (imageUrl.startsWith('http')) return imageUrl;
+    // Relative path hai toh API base jodo
+    return `${this.apiBase}${imageUrl}`;
   }
 }

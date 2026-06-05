@@ -1,7 +1,13 @@
 import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+
+const API_BASE = 'https://api.shyamjisewasamiti.org';
 
 export interface GalleryItem {
   id: string;
+  _id?: string;       // ← ADD: MongoDB field bhi rakhlo
   title: string;
   description: string;
   imageUrl: string;
@@ -9,71 +15,105 @@ export interface GalleryItem {
   createdAt: string;
 }
 
-const STORAGE_KEY = 'shyamji_gallery_images';
+interface ApiResponse<T> {
+  success: boolean;
+  data: T;
+  message?: string;
+}
+
+// ── Helper: _id → id map karo ──────────────────────────────
+function mapItem(item: any): GalleryItem {
+  return { ...item, id: item._id || item.id };
+}
 
 @Injectable({ providedIn: 'root' })
 export class GalleryService {
-  private normalizeStatus(value: any): 'active' | 'inactive' {
-    return value === 'active' || value === 'inactive' ? value : 'inactive';
+
+  private readonly base = `${API_BASE}/api/gallery`;
+
+  constructor(private http: HttpClient) {}
+
+  // ── Auth header (PUT/DELETE ke liye) ─────────────────────
+  private authHeaders(): HttpHeaders {
+    const token = localStorage.getItem('admin_token') || '';
+    return new HttpHeaders({ Authorization: `Bearer ${token}` });
   }
 
-  private readStorage(): GalleryItem[] {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      const items = raw ? JSON.parse(raw) as any[] : [];
-      return (items || []).map(item => ({
-        id: item.id,
-        title: item.title,
-        description: item.description,
-        imageUrl: item.imageUrl,
-        status: this.normalizeStatus(item.status),
-        createdAt: item.createdAt
-      }));
-    } catch {
-      return [];
-    }
+  getAll(): Observable<GalleryItem[]> {
+    return this.http
+      .get<ApiResponse<GalleryItem[]>>(this.base)
+      .pipe(map(res => (res.data ?? []).map(mapItem)));
   }
 
-  private writeStorage(items: GalleryItem[]) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+  getActive(): Observable<GalleryItem[]> {
+    return this.http
+      .get<ApiResponse<GalleryItem[]>>(`${this.base}?status=active`)
+      .pipe(map(res => (res.data ?? []).map(mapItem)));
   }
 
-  getAll(): GalleryItem[] {
-    return this.readStorage().sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+  getById(id: string): Observable<GalleryItem> {
+    return this.http
+      .get<ApiResponse<GalleryItem>>(`${this.base}/${id}`)
+      .pipe(map(res => mapItem(res.data)));
   }
 
-  getActive(): GalleryItem[] {
-    return this.getAll().filter(item => item.status === 'active');
+  // ── CREATE — NO auth header (backend mein auth remove kiya) ──
+  create(payload: {
+    title: string;
+    description: string;
+    status: 'active' | 'inactive';
+    image: File;
+  }): Observable<GalleryItem> {
+    const form = new FormData();
+    form.append('title',       payload.title);
+    form.append('description', payload.description);
+    form.append('status',      payload.status);
+    form.append('image',       payload.image);
+
+    // ⚠️ Content-Type mat set karo — browser khud boundary set karta hai FormData ke liye
+    return this.http
+      .post<ApiResponse<GalleryItem>>(this.base, form)
+      .pipe(map(res => mapItem(res.data)));
   }
 
-  add(item: Omit<GalleryItem, 'id' | 'createdAt'>): GalleryItem {
-    const current = this.getAll();
-    const newItem: GalleryItem = {
-      ...item,
-      id: `gallery_${Date.now()}_${Math.floor(Math.random() * 10000)}`,
-      createdAt: new Date().toISOString()
-    };
-    const next = [newItem, ...current];
-    this.writeStorage(next);
-    return newItem;
+  // ── UPDATE — auth header chahiye ─────────────────────────
+  update(id: string, payload: {
+    title?: string;
+    description?: string;
+    status?: 'active' | 'inactive';
+    image?: File;
+  }): Observable<GalleryItem> {
+    const form = new FormData();
+    if (payload.title)       form.append('title',       payload.title);
+    if (payload.description) form.append('description', payload.description);
+    if (payload.status)      form.append('status',      payload.status);
+    if (payload.image)       form.append('image',       payload.image);
+
+    return this.http
+      .put<ApiResponse<GalleryItem>>(`${this.base}/${id}`, form, {
+        headers: this.authHeaders()
+      })
+      .pipe(map(res => mapItem(res.data)));
   }
 
-  update(id: string, update: Partial<Omit<GalleryItem, 'id' | 'createdAt'>>) {
-    const current = this.getAll();
-    const next: GalleryItem[] = current.map(item => item.id === id ? ({ ...item, ...update } as GalleryItem) : item);
-    this.writeStorage(next);
-    return next.find(item => item.id === id) as GalleryItem;
+  // ── DELETE — auth header chahiye ─────────────────────────
+  remove(id: string): Observable<void> {
+    return this.http
+      .delete<ApiResponse<null>>(`${this.base}/${id}`, {
+        headers: this.authHeaders()
+      })
+      .pipe(map(() => void 0));
   }
 
-  remove(id: string) {
-    const next = this.getAll().filter(item => item.id !== id);
-    this.writeStorage(next);
-  }
+  // ── PATCH toggle status — auth header chahiye ─────────────
+  toggleStatus(id: string, newStatus: 'active' | 'inactive'): Observable<GalleryItem> {
+    const form = new FormData();
+    form.append('status', newStatus);
 
-  toggleStatus(id: string) {
-    const current = this.getAll();
-    const next: GalleryItem[] = current.map(item => item.id === id ? ({ ...item, status: item.status === 'active' ? 'inactive' : 'active' } as GalleryItem) : item);
-    this.writeStorage(next);
-    return next.find(item => item.id === id) as GalleryItem;
+    return this.http
+      .put<ApiResponse<GalleryItem>>(`${this.base}/${id}`, form, {
+        headers: this.authHeaders()
+      })
+      .pipe(map(res => mapItem(res.data)));
   }
 }

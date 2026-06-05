@@ -105,6 +105,7 @@ export class Admin implements OnInit {
   galleryItemId: string | null = null;
   galleryStatus: 'active' | 'inactive' = 'active';
   galleryPreviewError = '';
+  gallerySelectedFile: File | null = null;
 
   constructor(
     private campaignService: CampaignService,
@@ -517,7 +518,10 @@ export class Admin implements OnInit {
 
   // ───────── GALLERY MANAGEMENT ─────────
   loadGalleryItems() {
-    this.galleryItems = this.galleryService.getAll();
+    this.galleryService.getAll().subscribe(items => {
+      this.galleryItems = items;
+      console.log('Gallery items loaded:>>>>>>>>>>>>>>>', items);
+    });
   }
 
   openAddGalleryModal() {
@@ -552,6 +556,8 @@ export class Admin implements OnInit {
       return;
     }
 
+    this.gallerySelectedFile = file;
+
     const reader = new FileReader();
     reader.onload = () => {
       this.galleryImageUrl = reader.result as string;
@@ -561,39 +567,61 @@ export class Admin implements OnInit {
   }
 
   saveGalleryItem() {
-    if (!this.galleryTitle.trim() || !this.galleryImageUrl) {
-      this.galleryPreviewError = 'Title and image are required.';
+    if (!this.galleryTitle.trim()) {
+      this.galleryPreviewError = 'Title is required.';
       return;
     }
 
-    const payload = {
-      title: this.galleryTitle.trim(),
-      description: this.galleryDescription.trim(),
-      imageUrl: this.galleryImageUrl,
-      status: this.galleryStatus
-    };
-
     if (this.galleryItemId) {
-      this.galleryService.update(this.galleryItemId, payload);
+      // Update: image is optional
+      const payload: {
+        title?: string;
+        description?: string;
+        status?: 'active' | 'inactive';
+        image?: File;
+      } = {
+        title: this.galleryTitle.trim(),
+        description: this.galleryDescription.trim(),
+        status: this.galleryStatus,
+      };
+      if (this.gallerySelectedFile) {
+        payload.image = this.gallerySelectedFile;
+      }
+      this.galleryService.update(this.galleryItemId, payload).subscribe({
+        next: () => { this.loadGalleryItems(); this.closeGalleryModal(); },
+        error: () => { this.galleryPreviewError = 'Failed to update gallery item.'; }
+      });
     } else {
-      this.galleryService.add(payload);
+      // Create: image is required
+      if (!this.gallerySelectedFile) {
+        this.galleryPreviewError = 'Please select an image.';
+        return;
+      }
+      this.galleryService.create({
+        title: this.galleryTitle.trim(),
+        description: this.galleryDescription.trim(),
+        status: this.galleryStatus,
+        image: this.gallerySelectedFile
+      }).subscribe({
+        next: () => { this.loadGalleryItems(); this.closeGalleryModal(); },
+       error: (err) => {
+  console.error('Gallery create error:', err);   // ← ADD
+  this.galleryPreviewError = 'Failed to add gallery item.';
+}
+      });
     }
-
-    this.loadGalleryItems();
-    this.closeGalleryModal();
   }
 
   deleteGalleryItem(id: string) {
     if (!confirm('Delete this gallery image?')) {
       return;
     }
-    this.galleryService.remove(id);
-    this.loadGalleryItems();
+    this.galleryService.remove(id).subscribe(() => this.loadGalleryItems());
   }
 
   toggleGalleryStatus(item: GalleryItem) {
-    this.galleryService.toggleStatus(item.id);
-    this.loadGalleryItems();
+    const newStatus: 'active' | 'inactive' = item.status === 'active' ? 'inactive' : 'active';
+    this.galleryService.toggleStatus(item.id, newStatus).subscribe(() => this.loadGalleryItems());
   }
 
   clearGalleryForm() {
@@ -603,5 +631,6 @@ export class Admin implements OnInit {
     this.galleryImageUrl = '';
     this.galleryStatus = 'active';
     this.galleryPreviewError = '';
+    this.gallerySelectedFile = null;
   }
 }

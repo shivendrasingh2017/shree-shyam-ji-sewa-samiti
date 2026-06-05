@@ -12,7 +12,7 @@
 
     <div class="grid" *ngIf="galleryItems.length > 0">
       <div class="gallery-card" *ngFor="let item of galleryItems">
-        <img [src]="item.imageUrl" [alt]="item.title" />
+        <img [src]="getImageUrl(item.imageUrl)" [alt]="item.title" (error)="$any($event.target).src='assets/placeholder.png'" />
         <div class="gallery-caption">
           <h3>{{ item.title }}</h3>
           <p>{{ item.description }}</p>
