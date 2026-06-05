@@ -18,7 +18,7 @@ import { Abouts } from "../../components/abouts/abouts";
 @Component({
   standalone: true,
   selector: 'app-home',
-  imports: [CommonModule, Hero, Features, ContactBar, LiveBroadcast, OurPuja, Gallery, Volunteers, Testimonials, NewsFeed, HowWeHelpComponent, Donation, Abouts],
+  imports: [CommonModule, Hero, Features, LiveBroadcast, OurPuja, Gallery, Volunteers, Testimonials, NewsFeed, HowWeHelpComponent, Donation, Abouts],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
 })

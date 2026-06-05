@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from "@angular/router";
 
 @Component({
   selector: 'app-our-puja',
    standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './our-puja.html',
   styleUrl: './our-puja.scss',
 })

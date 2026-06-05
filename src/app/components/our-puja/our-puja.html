@@ -7,7 +7,7 @@
             </ul>
         </div>
 
-        <div class="puja-grid">
+        <div routerLink="/puja" class="puja-grid">
             <article class="puja-card" *ngFor="let p of filtered">
                 <img [src]="p.img" [alt]="p.title" />
                 <span class="plus">+</span>
