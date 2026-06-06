@@ -20,7 +20,7 @@ export class Puja {
   private http   = inject(HttpClient);
   private router = inject(Router);
 
-  apiUrl = 'http://localhost:3000';
+  apiUrl = 'https://api.shyamjisewasamiti.org/api/';
 
   loading = false;
 

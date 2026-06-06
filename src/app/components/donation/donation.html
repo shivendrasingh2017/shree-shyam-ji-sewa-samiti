@@ -113,8 +113,6 @@
             <span class="error-msg" *ngIf="amountError">{{ amountError }}</span>
           </div>
 
-
-
           <div class="input-group">
             <label for="donorFull">Full Name</label>
             <input
@@ -212,7 +210,7 @@
           </button>
 
           <h3 class="confirm-title">Complete Your Donation</h3>
-          
+
           <div class="donation-summary">
             <div class="summary-item">
               <span class="label">Campaign:</span>
@@ -222,7 +220,6 @@
               <span class="label">Amount:</span>
               <span class="value amount">{{ formatINR(finalAmount) }}</span>
             </div>
-            
             <div class="summary-item" *ngIf="donorFullName">
               <span class="label">Full Name:</span>
               <span class="value">{{ donorFullName }}</span>
@@ -260,8 +257,8 @@
             </div>
           </div>
 
-          <button 
-            class="btn-razorpay" 
+          <button
+            class="btn-razorpay"
             (click)="initiatePayment()"
             [disabled]="paymentProcessing"
             type="button"
@@ -284,10 +281,10 @@
         <div class="success-box">
           <div class="success-icon" *ngIf="lastDonation.status === 'success'">🙏</div>
           <div class="success-icon" *ngIf="lastDonation.status === 'failed'">❌</div>
-          
+
           <h3 *ngIf="lastDonation.status === 'success'">Jai Shri Ram! Thank You</h3>
           <h3 *ngIf="lastDonation.status === 'failed'">Payment Failed</h3>
-          
+
           <p class="success-msg" *ngIf="lastDonation.status === 'success'">
             Your donation of <strong>{{ formatINR(lastDonation.amount) }}</strong>
             towards <strong>{{ lastDonation.campaign }}</strong> has been recorded successfully!
@@ -295,8 +292,13 @@
 
           <div class="invoice-summary" *ngIf="lastDonation.invoiceNumber">
             <span><strong>Invoice:</strong> {{ lastDonation.invoiceNumber }}</span>
-            <button class="btn-secondary" type="button" (click)="downloadInvoice()">
-              📄 Download Invoice
+            <button
+              class="btn-secondary"
+              type="button"
+              (click)="downloadInvoice()"
+              [disabled]="pdfLoading"
+            >
+              {{ pdfLoading ? '⏳ Generating PDF...' : '📄 Download PDF' }}
             </button>
           </div>
 
@@ -347,8 +349,13 @@
           </div>
 
           <div class="success-actions">
-            <button class="btn-secondary" type="button" (click)="downloadInvoice()">
-              📄 Download Invoice
+            <button
+              class="btn-secondary"
+              type="button"
+              (click)="downloadInvoice()"
+              [disabled]="pdfLoading"
+            >
+              {{ pdfLoading ? '⏳ Generating PDF...' : '📄 Download PDF' }}
             </button>
             <button class="btn-donate-again" (click)="donateAgain()" type="button">
               🪔 Donate Again

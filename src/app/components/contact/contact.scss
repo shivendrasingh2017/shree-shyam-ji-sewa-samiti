@@ -93,7 +93,7 @@
     font-size: 0.85rem;
     font-weight: 600;
     color: rgba(255,255,255,0.92);
-    backdrop-filter: blur(4px);
+    // backdrop-filter: blur(4px);
 
     .eyebrow-dot {
         width: 8px;
@@ -170,7 +170,7 @@
 }
 
 .btn-hero-primary {
-    background: linear-gradient(135deg, var(--clr-accent), var(--clr-gold-lt));
+    // background: linear-gradient(135deg, var(--clr-accent), var(--clr-gold-lt));
     color: #5a2b00;
     border: none;
     padding: 12px 26px;
@@ -418,7 +418,7 @@
 .contact-form-section {
     // background: var(--clr-light-bg);
     // padding: 60px 0 80px;
-background: var(--accent);
+background: #874e3c;
     padding: 1px 0 7px;
 
 
@@ -427,15 +427,15 @@ background: var(--accent);
             font-family: var(--font-display);
             font-size: clamp(1.6rem, 3vw, 2.4rem);
             font-weight: 800;
-            color: var(--clr-dark);
+            color: white
         }
 
-        p { color: var(--clr-body); font-size: 0.95rem; }
+        p { color: white; font-size: 0.95rem; }
     }
 }
 
 .form-card {
-    background: var(--clr-white);
+    background: white;
     border-radius: var(--radius-card);
     border: 1px solid var(--clr-border);
     box-shadow: var(--shadow-card);
@@ -541,8 +541,8 @@ background: var(--accent);
 }
 
 .submit-btn {
-    background: linear-gradient(135deg, var(--clr-primary) 0%, #b72c56 100%);
-    color: #fff;
+    background: linear-gradient(135deg, var(--accent) 0%, #b72c56 100%);
+    color: hsl(0, 0%, 5%);
     border: none;
     border-radius: var(--radius-btn);
     padding: 14px 36px;
@@ -705,7 +705,7 @@ background: var(--accent);
         position: relative;
         z-index: 1;
         padding: 2rem;
-        background-color: var(--accent);
+        background-color: #874e3c;
 
         .cta-icon-ring {
             width: 68px;
@@ -743,10 +743,10 @@ background: var(--accent);
     }
 
     .btn-cta-call {
-        background: #fff;
-        color: var(--clr-primary);
+       background: var(--accent);
+        color: #f7f3f3;
         border: none;
-        border-radius: var(--radius-btn);
+        // border-radius: var(--radius-btn);
         padding: 12px 26px;
         font-weight: 700;
         text-decoration: none;
@@ -758,10 +758,11 @@ background: var(--accent);
     }
 
     .btn-cta-email {
-        background: transparent;
+       background: var(--accent);
+        color:  #f7f3f3;
         border: 2px solid rgba(255,255,255,0.5);
-        color: #fff;
-        border-radius: var(--radius-btn);
+       
+        // border-radius: var(--radius-btn);
         padding: 10px 26px;
         font-weight: 700;
         text-decoration: none;
@@ -774,10 +775,9 @@ background: var(--accent);
     }
 
     .btn-cta-donate {
-        background: linear-gradient(135deg, var(--clr-accent), var(--clr-gold-lt));
-        color: #5a2b00;
-        border: none;
-        border-radius: var(--radius-btn);
+        background: var(--accent);
+        color:  #f7f3f3;
+        border: 2px solid rgba(255,255,255,0.5);
         padding: 12px 26px;
         font-weight: 700;
         text-decoration: none;

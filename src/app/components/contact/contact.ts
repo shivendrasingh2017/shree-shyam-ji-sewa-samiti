@@ -60,6 +60,34 @@ export class Contact implements OnInit {
     this.mapUrl = this.sanitizer.bypassSecurityTrustResourceUrl(rawUrl);
   }
 
+   scrollToForm(): void {
+
+    const element =
+      document.getElementById('contact-form');
+
+    if (element) {
+
+      element.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
+
+    }
+  }
+  scrollToMap(): void {
+
+  const element =
+    document.getElementById('map-section');
+
+  if (element) {
+
+    element.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start'
+    });
+
+  }
+}
   // ── Convenience getter ────────────────────────────────────────────────────────
   get f() { return this.contactForm.controls; }
 

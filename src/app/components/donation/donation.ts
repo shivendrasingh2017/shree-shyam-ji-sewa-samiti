@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CampaignService } from '../../services/campaign';
 import { PaymentService } from '../../services/payment';
+import { InvoicePdf } from '../../services/invoice-pdf';
 
 export interface Campaign {
   _id?: string;
@@ -65,6 +66,7 @@ export class Donation implements OnInit, AfterViewInit {
   modalOpen = false;
   paymentProcessing = false;
   paymentError = '';
+  pdfLoading = false; // ← PDF download loader
 
   // Validation errors
   amountError = '';
@@ -76,17 +78,19 @@ export class Donation implements OnInit, AfterViewInit {
   // Receipt
   lastDonation: DonationRecord | null = null;
 
+  // Full receipt object — PDF generate karne ke liye
+  private _receiptData: any = null;
+
   // Razorpay
   razorpayKey = '';
 
-  // ─── Internal flag: payment.failed event fire hua ya sirf dismiss ───
-  // Yeh flag ensure karta hai ki ek hi failed record save ho
   private _failedRecorded = false;
 
   constructor(
     private cdr: ChangeDetectorRef,
     private campaignService: CampaignService,
-    private paymentService: PaymentService
+    private paymentService: PaymentService,
+    private invoicePdfService: InvoicePdf  // ← inject
   ) {}
 
   ngOnInit(): void {
@@ -263,7 +267,6 @@ export class Donation implements OnInit, AfterViewInit {
 
     this.paymentProcessing = true;
     this.paymentError = '';
-    // Har naye payment attempt pe flag reset karo
     this._failedRecorded = false;
 
     this.paymentService.createOrder(this.finalAmount).subscribe(
@@ -320,16 +323,12 @@ export class Donation implements OnInit, AfterViewInit {
       },
       theme: { color: '#667eea' },
 
-      // ─── SUCCESS HANDLER ────────────────────────────────────────
       handler: (response: any) => {
         this.paymentProcessing = false;
         this.verifyPayment(response, order);
       },
 
       modal: {
-        // ─── USER NE MODAL BAND KIYA (bina payment ke) ──────────
-        // Yeh tab fire hota hai jab user X button dabaye
-        // Agar payment.failed pehle fire ho chuka ho toh dobara record mat karo
         ondismiss: () => {
           this.paymentProcessing = false;
           if (!this._failedRecorded) {
@@ -345,12 +344,8 @@ export class Donation implements OnInit, AfterViewInit {
 
     const rzp = new Razorpay(options);
 
-    // ─── PAYMENT FAILURE EVENT ───────────────────────────────────
-    // Card decline, insufficient funds, network error, OTP failure —
-    // yeh sab scenarios yahan capture hote hain
     rzp.on('payment.failed', (response: any) => {
       this.paymentProcessing = false;
-      // Flag set karo taaki ondismiss dobara record na kare
       this._failedRecorded = true;
 
       const errorCode = response?.error?.code || 'PAYMENT_FAILED';
@@ -372,7 +367,6 @@ export class Donation implements OnInit, AfterViewInit {
     rzp.open();
   }
 
-  // ─── PAYMENT VERIFY (success path) ──────────────────────────────
   verifyPayment(response: any, order: any): void {
     const paymentData = {
       razorpay_order_id:   response.razorpay_order_id,
@@ -409,9 +403,16 @@ export class Donation implements OnInit, AfterViewInit {
     );
   }
 
-  // ─── SUCCESS RECORD ──────────────────────────────────────────────
   recordSuccessfulPayment(response: any, receipt: any): void {
     const txnId = this.generateTxnId();
+
+    // ── Full receipt object save karo — PDF ke liye ──────────
+    this._receiptData = {
+      ...receipt,
+      // Agar campaignId populate nahi hua toh selectedCampaign se fill karo
+      campaignId: receipt.campaignId || this.selectedCampaign,
+    };
+
     this.lastDonation = {
       txnId,
       campaign:      this.selectedCampaign?.title || '',
@@ -431,8 +432,6 @@ export class Donation implements OnInit, AfterViewInit {
     this.cdr.detectChanges();
   }
 
-  // ─── FAILED RECORD ───────────────────────────────────────────────
-  // Backend pe POST /api/payment/record-failed — database mein save hoga
   recordFailedPayment(
     order: any,
     meta: {
@@ -442,7 +441,6 @@ export class Donation implements OnInit, AfterViewInit {
       razorpay_order_id?: string;
     } = {}
   ): void {
-    // UI update
     this.lastDonation = {
       txnId:     this.generateTxnId(),
       campaign:  this.selectedCampaign?.title || '',
@@ -457,7 +455,6 @@ export class Donation implements OnInit, AfterViewInit {
     this.paymentError = 'Payment was not completed. Please try again.';
     this.step = 'success';
 
-    // Database mein save karo
     const payload = {
       amount:           this.finalAmount,
       currency:         'INR',
@@ -470,10 +467,8 @@ export class Donation implements OnInit, AfterViewInit {
       donorPAN:         this.sanitize(this.donorPAN.trim().toUpperCase()),
       donorAddress:     this.sanitize(this.donorAddress.trim()),
       donorMessage:     this.sanitize(this.donorMessage.trim()),
-      // Razorpay IDs — available ho toh bhejo
       razorpay_order_id:   meta.razorpay_order_id   || order?.id || '',
       razorpay_payment_id: meta.razorpay_payment_id || '',
-      // Error info
       errorCode:        meta.reason      || 'unknown',
       errorDescription: meta.description || 'Payment not completed',
     };
@@ -495,36 +490,62 @@ export class Donation implements OnInit, AfterViewInit {
   donateAgain(): void {
     this.step = 'select';
     this.lastDonation = null;
+    this._receiptData = null;
     this._failedRecorded = false;
     this.resetForm();
     this.modalOpen = false;
     document.body.style.overflow = '';
   }
 
-  downloadInvoice(): void {
-    if (!this.lastDonation?.receiptId) return;
-    const url = `https://api.shyamjisewasamiti.org/api/receipts/${this.lastDonation.receiptId}/invoice`;
-    window.open(url, '_blank');
+  // ── PDF Download ─────────────────────────────────────────────
+  // InvoicePdfService se frontend pe directly PDF generate hogi
+  async downloadInvoice(): Promise<void> {
+     console.log('_receiptData:', this._receiptData); 
+  console.log('lastDonation:', this.lastDonation);
+    if (this.pdfLoading) return;
+
+    // Receipt data available hai toh PDF banao
+    if (this._receiptData) {
+      this.pdfLoading = true;
+      this.cdr.detectChanges();
+      try {
+        await this.invoicePdfService.downloadPdf(this._receiptData);
+      } catch (err) {
+        console.error('PDF generation error:', err);
+      } finally {
+        this.pdfLoading = false;
+        this.cdr.detectChanges();
+      }
+      return;
+    }
+
+    // Fallback: receiptId se backend HTML invoice open karo
+    if (this.lastDonation?.receiptId) {
+      const url = `https://api.shyamjisewasamiti.org/api/receipts/${this.lastDonation.receiptId}/invoice`;
+      window.open(url, '_blank');
+    }
   }
 
   resetForm(): void {
-    this.selectedAmount  = null;
-    this.customAmount    = '';
-    this.donorFullName   = '';
+    this.selectedAmount   = null;
+    this.customAmount     = '';
+    this.donorFullName    = '';
     this.donorCountryCode = '+91';
-    this.donorMobile     = '';
-    this.donorEmail      = '';
+    this.donorMobile      = '';
+    this.donorEmail       = '';
     this.donorNationality = 'India';
-    this.donorPAN        = '';
-    this.donorAddress    = '';
-    this.donorMessage    = '';
-    this.amountError     = '';
-    this.nameError       = '';
-    this.mobileError     = '';
-    this.panError        = '';
-    this.addressError    = '';
-    this.paymentError    = '';
-    this._failedRecorded = false;
+    this.donorPAN         = '';
+    this.donorAddress     = '';
+    this.donorMessage     = '';
+    this.amountError      = '';
+    this.nameError        = '';
+    this.mobileError      = '';
+    this.panError         = '';
+    this.addressError     = '';
+    this.paymentError     = '';
+    this.pdfLoading       = false;
+    this._receiptData     = null;
+    this._failedRecorded  = false;
   }
 
   progressPercent(c: Campaign): number {
