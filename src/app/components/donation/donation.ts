@@ -91,7 +91,7 @@ export class Donation implements OnInit, AfterViewInit {
     private campaignService: CampaignService,
     private paymentService: PaymentService,
     private invoicePdfService: InvoicePdf  // ← inject
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loadCampaigns();
@@ -151,7 +151,7 @@ export class Donation implements OnInit, AfterViewInit {
           }
         }
       },
-      () => {}
+      () => { }
     );
   }
 
@@ -354,7 +354,7 @@ export class Donation implements OnInit, AfterViewInit {
         response?.error?.reason ||
         'Payment failed';
       const razorpayPaymentId = response?.error?.metadata?.payment_id || '';
-      const razorpayOrderId   = response?.error?.metadata?.order_id   || order.id;
+      const razorpayOrderId = response?.error?.metadata?.order_id || order.id;
 
       this.recordFailedPayment(order, {
         reason: errorCode,
@@ -369,20 +369,20 @@ export class Donation implements OnInit, AfterViewInit {
 
   verifyPayment(response: any, order: any): void {
     const paymentData = {
-      razorpay_order_id:   response.razorpay_order_id,
+      razorpay_order_id: response.razorpay_order_id,
       razorpay_payment_id: response.razorpay_payment_id,
-      razorpay_signature:  response.razorpay_signature,
-      amount:              this.finalAmount,
-      currency:            'INR',
-      campaignId:          this.selectedCampaign?._id,
-      donorFullName:       this.sanitize(this.donorFullName.trim()),
-      donorCountryCode:    this.sanitize(this.donorCountryCode.trim()),
-      donorMobile:         this.sanitize(this.donorMobile.trim()),
-      donorEmail:          this.sanitize(this.donorEmail.trim()),
-      donorNationality:    this.sanitize(this.donorNationality.trim()),
-      donorPAN:            this.sanitize(this.donorPAN.trim().toUpperCase()),
-      donorAddress:        this.sanitize(this.donorAddress.trim()),
-      donorMessage:        this.sanitize(this.donorMessage.trim()),
+      razorpay_signature: response.razorpay_signature,
+      amount: this.finalAmount,
+      currency: 'INR',
+      campaignId: this.selectedCampaign?._id,
+      donorFullName: this.sanitize(this.donorFullName.trim()),
+      donorCountryCode: this.sanitize(this.donorCountryCode.trim()),
+      donorMobile: this.sanitize(this.donorMobile.trim()),
+      donorEmail: this.sanitize(this.donorEmail.trim()),
+      donorNationality: this.sanitize(this.donorNationality.trim()),
+      donorPAN: this.sanitize(this.donorPAN.trim().toUpperCase()),
+      donorAddress: this.sanitize(this.donorAddress.trim()),
+      donorMessage: this.sanitize(this.donorMessage.trim()),
     };
 
     this.paymentService.verifyPayment(paymentData).subscribe(
@@ -415,19 +415,19 @@ export class Donation implements OnInit, AfterViewInit {
 
     this.lastDonation = {
       txnId,
-      campaign:      this.selectedCampaign?.title || '',
-      amount:        this.finalAmount,
-      name:          this.donorFullName.trim() || 'Anonymous',
-      message:       this.donorMessage.trim(),
-      timestamp:     new Date(),
-      paymentId:     response.razorpay_payment_id,
-      orderId:       response.razorpay_order_id,
-      receiptId:     receipt._id,
+      campaign: this.selectedCampaign?.title || '',
+      amount: this.finalAmount,
+      name: this.donorFullName.trim() || 'Anonymous',
+      message: this.donorMessage.trim(),
+      timestamp: new Date(),
+      paymentId: response.razorpay_payment_id,
+      orderId: response.razorpay_order_id,
+      receiptId: receipt._id,
       invoiceNumber: receipt.invoiceNumber,
-      status:        'success',
+      status: 'success',
     };
 
-    this.loadCampaigns();
+    // this.loadCampaigns();
     this.step = 'success';
     this.cdr.detectChanges();
   }
@@ -442,39 +442,39 @@ export class Donation implements OnInit, AfterViewInit {
     } = {}
   ): void {
     this.lastDonation = {
-      txnId:     this.generateTxnId(),
-      campaign:  this.selectedCampaign?.title || '',
-      amount:    this.finalAmount,
-      name:      this.donorFullName.trim() || 'Anonymous',
-      message:   this.donorMessage.trim(),
+      txnId: this.generateTxnId(),
+      campaign: this.selectedCampaign?.title || '',
+      amount: this.finalAmount,
+      name: this.donorFullName.trim() || 'Anonymous',
+      message: this.donorMessage.trim(),
       timestamp: new Date(),
-      orderId:   meta.razorpay_order_id || order?.id || '',
-      status:    'failed',
+      orderId: meta.razorpay_order_id || order?.id || '',
+      status: 'failed',
     };
 
     this.paymentError = 'Payment was not completed. Please try again.';
     this.step = 'success';
 
     const payload = {
-      amount:           this.finalAmount,
-      currency:         'INR',
-      campaignId:       this.selectedCampaign?._id,
-      donorFullName:    this.sanitize(this.donorFullName.trim()),
+      amount: this.finalAmount,
+      currency: 'INR',
+      campaignId: this.selectedCampaign?._id,
+      donorFullName: this.sanitize(this.donorFullName.trim()),
       donorCountryCode: this.sanitize(this.donorCountryCode.trim()),
-      donorMobile:      this.sanitize(this.donorMobile.trim()),
-      donorEmail:       this.sanitize(this.donorEmail.trim()),
+      donorMobile: this.sanitize(this.donorMobile.trim()),
+      donorEmail: this.sanitize(this.donorEmail.trim()),
       donorNationality: this.sanitize(this.donorNationality.trim()),
-      donorPAN:         this.sanitize(this.donorPAN.trim().toUpperCase()),
-      donorAddress:     this.sanitize(this.donorAddress.trim()),
-      donorMessage:     this.sanitize(this.donorMessage.trim()),
-      razorpay_order_id:   meta.razorpay_order_id   || order?.id || '',
+      donorPAN: this.sanitize(this.donorPAN.trim().toUpperCase()),
+      donorAddress: this.sanitize(this.donorAddress.trim()),
+      donorMessage: this.sanitize(this.donorMessage.trim()),
+      razorpay_order_id: meta.razorpay_order_id || order?.id || '',
       razorpay_payment_id: meta.razorpay_payment_id || '',
-      errorCode:        meta.reason      || 'unknown',
+      errorCode: meta.reason || 'unknown',
       errorDescription: meta.description || 'Payment not completed',
     };
 
     this.paymentService.recordFailed(payload).subscribe(
-      () => {},
+      () => { },
       (err) => console.error('recordFailed API error:', err)
     );
 
@@ -482,7 +482,7 @@ export class Donation implements OnInit, AfterViewInit {
   }
 
   generateTxnId(): string {
-    const ts   = Date.now().toString(36).toUpperCase();
+    const ts = Date.now().toString(36).toUpperCase();
     const rand = Math.random().toString(36).substring(2, 7).toUpperCase();
     return `TXN-${ts}-${rand}`;
   }
@@ -495,57 +495,53 @@ export class Donation implements OnInit, AfterViewInit {
     this.resetForm();
     this.modalOpen = false;
     document.body.style.overflow = '';
+    this.loadCampaigns();
   }
 
   // ── PDF Download ─────────────────────────────────────────────
-  // InvoicePdfService se frontend pe directly PDF generate hogi
+
   async downloadInvoice(): Promise<void> {
-     console.log('_receiptData:', this._receiptData); 
-  console.log('lastDonation:', this.lastDonation);
     if (this.pdfLoading) return;
 
-    // Receipt data available hai toh PDF banao
-    if (this._receiptData) {
-      this.pdfLoading = true;
-      this.cdr.detectChanges();
-      try {
-        await this.invoicePdfService.downloadPdf(this._receiptData);
-      } catch (err) {
-        console.error('PDF generation error:', err);
-      } finally {
-        this.pdfLoading = false;
-        this.cdr.detectChanges();
-      }
+    if (!this._receiptData) {
+      alert('Receipt data not found. Please try again.');
       return;
     }
 
-    // Fallback: receiptId se backend HTML invoice open karo
-    if (this.lastDonation?.receiptId) {
-      const url = `https://api.shyamjisewasamiti.org/api/receipts/${this.lastDonation.receiptId}/invoice`;
-      window.open(url, '_blank');
+    this.pdfLoading = true;
+    this.cdr.detectChanges();
+
+    try {
+      await this.invoicePdfService.downloadPdf(this._receiptData);
+    } catch (err) {
+      console.error('PDF generation error:', err);
+      alert('PDF generate nahi ho payi. Please try again.');
+    } finally {
+      this.pdfLoading = false;
+      this.cdr.detectChanges();
     }
   }
 
   resetForm(): void {
-    this.selectedAmount   = null;
-    this.customAmount     = '';
-    this.donorFullName    = '';
+    this.selectedAmount = null;
+    this.customAmount = '';
+    this.donorFullName = '';
     this.donorCountryCode = '+91';
-    this.donorMobile      = '';
-    this.donorEmail       = '';
+    this.donorMobile = '';
+    this.donorEmail = '';
     this.donorNationality = 'India';
-    this.donorPAN         = '';
-    this.donorAddress     = '';
-    this.donorMessage     = '';
-    this.amountError      = '';
-    this.nameError        = '';
-    this.mobileError      = '';
-    this.panError         = '';
-    this.addressError     = '';
-    this.paymentError     = '';
-    this.pdfLoading       = false;
-    this._receiptData     = null;
-    this._failedRecorded  = false;
+    this.donorPAN = '';
+    this.donorAddress = '';
+    this.donorMessage = '';
+    this.amountError = '';
+    this.nameError = '';
+    this.mobileError = '';
+    this.panError = '';
+    this.addressError = '';
+    this.paymentError = '';
+    this.pdfLoading = false;
+    this._receiptData = null;
+    this._failedRecorded = false;
   }
 
   progressPercent(c: Campaign): number {

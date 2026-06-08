@@ -1,9 +1,6 @@
 <!-- HERO -->
 
-<section
-  class="hero-section"
-  [style.background-image]="'url(' + heroImage + ')'"
->
+<section class="hero-section" [style.background-image]="'url(' + heroImage + ')'">
   <div class="hero-overlay">
     <div class="container text-center">
 
@@ -18,7 +15,7 @@
         seek blessings of Khatu Shyam Ji.
       </p>
 
-      <a href="#live-broadcast" class="theme-btn">
+      <a routerLink="/live-broadcast" class="theme-btn">
         Join Aarti
       </a>
 
@@ -27,7 +24,7 @@
 </section>
 
 <!-- QUICK NAV -->
- <app-live-broadcast id="live-broadcast"></app-live-broadcast>
+<app-live-broadcast id="live-broadcast"></app-live-broadcast>
 
 
 
@@ -83,7 +80,7 @@
 
       @for (aarti of aartis; track aarti.title) {
 
-      <div class="col-lg-4">
+      <div class="col-lg-4 col-md-6">
 
         <div class="lyrics-card">
 
@@ -91,25 +88,15 @@
 
           <div class="action-buttons">
 
-            <button
-              class="btn btn-outline-light"
-              (click)="readLyrics(aarti.title)"
-            >
+            <button class="btn btn-outline-light" type="button" (click)="readLyrics(aarti)">
               Read Lyrics
             </button>
 
-            <a
-              [href]="aarti.pdf"
-              target="_blank"
-              class="btn btn-warning"
-            >
-              Download PDF
-            </a>
+            <button class="btn btn-warning" type="button" (click)="downloadLyricsPdf(aarti)" [disabled]="pdfLoading">
+              {{ pdfLoading ? 'Downloading...' : 'Download PDF' }}
+            </button>
 
-            <button
-              class="btn btn-outline-warning"
-              (click)="printAarti()"
-            >
+            <button class="btn btn-outline-warning" type="button" (click)="printAarti(aarti)">
               Print
             </button>
 
@@ -126,8 +113,40 @@
   </div>
 </section>
 
-<!-- VIDEOS -->
+<!-- LYRICS POPUP -->
+@if (lyricsModalOpen && selectedAarti) {
+<div class="lyrics-modal-overlay" (click)="closeLyricsModal($event)">
+  <div class="lyrics-modal" role="dialog" aria-modal="true">
 
+    <button class="lyrics-close" type="button" (click)="closeLyricsModal(null)" aria-label="Close">
+      ×
+    </button>
+
+    <div class="lyrics-modal-header">
+      <img src="assets/logo/LOGO.png" alt="Logo">
+      <h3>{{ selectedAarti.title }}</h3>
+      <p>Shree Shyam Ji Sewa Samiti</p>
+    </div>
+
+    <div class="lyrics-modal-body">
+      {{ selectedAarti.lyrics }}
+    </div>
+
+    <div class="lyrics-modal-actions">
+      <button class="btn btn-warning" type="button" (click)="downloadLyricsPdf(selectedAarti)" [disabled]="pdfLoading">
+        {{ pdfLoading ? 'Downloading...' : 'Download PDF' }}
+      </button>
+
+      <button class="btn btn-warning" type="button" (click)="printAarti(selectedAarti)">
+        Print
+      </button>
+    </div>
+
+  </div>
+</div>
+}
+
+<!-- VIDEOS -->
 <section id="videos" class="section-space">
   <div class="container">
 
@@ -138,41 +157,38 @@
 
     <div class="row g-4">
 
-      <div class="col-lg-4">
+      @for (video of videos; track video.videoId) {
+
+      <div class="col-lg-4 col-md-6">
         <div class="video-card">
-          <div class="ratio ratio-16x9">
-            <iframe
-              src="https://www.youtube.com/embed/YOUR_VIDEO_ID"
-              allowfullscreen
-            ></iframe>
+
+          <div class="video-thumb-box ratio ratio-16x9">
+
+            @if (!video.playing) {
+            <button type="button" class="video-thumbnail-btn" (click)="playVideo(video)"
+              [attr.aria-label]="'Play ' + video.title">
+              <img [src]="getThumbnail(video.videoId)" [alt]="video.title"
+                (error)="onThumbError($event, video.videoId)" />
+
+              <span class="play-icon">
+                ▶
+              </span>
+            </button>
+            }
+
+            @if (video.playing) {
+            <iframe [src]="getEmbedUrl(video.videoId)" title="YouTube video player"
+              allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
+            }
+
           </div>
-          <h5>Daily Aarti Live</h5>
+
+          <h5>{{ video.title }}</h5>
+
         </div>
       </div>
 
-      <div class="col-lg-4">
-        <div class="video-card">
-          <div class="ratio ratio-16x9">
-            <iframe
-              src="https://www.youtube.com/embed/YOUR_VIDEO_ID"
-              allowfullscreen
-            ></iframe>
-          </div>
-          <h5>Festival Aarti</h5>
-        </div>
-      </div>
-
-      <div class="col-lg-4">
-        <div class="video-card">
-          <div class="ratio ratio-16x9">
-            <iframe
-              src="https://www.youtube.com/embed/YOUR_VIDEO_ID"
-              allowfullscreen
-            ></iframe>
-          </div>
-          <h5>Special Bhajan</h5>
-        </div>
-      </div>
+      }
 
     </div>
   </div>

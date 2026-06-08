@@ -1,211 +1,338 @@
-
 import { Injectable } from '@angular/core';
 
 @Injectable({ providedIn: 'root' })
 export class InvoicePdf {
-
-  /**
-   * Receipt object lo, HTML banao, jsPDF se PDF generate karo
-   * aur automatically download karo.
-   *
-   * Dependencies install karo:
-   *   npm install jspdf html2canvas
-   */
   async downloadPdf(receipt: any): Promise<void> {
-    // Dynamic import — lazy load karta hai, bundle size avoid hoti hai
-    const [jsPDFModule, html2canvasModule] = await Promise.all([
+    const [{ default: jsPDF }, { default: html2canvas }] = await Promise.all([
       import('jspdf'),
       import('html2canvas'),
     ]);
 
-    const jsPDF      = jsPDFModule.default;
-    const html2canvas = html2canvasModule.default;
+    const element = document.createElement('div');
+    element.style.position = 'fixed';
+    element.style.left = '-10000px';
+    element.style.top = '0';
+    element.style.width = '794px';
+    element.style.background = '#ffffff';
+    element.innerHTML = this.buildHtml(receipt);
 
-    // ── Temporary hidden div banao DOM mein ──────────────────
-    const container = document.createElement('div');
-    container.style.cssText = `
-      position: fixed;
-      top: -9999px;
-      left: -9999px;
-      width: 900px;
-      background: white;
-      z-index: -1;
-    `;
-    container.innerHTML = this.buildInvoiceHtml(receipt);
-    document.body.appendChild(container);
+    document.body.appendChild(element);
 
     try {
-      // ── html2canvas se screenshot lo ────────────────────────
-      const canvas = await html2canvas(container, {
-        scale: 2,                  // high resolution
-        useCORS: true,             // cross-origin images (logo)
+      await this.waitForImages(element);
+
+      const canvas = await html2canvas(element, {
+        scale: 2,
+        useCORS: true,
+        allowTaint: true,
         backgroundColor: '#ffffff',
         logging: false,
-        windowWidth: 900,
+        windowWidth: 794,
+        windowHeight: 1123,
       });
 
-      // ── A4 size mein fit karo ────────────────────────────────
-      const imgData   = canvas.toDataURL('image/png');
-      const pdf       = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
-      const pageWidth = pdf.internal.pageSize.getWidth();   // 210mm
-      const pageHeight = pdf.internal.pageSize.getHeight(); // 297mm
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, 210, 297);
 
-      const imgWidth  = pageWidth;
-      const imgHeight = (canvas.height * pageWidth) / canvas.width;
-
-      // Agar content ek page se zyada ho toh multiple pages
-      let heightLeft = imgHeight;
-      let position   = 0;
-
-      pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-      heightLeft -= pageHeight;
-
-      while (heightLeft > 0) {
-        position -= pageHeight;
-        pdf.addPage();
-        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-        heightLeft -= pageHeight;
-      }
-
-      // ── Download ─────────────────────────────────────────────
-      pdf.save(`${receipt.invoiceNumber || 'invoice'}.pdf`);
-
+      pdf.save(`${receipt.invoiceNumber || 'donation-receipt'}.pdf`);
     } finally {
-      document.body.removeChild(container);
+      document.body.removeChild(element);
     }
   }
 
-  // ══════════════════════════════════════════════════════════════
-  // Invoice HTML builder — same design jaise server pe hai
-  // ══════════════════════════════════════════════════════════════
-  private buildInvoiceHtml(r: any): string {
-    const invoiceDate = new Date(r.createdAt).toLocaleDateString('en-IN', {
-      day: '2-digit', month: '2-digit', year: 'numeric',
-    });
-    const invoiceTime = new Date(r.createdAt).toLocaleTimeString('en-IN');
+  private buildHtml(r: any): string {
+    const logo = 'assets/logo/LOGO.png';
+    const campaign = r.campaignId || r.campaign || {};
+    const createdAt = r.createdAt ? new Date(r.createdAt) : new Date();
 
-    const campaign       = r.campaignId || r.campaign || null;
-    const donorMessage   = r.donorMessage
-      ? `<div class="detail-row"><span class="detail-label">Message:</span><span class="detail-value">${r.donorMessage}</span></div>`
-      : '';
-    const campaignExtras = campaign
-      ? `<div class="detail-row"><span class="detail-label">Goal Amount:</span><span class="detail-value">&#8377;${Number(campaign.goal).toFixed(2)}</span></div>
-         <div class="detail-row"><span class="detail-label">Days Left:</span><span class="detail-value">${campaign.daysLeft ?? '—'} days</span></div>`
-      : '';
-    const remainingRow = campaign
-      ? `<div class="amount-row">
-           <span class="amount-label">Remaining Goal:</span>
-           <span class="amount-value">&#8377;${Number(Math.max(0, campaign.goal - campaign.raised)).toFixed(2)}</span>
-         </div>`
-      : '';
+    const date = createdAt.toLocaleDateString('en-IN');
+    const time = createdAt.toLocaleTimeString('en-IN');
+
+    const amount = Number(r.amount || 0);
+    const amountText = `₹${amount.toFixed(2)}`;
+    const amountWords = `${this.numberToWordsIndian(amount)} Only`;
 
     return `
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #fff; color: #333; padding: 30px; }
-  .invoice-container { max-width: 860px; margin: auto; background: white; padding: 40px; }
-  .invoice-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 30px; border-bottom: 3px solid #d4af37; padding-bottom: 20px; }
-  .logo-section { display: flex; align-items: center; gap: 15px; }
-  .logo-section img { width: 75px; height: 75px; object-fit: contain; }
-  .company-name { font-size: 26px; font-weight: bold; color: #8b4513; margin-bottom: 4px; }
-  .company-tagline { font-size: 12px; color: #666; font-style: italic; }
-  .invoice-title-section { text-align: right; }
-  .invoice-title { font-size: 30px; font-weight: bold; color: #d4af37; margin-bottom: 8px; }
-  .invoice-number { font-size: 13px; color: #666; margin-bottom: 4px; }
-  .invoice-main { display: flex; gap: 40px; margin-bottom: 30px; }
-  .section { flex: 1; min-width: 0; }
-  .section-title { font-size: 12px; font-weight: bold; color: #8b4513; text-transform: uppercase; margin-bottom: 14px; border-bottom: 2px solid #d4af37; padding-bottom: 8px; }
-  .detail-row { display: flex; margin-bottom: 8px; font-size: 13px; }
-  .detail-label { font-weight: 600; width: 120px; min-width: 120px; color: #333; }
-  .detail-value { flex: 1; color: #555; word-break: break-word; }
-  .amount-section { background: #f9f9f9; padding: 24px; border-radius: 4px; margin: 28px 0; border-left: 5px solid #d4af37; }
-  .amount-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px; }
-  .amount-label { font-weight: 600; color: #333; }
-  .amount-value { color: #555; }
-  .donation-amount { display: flex; justify-content: space-between; font-size: 22px; font-weight: bold; color: #8b4513; border-top: 2px solid #d4af37; padding-top: 14px; margin-top: 14px; }
-  .invoice-footer { display: flex; justify-content: space-between; align-items: flex-end; margin-top: 36px; padding-top: 18px; border-top: 2px solid #eee; }
-  .footer-left { font-size: 12px; color: #666; }
-  .footer-date { display: block; margin-bottom: 8px; }
-  .footer-note { font-size: 11px; color: #999; font-style: italic; margin-top: 8px; }
-  .mohar { width: 90px; height: 90px; border: 2px dashed #d4af37; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; color: #d4af37; font-weight: bold; text-align: center; }
-  .organization-name { font-size: 13px; font-weight: bold; color: #8b4513; margin-top: 6px; text-align: center; }
-  .system-notice { text-align: center; margin-top: 28px; font-size: 10px; color: #999; border-top: 1px dashed #ddd; padding-top: 14px; }
-</style>
-</head>
-<body>
-<div class="invoice-container">
+      <div style="
+        width:794px;
+        height:1123px;
+        background:#fff;
+        padding:34px 42px;
+        box-sizing:border-box;
+        font-family:Arial, Helvetica, sans-serif;
+        color:#111;
+        position:relative;
+        overflow:hidden;
+      ">
 
-  <div class="invoice-header">
-    <div class="logo-section">
-      <img src="https://shyamjisewasamiti.org/assets/logo/logo.svg" alt="Logo" crossorigin="anonymous" />
-      <div>
-        <div class="company-name">श्री श्याम जी सेवा समिति</div>
-        <div class="company-tagline">Shree Shyam Ji Sewa Samiti</div>
+        <img src="${logo}" style="
+          position:absolute;
+          width:390px;
+          height:390px;
+          object-fit:contain;
+          left:202px;
+          top:360px;
+          opacity:0.055;
+          z-index:0;
+        " />
+
+        <div style="position:relative;z-index:1;height:100%;display:flex;flex-direction:column;">
+
+          <!-- HEADER -->
+          <div style="display:flex;align-items:center;justify-content:space-between;">
+            <div style="display:flex;align-items:center;gap:14px;">
+              <img src="${logo}" style="width:112px;height:82px;object-fit:contain;" />
+              <div>
+                <div style="font-size:27px;font-weight:800;color:#8b3f17;line-height:1.05;">
+                  श्री श्याम जी सेवा समिति
+                </div>
+                <div style="font-size:14px;color:#555;font-style:italic;margin-top:8px;">
+                  Shree Shyam Ji Sewa Samiti
+                </div>
+              </div>
+            </div>
+
+            <div style="text-align:right;">
+              <div style="font-size:14px;font-weight:800;color:#b8860b;line-height:1.15;">
+                DONATION RECEIPT
+              </div>
+              <div style="font-size:12px;margin-top:12px;">
+                Receipt No: ${this.safe(r.invoiceNumber || r._id || '—')}
+              </div>
+              <div style="font-size:12px;margin-top:8px;">
+                Date: ${date}
+              </div>
+            </div>
+          </div>
+
+          <div style="text-align:center;margin-top:18px;font-size:13px;line-height:1.55;">
+            <div>Noida Sector 63, Uttar Pradesh, India</div>
+            <div>Unique Registration Number :  '<strong>AAEBS4366FE20261</strong>'</div>
+            <div>E-Mail : shyamjisewasamiti@gmail.com</div>
+          </div>
+
+          <div style="height:2px;background:#b8860b;margin:20px 0 30px;"></div>
+
+          <!-- DETAILS -->
+          <div style="display:flex;gap:38px;">
+
+            <div style="width:50%;">
+              ${this.sectionTitle('', 'DONOR INFORMATION')}
+              ${this.infoRow('Name', r.donorFullName || 'Anonymous')}
+              ${this.infoRow('Email', r.donorEmail || '—')}
+              ${this.infoRow('Contact', `${r.donorCountryCode || '+91'} ${r.donorMobile || '—'}`)}
+              ${this.infoRow('Address', r.donorAddress || '—')}
+              ${this.infoRow('Nationality', r.donorNationality || 'India')}
+              ${this.infoRow('PAN', r.donorPAN || '—')}
+              ${this.infoRow('Whatsapp No.', r.donorMobile || '—')}
+            </div>
+
+            <div style="width:50%;">
+              ${this.sectionTitle('', 'DONATION FOR')}
+              ${this.infoRow('Campaign', campaign.title || 'General Donation')}
+              ${this.infoRow('Description', campaign.description || 'Religious & Social Service')}
+              ${this.infoRow('Payment ID', r.razorpay_payment_id || '—')}
+              ${this.infoRow('Order ID', r.razorpay_order_id || '—')}
+              ${this.infoRow('Currency', r.currency || 'INR')}
+              ${this.infoRow('The sum of Rs.', amountText)}
+              ${this.infoRow('In Words', amountWords)}
+            </div>
+
+          </div>
+
+          <!-- AMOUNT BOX -->
+          <div style="
+            margin-top:28px;
+            background:#f7f7f7;
+            border-left:5px solid #d4af37;
+            padding:20px 26px;
+          ">
+            <div style="display:flex;justify-content:space-between;font-size:14px;">
+              <div>Total Donation Amount</div>
+              <div>${amountText}</div>
+            </div>
+
+            <div style="height:1px;background:#b8860b;margin:16px 0;"></div>
+
+            <div style="display:flex;justify-content:space-between;align-items:center;font-size:23px;font-weight:800;">
+              <div style="color:#7b3517;">Total Amount</div>
+              <div style="color:#0b8f3a;">${amountText}</div>
+            </div>
+          </div>
+
+          <!-- TAX INFO -->
+          <div style="margin-top:22px;font-size:13px;">
+            ${this.fullRow('Eligible for deduction Section', 'Section 35(1)(ii)')}
+            ${this.fullRow('Our Income Tax Unique Registeration No', 'AAEBS4366FE20261')}
+          </div>
+
+          <div style="height:1px;background:#d4af37;margin-top:16px;"></div>
+
+          <!-- FOOTER -->
+          <div style="margin-top:28px;display:flex;justify-content:space-between;align-items:flex-end;">
+            <div style="font-size:13px;line-height:1.8;">
+              <div><strong>Date:</strong> ${date}</div>
+              <div><strong>Time:</strong> ${time}</div>
+              <div style="font-size:12px;color:#666;font-style:italic;margin-top:14px;">
+                Thank you for your generous donation!
+              </div>
+            </div>
+
+            <div style="text-align:center;">
+              <div style="
+                width:90px;
+                height:90px;
+                border:2px dashed #b8860b;
+                border-radius:50%;
+                display:flex;
+                align-items:center;
+                justify-content:center;
+                color:#b8860b;
+                font-size:12px;
+                font-weight:700;
+                margin-left:auto;
+                margin-bottom:14px;
+              ">
+                Official Seal
+              </div>
+              <div style="font-size:16px;font-weight:800;color:#8b3f17;">
+                श्री श्याम जी सेवा समिति
+              </div>
+            </div>
+          </div>
+
+          <div style="
+            margin-top:auto;
+            border-top:1px dashed #999;
+            padding-top:12px;
+            text-align:center;
+            font-size:11px;
+            color:#666;
+            line-height:1.65;
+          ">
+            <div>1. Cheque/DD is Subject to realisation &nbsp;&nbsp; 2. This is a system generated receipt.</div>
+            <div>✓ This is a system generated receipt. No physical signature required.</div>
+            <div>Generated on ${date}, ${time}</div>
+          </div>
+
+        </div>
       </div>
-    </div>
-    <div class="invoice-title-section">
-      <div class="invoice-title">INVOICE</div>
-      <div class="invoice-number">Invoice #: ${r.invoiceNumber}</div>
-      <div class="invoice-number">Receipt ID: ${r._id}</div>
-    </div>
-  </div>
+    `;
+  }
 
-  <div class="invoice-main">
-    <div class="section">
-      <div class="section-title">💳 Donor Information</div>
-      <div class="detail-row"><span class="detail-label">Name:</span><span class="detail-value">${r.donorFullName || 'Anonymous'}</span></div>
-      <div class="detail-row"><span class="detail-label">Email:</span><span class="detail-value">${r.donorEmail || '—'}</span></div>
-      <div class="detail-row"><span class="detail-label">Contact:</span><span class="detail-value">${r.donorCountryCode || '+91'} ${r.donorMobile || '—'}</span></div>
-      <div class="detail-row"><span class="detail-label">Address:</span><span class="detail-value">${r.donorAddress || '—'}</span></div>
-      <div class="detail-row"><span class="detail-label">Nationality:</span><span class="detail-value">${r.donorNationality || 'India'}</span></div>
-      <div class="detail-row"><span class="detail-label">PAN:</span><span class="detail-value">${r.donorPAN || '—'}</span></div>
-      ${donorMessage}
-    </div>
-    <div class="section">
-      <div class="section-title">🏛️ Donation For</div>
-      <div class="detail-row"><span class="detail-label">Campaign:</span><span class="detail-value">${campaign?.title || 'General Donation'}</span></div>
-      <div class="detail-row"><span class="detail-label">Description:</span><span class="detail-value">${campaign?.description || 'Religious & Social Service'}</span></div>
-      <div class="detail-row"><span class="detail-label">Payment ID:</span><span class="detail-value">${r.razorpay_payment_id || '—'}</span></div>
-      <div class="detail-row"><span class="detail-label">Order ID:</span><span class="detail-value">${r.razorpay_order_id || '—'}</span></div>
-      <div class="detail-row"><span class="detail-label">Currency:</span><span class="detail-value">${r.currency || 'INR'}</span></div>
-      ${campaignExtras}
-    </div>
-  </div>
+  private sectionTitle(icon: string, title: string): string {
+    return `
+      <div style="margin-bottom:22px;">
+        <div style="
+          font-size:16px;
+          font-weight:800;
+          color:#8b3f17;
+          display:flex;
+          align-items:center;
+          gap:8px;
+        ">
+          <span>${icon}</span>
+          <span>${title}</span>
+        </div>
+        <div style="height:2px;background:#c69a1b;margin-top:10px;"></div>
+      </div>
+    `;
+  }
 
-  <div class="amount-section">
-    <div class="amount-row">
-      <span class="amount-label">Donation Amount:</span>
-      <span class="amount-value">&#8377;${Number(r.amount).toFixed(2)}</span>
-    </div>
-    ${remainingRow}
-    <div class="donation-amount">
-      <span>Total Amount:</span>
-      <span style="color:#27ae60;">&#8377;${Number(r.amount).toFixed(2)}</span>
-    </div>
-  </div>
+  private infoRow(label: string, value: any): string {
+    return `
+      <div style="
+        display:grid;
+        grid-template-columns:125px 14px 1fr;
+        gap:5px;
+        margin-bottom:13px;
+        font-size:12.5px;
+        line-height:1.42;
+      ">
+        <div style="font-weight:700;">${this.safe(label)}</div>
+        <div>:</div>
+        <div style="word-break:break-word;">${this.safe(value)}</div>
+      </div>
+    `;
+  }
 
-  <div class="invoice-footer">
-    <div class="footer-left">
-      <span class="footer-date"><strong>Date:</strong> ${invoiceDate}</span>
-      <span class="footer-date"><strong>Time:</strong> ${invoiceTime}</span>
-      <div class="footer-note">Thank you for your generous donation!</div>
-    </div>
-    <div class="footer-right">
-      <div class="mohar"><span>Official<br>Seal</span></div>
-      <div class="organization-name">श्री श्याम जी<br>सेवा समिति</div>
-    </div>
-  </div>
+  private fullRow(label: string, value: any): string {
+    return `
+      <div style="
+        display:grid;
+        grid-template-columns:275px 16px 1fr;
+        gap:6px;
+        margin-bottom:11px;
+        line-height:1.45;
+      ">
+        <div style="font-weight:700;">${this.safe(label)}</div>
+        <div>:</div>
+        <div>${this.safe(value)}</div>
+      </div>
+    `;
+  }
 
-  <div class="system-notice">
-    ✓ This is a system-generated invoice. No physical signature required. | Generated on ${new Date().toLocaleString('en-IN')}
-  </div>
+  private safe(value: any): string {
+    return String(value ?? '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
+  }
 
-</div>
-</body>
-</html>`;
+  private waitForImages(element: HTMLElement): Promise<void> {
+    const images = Array.from(element.querySelectorAll('img'));
+
+    return Promise.all(
+      images.map((img: HTMLImageElement) => {
+        if (img.complete) return Promise.resolve();
+
+        return new Promise<void>((resolve) => {
+          img.onload = () => resolve();
+          img.onerror = () => resolve();
+        });
+      })
+    ).then(() => undefined);
+  }
+
+  private numberToWordsIndian(num: number): string {
+    num = Math.floor(Number(num || 0));
+    if (!num) return 'Zero';
+
+    const ones = [
+      '', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight',
+      'Nine', 'Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen',
+      'Sixteen', 'Seventeen', 'Eighteen', 'Nineteen'
+    ];
+
+    const tens = [
+      '', '', 'Twenty', 'Thirty', 'Forty', 'Fifty',
+      'Sixty', 'Seventy', 'Eighty', 'Ninety'
+    ];
+
+    const words = (n: number): string => {
+      if (n < 20) return ones[n];
+      if (n < 100) {
+        return tens[Math.floor(n / 10)] + (n % 10 ? ' ' + ones[n % 10] : '');
+      }
+      return ones[Math.floor(n / 100)] + ' Hundred' + (n % 100 ? ' ' + words(n % 100) : '');
+    };
+
+    let result = '';
+
+    const crore = Math.floor(num / 10000000);
+    num %= 10000000;
+
+    const lakh = Math.floor(num / 100000);
+    num %= 100000;
+
+    const thousand = Math.floor(num / 1000);
+    num %= 1000;
+
+    if (crore) result += words(crore) + ' Crore ';
+    if (lakh) result += words(lakh) + ' Lakh ';
+    if (thousand) result += words(thousand) + ' Thousand ';
+    if (num) result += words(num);
+
+    return result.trim();
   }
 }
