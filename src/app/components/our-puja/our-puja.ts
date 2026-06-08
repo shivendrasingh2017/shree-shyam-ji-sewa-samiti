@@ -15,17 +15,17 @@ export class OurPuja {
   active = 'All';
 
   pujas = [
-    { title:'Shyam Aarti',   img:'assets/puja/puja1.webp', cat:'Shyam Aarti',
+    { title:'Shyam Aarti',   img:'assets/puja/our-puja1.jpg', cat:'Shyam Aarti',
       desc:'Roz subah-shaam Khatu Shyam Ji ki divya aarti me shaamil hon.' },
-    { title:'Phagun Mela',   img:'assets/puja/puja2.webp', cat:'Phagun Mela',
+    { title:'Phagun Mela',   img:'assets/puja/our-puja2.jpg', cat:'Phagun Mela',
       desc:'Khatu dhaam ka sabse bada utsav — lakhon bhakton ka sangam.' },
-    { title:'Ekadashi Path', img:'assets/puja/puja3.webp', cat:'Ekadashi',
+    { title:'Ekadashi Path', img:'assets/puja/our-puja3.jpg', cat:'Ekadashi',
       desc:'Har Ekadashi ko Shyam Baba ke charno me path & bhajan.' },
-    { title:'Nishan Yatra',  img:'assets/puja/puja4.webp', cat:'Phagun Mela',
+    { title:'Nishan Yatra',  img:'assets/puja/our-puja4.jpg', cat:'Phagun Mela',
       desc:'Reengus se Khatu tak paidal Nishan Yatra — aastha ka pratik.' },
-    { title:'Chhappan Bhog', img:'assets/puja/puja5.webp', cat:'Shyam Aarti',
+    { title:'Chhappan Bhog', img:'assets/puja/our-puja5.jpg', cat:'Shyam Aarti',
       desc:'Baba ko 56 prakar ke bhog ka divya samarpan.' },
-    { title:'Jagran',        img:'assets/puja/puja6.webp', cat:'Ekadashi',
+    { title:'Jagran',        img:'assets/puja/our-puja6.jpg', cat:'Ekadashi',
       desc:'Raat bhar bhajan & kirtan ke saath Shyam naam ka jaap.' },
   ];
 

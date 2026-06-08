@@ -7,11 +7,13 @@ import {
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
+import { OurPuja } from "../../components/our-puja/our-puja";
+import { Donation } from "../../components/donation/donation";
 
 @Component({
   selector: 'app-puja',
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, OurPuja, Donation,RouterLink],
   templateUrl: './puja.html',
   styleUrl: './puja.scss',
 })
@@ -75,8 +77,8 @@ export class Puja {
   ];
 
   upcomingPujas = [
-    { date: '15 Aug 2026', time: '10:00 AM', location: 'Main Temple'       },
-    { date: '20 Aug 2026', time: '11:00 AM', location: 'Shyam Darbar Hall' }
+    { date: '25 July 2026', time: '10:00 AM', location: 'Main Temple'       },
+    { date: '25 July 2026', time: '11:00 AM', location: 'Shyam Darbar Hall' }
   ];
 
   selectPuja(name: string) {

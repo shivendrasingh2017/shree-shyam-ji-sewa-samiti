@@ -22,7 +22,7 @@
         Participate in sacred pujas and receive divine blessings.
       </p>
 
-      <a href="#booking-form" class="theme-btn">
+      <a routerLink="/donation"class="theme-btn">
         Book Now
       </a>
 
@@ -61,12 +61,12 @@
             ₹ {{item.donation}}
           </div>
 
-          <button
+          <!-- <button
             class="theme-btn w-100"
             (click)="selectPuja(item.title)"
           >
             Select Puja
-          </button>
+          </button> -->
 
         </div>
 
@@ -80,7 +80,7 @@
 
 </section>
 
-<section
+<!-- <section
   id="booking-form"
   class="section-space section-bg"
 >
@@ -204,7 +204,8 @@
 
   </div>
 
-</section>
+</section> -->
+<app-our-puja></app-our-puja>
 
 <section class="section-space">
 
@@ -237,6 +238,7 @@
   </div>
 
 </section>
+<app-donation></app-donation>
 
 <section class="section-bg section-space">
 
@@ -292,9 +294,9 @@
 
           <p>{{item.location}}</p>
 
-          <button class="theme-btn">
+          <!-- <button class="theme-btn">
             Register
-          </button>
+          </button> -->
 
         </div>
 

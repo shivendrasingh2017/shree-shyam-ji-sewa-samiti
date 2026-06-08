@@ -56,7 +56,7 @@ export class Gallery {
       title:    'Janmashtami'
     },
     {
-      image:    'assets/gallery/gallery06.jpg',
+      image:    'assets/gallery/food_sewa1.jpg',
       category: 'Food Distribution',
       title:    'Food Seva'
     }
