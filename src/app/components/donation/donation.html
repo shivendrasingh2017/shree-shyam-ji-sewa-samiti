@@ -1,22 +1,36 @@
 <section class="donation">
 
-  <!-- ══ HEADER ══ -->
-  <div class="container">
-    <span class="eyebrow">🕉 DONATE TO HELP 🕉</span>
-    <h2>Make a Donation to<br>Help Community</h2>
-    <p class="subtitle">
-      Every rupee you give creates a ripple of hope. Choose a cause and donate securely via Razorpay.
-    </p>
+  <div class="gateway-loader page-loader" *ngIf="gatewayLoading && !modalOpen">
+    <div class="gateway-loader__inner">
+      <img src="assets/logo/LOGO.png" alt="Shree Shyam Ji Sewa Samiti" />
+      <div class="spinner-ring"></div>
+      <p>{{ gatewayLoadingMsg || 'Please wait...' }}</p>
+    </div>
   </div>
 
-  <!-- ══ MAIN CONTENT ══ -->
-  <div class="container donation-body">
+  <div class="container donation-hero">
+    <span class="eyebrow">🕉 DONATE TO HELP 🕉</span>
+    <h2>Make a Donation<br />Support Seva</h2>
+    <p class="subtitle">
+      Aapka yogdan bhandara, food, dharmik karyakram aur samaj kalyan ke liye istemal hota hai.
+    </p>
 
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px">
-      <h3 style="margin:0">Choose a Campaign</h3>
+    <div class="ngo-trust-strip">
+      <div><strong>AAEBS4366FE20261</strong><span>Unique Registration No.</span></div>
+      <div><strong>Secure</strong><span> Payment</span></div>
+      <div><strong>Tax Benefit</strong><span>As applicable</span></div>
+    </div>
+  </div>
+
+  <div class="container donation-body">
+    <div class="section-head">
+      <div>
+        <span class="label-chip">Choose Campaign</span>
+        <h3>Support a Cause</h3>
+      </div>
+      <p>Select any seva campaign and continue donation securely.</p>
     </div>
 
-    <!-- Campaign Cards — dynamically rendered -->
     <div class="campaigns-grid">
       <div
         class="campaign-card"
@@ -27,7 +41,6 @@
         [attr.aria-pressed]="isSelectedCampaign(c)"
         tabindex="0"
         (keydown.enter)="selectCampaign(c)"
-        style="position:relative"
       >
         <div class="campaign-top">
           <span class="c-icon">{{ c.icon }}</span>
@@ -35,6 +48,7 @@
             {{ c.daysLeft }}d left
           </span>
         </div>
+
         <h3>{{ c.title }}</h3>
         <p>{{ c.description }}</p>
 
@@ -43,63 +57,63 @@
             <div class="progress-fill" [style.width.%]="progressPercent(c)"></div>
           </div>
           <div class="progress-meta">
-            <span class="raised">{{ formatINR(c.raised) }} raised</span>
-            <span class="percent">{{ progressPercent(c) }}%</span>
+            <span>{{ formatINR(c.raised) }} raised</span>
+            <strong>{{ progressPercent(c) }}%</strong>
           </div>
         </div>
 
         <div class="campaign-footer">
-          <span>🎯 Goal: {{ formatINR(c.goal) }}</span>
-          <span>💸 Remaining: {{ formatINR((c.goal || 0) - (c.raised || 0)) }}</span>
+          <span>🎯 {{ formatINR(c.goal) }}</span>
           <span>👥 {{ c.donors }} donors</span>
         </div>
       </div>
     </div>
 
-    <div style="text-align:center; margin-top:12px" *ngIf="campaigns.length > visibleCount">
-      <button (click)="visibleCount = visibleCount + 6" type="button">Load more</button>
+    <div class="load-more-wrap" *ngIf="campaigns.length > visibleCount">
+      <button (click)="visibleCount = visibleCount + 6" type="button">
+        Load More Campaigns
+      </button>
     </div>
+  </div>
 
-  </div><!-- /donation-body -->
-
-  <!-- ══ MODAL — covers all steps ══ -->
   <div class="modal-overlay" *ngIf="modalOpen" (click)="closeModal($event)">
     <div class="modal-box" role="dialog" aria-modal="true">
 
-      <!-- Close Button -->
       <button
         class="modal-close-btn"
-        *ngIf="step !== 'success'"
         (click)="closeModal(null)"
         type="button"
         aria-label="Close"
-      >✕</button>
+        [disabled]="gatewayLoading || paymentProcessing || pdfLoading"
+      >
+        ✕
+      </button>
 
-      <!-- ─── GATEWAY LOADING OVERLAY ─── -->
-      <div class="gateway-loader" *ngIf="gatewayLoading">
+      <div class="gateway-loader modal-loader" *ngIf="gatewayLoading">
         <div class="gateway-loader__inner">
-          <div class="gateway-loader__logo">
-            <img
-              src="assets/logo/LOGO.png"
-              alt="Shree Shyam Ji Sewa Samiti"
-              onerror="this.style.display='none'"
-            />
-          </div>
-          <div class="gateway-loader__spinner">
-            <div class="spinner-ring"></div>
-          </div>
-          <p class="gateway-loader__msg">{{ gatewayLoadingMsg || 'Please wait...' }}</p>
-          <p class="gateway-loader__sub">🔒 Secure payment via Razorpay</p>
+          <img src="assets/logo/LOGO.png" alt="Shree Shyam Ji Sewa Samiti" />
+          <div class="spinner-ring"></div>
+          <p>{{ gatewayLoadingMsg || 'Please wait...' }}</p>
+          <small>🔒 Secure process. Please do not refresh.</small>
         </div>
       </div>
 
-      <!-- ─ STEP 1: SELECT DONATION DETAILS ─ -->
       <ng-container *ngIf="step === 'select'">
         <div class="donation-form-box" *ngIf="selectedCampaign">
-          <h3 class="form-title">
-            <span class="form-title-icon">{{ selectedCampaign.icon }}</span>
-            Donating to: <span>{{ selectedCampaign.title }}</span>
-          </h3>
+          <div class="modal-header">
+            <span class="modal-icon">{{ selectedCampaign.icon }}</span>
+            <div>
+              <span class="label-chip">Donation Details</span>
+              <h3>Donating to {{ selectedCampaign.title }}</h3>
+              <p>Fill donor details for receipt and payment verification.</p>
+            </div>
+          </div>
+
+          <div class="trust-mini">
+            <span>✅ Tax benefit eligible</span>
+            <span>🔒 Secure Payment</span>
+            <span>🧾 PDF Receipt</span>
+          </div>
 
           <div class="preset-amounts">
             <button
@@ -114,271 +128,148 @@
           </div>
 
           <div class="input-group">
-            <label for="customAmt">Or enter custom amount (₹)</label>
+            <label for="customAmt">Custom Amount</label>
             <div class="input-prefix-wrap">
               <span class="prefix">₹</span>
-              <input
-                id="customAmt"
-                type="number"
-                min="1"
-                max="100000"
-                placeholder="e.g. 2100"
-                [(ngModel)]="customAmount"
-                (ngModelChange)="onCustomAmountChange()"
-                [class.error]="!!amountError"
-                autocomplete="off"
-              />
+              <input id="customAmt" type="number" min="1" max="100000"
+                placeholder="e.g. 2100" [(ngModel)]="customAmount"
+                (ngModelChange)="onCustomAmountChange()" [class.error]="!!amountError" />
             </div>
             <span class="error-msg" *ngIf="amountError">{{ amountError }}</span>
           </div>
 
-          <div class="input-group">
-            <label for="donorFull">Full Name</label>
-            <input
-              id="donorFull"
-              type="text"
-              placeholder="e.g. Ramesh Sharma"
-              maxlength="100"
-              [(ngModel)]="donorFullName"
-              [class.error]="!!nameError"
-              autocomplete="name"
-            />
-            <span class="error-msg" *ngIf="nameError">{{ nameError }}</span>
-          </div>
-
-          <div class="input-group two-col">
-            <div>
-              <label for="country">Country Code</label>
-              <input id="country" type="text" [(ngModel)]="donorCountryCode" />
+          <div class="form-grid">
+            <div class="input-group">
+              <label for="donorFull">Full Name</label>
+              <input id="donorFull" type="text" maxlength="100"
+                [(ngModel)]="donorFullName" [class.error]="!!nameError" />
+              <span class="error-msg" *ngIf="nameError">{{ nameError }}</span>
             </div>
-            <div>
+
+            <div class="input-group">
               <label for="mobile">Mobile Number</label>
               <input id="mobile" type="tel" [(ngModel)]="donorMobile" [class.error]="!!mobileError" />
               <span class="error-msg" *ngIf="mobileError">{{ mobileError }}</span>
             </div>
-          </div>
 
-          <div class="input-group">
-            <label for="nationality">Nationality</label>
-            <input
-              id="nationality"
-              type="text"
-              [(ngModel)]="donorNationality"
-              placeholder="India"
-            />
-          </div>
+            <div class="input-group">
+              <label for="country">Country Code</label>
+              <input id="country" type="text" [(ngModel)]="donorCountryCode" />
+            </div>
 
-          <div class="input-group">
-            <label for="pan">PAN</label>
-            <input
-              id="pan"
-              type="text"
-              placeholder="ABCDE1234F"
-              maxlength="10"
-              [(ngModel)]="donorPAN"
-              [class.error]="!!panError"
-            />
-            <span class="error-msg" *ngIf="panError">{{ panError }}</span>
+            <div class="input-group">
+              <label for="nationality">Nationality</label>
+              <input id="nationality" type="text" [(ngModel)]="donorNationality" />
+            </div>
+
+            <div class="input-group">
+              <label for="pan">PAN</label>
+              <input id="pan" type="text" maxlength="10" [(ngModel)]="donorPAN" [class.error]="!!panError" />
+              <span class="error-msg" *ngIf="panError">{{ panError }}</span>
+            </div>
+
+            <div class="input-group">
+              <label for="email">Email <span>(optional)</span></label>
+              <input id="email" type="email" [(ngModel)]="donorEmail" />
+            </div>
           </div>
 
           <div class="input-group">
             <label for="address">Address</label>
-            <textarea
-              id="address"
-              rows="3"
-              placeholder="Enter your address"
-              maxlength="250"
-              [(ngModel)]="donorAddress"
-              [class.error]="!!addressError"
-            ></textarea>
+            <textarea id="address" rows="2" maxlength="250" [(ngModel)]="donorAddress" [class.error]="!!addressError"></textarea>
             <span class="error-msg" *ngIf="addressError">{{ addressError }}</span>
           </div>
 
           <div class="input-group">
-            <label for="email">Email <span class="optional">(optional)</span></label>
-            <input id="email" type="email" [(ngModel)]="donorEmail" />
+            <label for="donorMsg">Message <span>(optional)</span></label>
+            <textarea id="donorMsg" rows="2" maxlength="200" [(ngModel)]="donorMessage"></textarea>
           </div>
 
-          <div class="input-group">
-            <label for="donorMsg">Message <span class="optional">(optional)</span></label>
-            <textarea
-              id="donorMsg"
-              rows="2"
-              placeholder="Write a blessing or message..."
-              maxlength="200"
-              [(ngModel)]="donorMessage"
-            ></textarea>
-          </div>
-
-          <button
-            class="btn-donate"
-            (click)="proceedToConfirm()"
-            [disabled]="finalAmount < 1"
-            type="button"
-          >
+          <button class="btn-donate" (click)="proceedToConfirm()" [disabled]="finalAmount < 1" type="button">
             Continue →
           </button>
         </div>
       </ng-container>
 
-      <!-- ─ STEP 2: CONFIRM DONATION ─ -->
       <ng-container *ngIf="step === 'confirm'">
         <div class="confirm-box">
-          <button class="back-btn" (click)="step = 'select'" type="button">
-            ← Back
-          </button>
+          <button class="back-btn" (click)="step = 'select'" type="button">← Back</button>
 
-          <h3 class="confirm-title">Complete Your Donation</h3>
+          <div class="modal-header compact">
+            <span class="modal-icon">💳</span>
+            <div>
+              <span class="label-chip">Confirm Donation</span>
+              <h3>Complete Your Donation</h3>
+              <p>Please review details before payment.</p>
+            </div>
+          </div>
 
           <div class="donation-summary">
-            <div class="summary-item">
-              <span class="label">Campaign:</span>
-              <span class="value">{{ selectedCampaign?.title }}</span>
-            </div>
-            <div class="summary-item">
-              <span class="label">Amount:</span>
-              <span class="value amount">{{ formatINR(finalAmount) }}</span>
-            </div>
-            <div class="summary-item" *ngIf="donorFullName">
-              <span class="label">Full Name:</span>
-              <span class="value">{{ donorFullName }}</span>
-            </div>
-            <div class="summary-item" *ngIf="donorMobile">
-              <span class="label">Mobile:</span>
-              <span class="value">{{ donorCountryCode }} {{ donorMobile }}</span>
-            </div>
-            <div class="summary-item" *ngIf="donorNationality">
-              <span class="label">Nationality:</span>
-              <span class="value">{{ donorNationality }}</span>
-            </div>
-            <div class="summary-item" *ngIf="donorPAN">
-              <span class="label">PAN:</span>
-              <span class="value">{{ donorPAN }}</span>
-            </div>
-            <div class="summary-item" *ngIf="donorAddress">
-              <span class="label">Address:</span>
-              <span class="value">{{ donorAddress }}</span>
-            </div>
-            <div class="summary-item" *ngIf="donorEmail">
-              <span class="label">Email:</span>
-              <span class="value">{{ donorEmail }}</span>
-            </div>
-            <div class="summary-item" *ngIf="donorMessage">
-              <span class="label">Message:</span>
-              <span class="value">{{ donorMessage }}</span>
-            </div>
+            <div class="summary-item"><span>Campaign</span><strong>{{ selectedCampaign?.title }}</strong></div>
+            <div class="summary-item"><span>Amount</span><strong class="amount">{{ formatINR(finalAmount) }}</strong></div>
+            <div class="summary-item" *ngIf="donorFullName"><span>Name</span><strong>{{ donorFullName }}</strong></div>
+            <div class="summary-item" *ngIf="donorMobile"><span>Mobile</span><strong>{{ donorCountryCode }} {{ donorMobile }}</strong></div>
+            <div class="summary-item" *ngIf="donorPAN"><span>PAN</span><strong>{{ donorPAN }}</strong></div>
+            <div class="summary-item" *ngIf="donorAddress"><span>Address</span><strong>{{ donorAddress }}</strong></div>
           </div>
 
           <div class="payment-methods">
-            <p class="methods-label">Secure Payment via Razorpay</p>
-            <div class="razorpay-badge">
-              💳 Credit Card &nbsp;•&nbsp; 🏦 Bank Transfer &nbsp;•&nbsp; 📱 Digital Wallets
-            </div>
+            <strong>Secure Payment via Razorpay</strong>
+            <span>UPI • Card • Netbanking • Wallet</span>
           </div>
 
-          <button
-            class="btn-razorpay"
-            (click)="initiatePayment()"
-            [disabled]="paymentProcessing || gatewayLoading"
-            [attr.aria-busy]="paymentProcessing || gatewayLoading"
-            type="button"
-          >
+          <button class="btn-razorpay" (click)="initiatePayment()" [disabled]="paymentProcessing || gatewayLoading" type="button">
             <span *ngIf="!paymentProcessing && !gatewayLoading">💰 Pay Now</span>
             <span *ngIf="paymentProcessing || gatewayLoading" class="btn-loading-text">
-              <span class="btn-spinner"></span> Opening Gateway...
+              <span class="btn-spinner"></span> Please wait...
             </span>
           </button>
 
-          <p class="secure-note">
-            🔒 Payments are processed securely. We never store your card details.
-          </p>
+          <p class="secure-note">🔒 We never store your card or banking details.</p>
 
-          <div class="error-box" *ngIf="paymentError">
-            {{ paymentError }}
-          </div>
+          <div class="error-box" *ngIf="paymentError">{{ paymentError }}</div>
         </div>
       </ng-container>
 
-      <!-- ─ STEP 3: SUCCESS ─ -->
       <ng-container *ngIf="step === 'success' && lastDonation">
         <div class="success-box">
-          <div class="success-icon" *ngIf="lastDonation.status === 'success'">🙏</div>
-          <div class="success-icon" *ngIf="lastDonation.status === 'failed'">❌</div>
+          <div class="success-icon" [class.failed]="lastDonation.status === 'failed'">
+            {{ lastDonation.status === 'success' ? '🙏' : '❌' }}
+          </div>
 
-          <h3 *ngIf="lastDonation.status === 'success'">Jai Shri Shyam! Thank You</h3>
-          <h3 *ngIf="lastDonation.status === 'failed'">Payment Failed</h3>
+          <h3>{{ lastDonation.status === 'success' ? 'Jai Shri Shyam! Thank You' : 'Payment Failed' }}</h3>
 
           <p class="success-msg" *ngIf="lastDonation.status === 'success'">
             Your donation of <strong>{{ formatINR(lastDonation.amount) }}</strong>
-            towards <strong>{{ lastDonation.campaign }}</strong> has been recorded successfully!
+            towards <strong>{{ lastDonation.campaign }}</strong> has been recorded successfully.
+          </p>
+
+          <p class="success-msg" *ngIf="lastDonation.status === 'failed'">
+            Unfortunately, your payment could not be completed. Please try again.
           </p>
 
           <div class="invoice-summary" *ngIf="lastDonation.invoiceNumber">
             <span><strong>Invoice:</strong> {{ lastDonation.invoiceNumber }}</span>
-            <button
-              class="btn-secondary"
-              type="button"
-              (click)="downloadInvoice()"
-              [disabled]="pdfLoading"
-            >
-              {{ pdfLoading ? '⏳ Generating PDF...' : '📄 Download PDF' }}
+            <button class="btn-secondary" type="button" (click)="downloadInvoice()" [disabled]="pdfLoading">
+              {{ pdfLoading ? 'Generating...' : '📄 Download PDF' }}
             </button>
           </div>
-
-          <p class="success-msg" *ngIf="lastDonation.status === 'failed'">
-            Unfortunately, your payment could not be processed. Please try again.
-          </p>
 
           <div class="receipt" *ngIf="lastDonation.status === 'success'">
             <div class="receipt-header">🧾 Donation Receipt</div>
             <table class="receipt-table">
-              <tr>
-                <td>Transaction ID</td>
-                <td><code>{{ lastDonation.txnId }}</code></td>
-              </tr>
-              <tr>
-                <td>Payment ID</td>
-                <td><code>{{ lastDonation.paymentId }}</code></td>
-              </tr>
-              <tr>
-                <td>Donor</td>
-                <td>{{ lastDonation.name }}</td>
-              </tr>
-              <tr *ngIf="donorMobile">
-                <td>Contact</td>
-                <td>{{ donorCountryCode }} {{ donorMobile }}</td>
-              </tr>
-              <tr *ngIf="donorEmail">
-                <td>Email</td>
-                <td>{{ donorEmail }}</td>
-              </tr>
-              <tr>
-                <td>Campaign</td>
-                <td>{{ lastDonation.campaign }}</td>
-              </tr>
-              <tr>
-                <td>Amount</td>
-                <td><strong>{{ formatINR(lastDonation.amount) }}</strong></td>
-              </tr>
-              <tr>
-                <td>Date & Time</td>
-                <td>{{ lastDonation.timestamp | date:'dd MMM yyyy, h:mm a' }}</td>
-              </tr>
-              <tr *ngIf="lastDonation.message">
-                <td>Message</td>
-                <td><em>{{ lastDonation.message }}</em></td>
-              </tr>
+              <tr><td>Transaction ID</td><td><code>{{ lastDonation.txnId }}</code></td></tr>
+              <tr><td>Payment ID</td><td><code>{{ lastDonation.paymentId }}</code></td></tr>
+              <tr><td>Donor</td><td>{{ lastDonation.name }}</td></tr>
+              <tr><td>Campaign</td><td>{{ lastDonation.campaign }}</td></tr>
+              <tr><td>Amount</td><td><strong>{{ formatINR(lastDonation.amount) }}</strong></td></tr>
+              <tr><td>Date & Time</td><td>{{ lastDonation.timestamp | date:'dd MMM yyyy, h:mm a' }}</td></tr>
             </table>
           </div>
 
           <div class="success-actions">
-            <button
-              class="btn-secondary"
-              type="button"
-              (click)="downloadInvoice()"
-              [disabled]="pdfLoading"
-            >
-              {{ pdfLoading ? '⏳ Generating PDF...' : '📄 Download PDF' }}
+            <button class="btn-secondary" type="button" (click)="downloadInvoice()" [disabled]="pdfLoading" *ngIf="lastDonation.status === 'success'">
+              📄 Download PDF
             </button>
             <button class="btn-donate-again" (click)="donateAgain()" type="button">
               🪔 Donate Again
@@ -387,7 +278,6 @@
         </div>
       </ng-container>
 
-    </div><!-- /modal-box -->
-  </div><!-- /modal-overlay -->
-
+    </div>
+  </div>
 </section>
