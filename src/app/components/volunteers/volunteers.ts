@@ -10,10 +10,9 @@ import { CommonModule } from '@angular/common';
 })
 export class Volunteers {
   members = [
-    { role: 'MUKHYA PUJARI', name: 'Mr. Gaurav Jadav', img: 'assets/images/v1.jpg' },
-    { role: 'SAMITI ADHYAKSH', name: 'Shri Shivendra Singh', img: 'assets/images/v2.jpg' },
-    { role: 'SEVADAR', name: 'Kuldeep Singh', img: 'assets/images/v3.jpg' },
-    { role: 'BHAJAN GAYAK', name: 'Riya Sharma', img: 'assets/images/v4.jpg' },
+    { role: 'MUKHYA PUJARI', name: 'Mr. Gaurav Jadav', img: 'assets/volunteers/profile.jpg' },
+    { role: 'SAMITI ADHYAKSH', name: 'Mr. Shivendra Singh', img: 'assets/volunteers/profile.jpg' },
+    { role: 'SEVADAR', name: 'Mr. Kuldeep Singh', img: 'assets/volunteers/profile.jpg' },
+    { role: 'BHAJAN GAYAK', name: 'Mr. Aviram Kumar', img: 'assets/volunteers/profile.jpg' },
   ];
 }
-

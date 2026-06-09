@@ -1,0 +1,30 @@
+@if (showBanner) {
+<div class="banner-overlay">
+
+  <div class="banner-modal">
+
+    <!-- Close Button -->
+    <button
+      type="button"
+      class="close-btn"
+      (click)="closeBanner(); $event.stopPropagation()">
+      ✕
+    </button>
+
+    <!-- Entire Banner Clickable -->
+    <a
+      routerLink="/donation"
+      class="banner-link"
+      (click)="closeBanner()">
+
+      <img
+        class="banner-img"
+        [src]="bannerImage"
+        alt="Shree Shyam Ji Sewa Samiti Donation Banner">
+
+    </a>
+
+  </div>
+
+</div>
+}

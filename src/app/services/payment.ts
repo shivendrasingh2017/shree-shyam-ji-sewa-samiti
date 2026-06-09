@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { retry, timeout } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -13,12 +14,20 @@ export class PaymentService {
 
   /** Razorpay public key fetch karo */
   getKey(): Observable<any> {
-    return this.http.get(`${this.baseUrl}/key`);
+    return this.http.get(`${this.baseUrl}/key`).pipe(
+      timeout(10000),
+      retry(2)
+    );
   }
 
-  /** Payment order create karo */
+  /**
+   * Payment order create karo
+   * Amount rupees mein bhejo — backend paise mein convert karega
+   */
   createOrder(amount: number): Observable<any> {
-    return this.http.post(`${this.baseUrl}/create-order`, { amount });
+    return this.http
+      .post(`${this.baseUrl}/create-order`, { amount })
+      .pipe(timeout(15000));
   }
 
   /**
@@ -26,7 +35,9 @@ export class PaymentService {
    * Fraud prevention ke liye zaroori hai
    */
   verifyPayment(paymentData: any): Observable<any> {
-    return this.http.post(`${this.baseUrl}/verify-payment`, paymentData);
+    return this.http
+      .post(`${this.baseUrl}/verify-payment`, paymentData)
+      .pipe(timeout(15000));
   }
 
   /**
@@ -50,6 +61,8 @@ export class PaymentService {
     errorCode?: string;
     errorDescription?: string;
   }): Observable<any> {
-    return this.http.post(`${this.baseUrl}/record-failed`, payload);
+    return this.http
+      .post(`${this.baseUrl}/record-failed`, payload)
+      .pipe(timeout(10000));
   }
 }

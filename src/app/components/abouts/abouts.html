@@ -1,52 +1,76 @@
-<section class="about">
-    <div class="container grid">
-
-        <!-- LEFT: Image with badge -->
-        <div class="image">
-            <div class="image-card">
-                <img src="assets/about/shiv_god.webp" alt="Lord Shiva" />
-            </div>
-            <!-- Circular badge -->
-            <div class="badge">
-                <span class="badge-number">25<sup>+</sup></span>
-                <span class="badge-text">Join Temple</span>
-            </div>
-        </div>
-
-        <!-- RIGHT: Content -->
-        <div class="content">
-            <span class="eyebrow">EDUCATION FOR ALL RURAL CHILDREN</span>
-            <h2>We Are A Hindu That<br>Believes In Rama.</h2>
-            <p class="quote">
-                We are a Hindu that belives in Lord Rama and Vishnu Deva the followers and
-                We are a Hindu that belives in Lord Rama and Vishnu Deva.
-            </p>
-
-            <div class="mini-cards">
-                <!-- Temple card -->
-                <div class="mini">
-                    <div class="icon-wrap">
-                        <span>🛕</span>
-                    </div>
-                    <div class="mini-text">
-                        <h4>Temple</h4>
-                        <p>Donation is a good act amet quam vehicula elementum sed.</p>
-                    </div>
-                </div>
-                <!-- Donation card -->
-                <div class="mini">
-                    <div class="icon-wrap">
-                        <span>⛰️</span>
-                    </div>
-                    <div class="mini-text">
-                        <h4>Donation</h4>
-                        <p>Donation is a good act amet quam vehicula elementum sed.</p>
-                    </div>
-                </div>
-            </div>
-
-            <button routerLink="/about" class="btn-primary">LEARN MORE &nbsp;→</button>
-        </div>
-
+@if (isLoading) {
+  <div class="page-loader">
+    <div class="loader-card">
+      <img src="assets/logo/LOGO.png" alt="Shree Shyam Ji Sewa Samiti Logo" />
+      <h3>Shree Shyam Ji Sewa Samiti</h3>
+      <p>सेवा • भक्ति • समर्पण</p>
+      <div class="loader-ring"></div>
     </div>
+  </div>
+}
+
+<section class="about" [class.loaded]="!isLoading">
+  <div class="container grid">
+
+    <div class="image">
+      <div class="image-card">
+        <img src="assets/about/shiv_god.webp" alt="Lord Shiva" />
+      </div>
+
+      <div class="badge">
+        <span class="badge-number">25<sup>+</sup></span>
+        <span class="badge-text">Seva Campaigns</span>
+      </div>
+    </div>
+
+    <div class="content">
+      <span class="eyebrow">🕉 Shree Shyam Ji Sewa Samiti</span>
+
+      <h2>
+        Bhakti, Seva aur<br />
+        Manav Kalyan ka Sankalp
+      </h2>
+
+      <p class="quote">
+        Shree Shyam Ji Sewa Samiti ek dharmik aur samajik seva sanstha hai.
+        Hamara uddeshya bhakton ko Baba Shyam aur Mahadev ki bhakti se jodna,
+        zaruratmand logon ki sahayata karna aur samaj me seva ki bhavna ko
+        badhava dena hai.
+      </p>
+
+      <p class="desc">
+        Bhagwan Shiv tyag, daya, shakti aur kalyan ke prateek hain. Isi
+        prerna se hamari samiti bhandara, puja, aarti, bhajan sandhya,
+        gau seva, food seva aur garib parivaron ki madad jaise karyon me
+        nirantar yogdan deti hai.
+      </p>
+
+      <div class="mini-cards">
+        <div class="mini">
+          <div class="icon-wrap">
+            <span>🛕</span>
+          </div>
+          <div class="mini-text">
+            <h4>Religious Seva</h4>
+            <p>Mandir seva, aarti, puja, bhajan aur dharmik karyakramon ka ayojan.</p>
+          </div>
+        </div>
+
+        <div class="mini">
+          <div class="icon-wrap">
+            <span>🤝</span>
+          </div>
+          <div class="mini-text">
+            <h4>Donation & Help</h4>
+            <p>Aapka donation bhandara, food seva aur zaruratmand logon ki madad me lagta hai.</p>
+          </div>
+        </div>
+      </div>
+
+      <button routerLink="/donation" class="btn-primary">
+        DONATE NOW &nbsp;→
+      </button>
+    </div>
+
+  </div>
 </section>

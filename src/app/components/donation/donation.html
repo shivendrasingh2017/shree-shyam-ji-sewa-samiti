@@ -55,6 +55,7 @@
         </div>
       </div>
     </div>
+
     <div style="text-align:center; margin-top:12px" *ngIf="campaigns.length > visibleCount">
       <button (click)="visibleCount = visibleCount + 6" type="button">Load more</button>
     </div>
@@ -73,6 +74,24 @@
         type="button"
         aria-label="Close"
       >✕</button>
+
+      <!-- ─── GATEWAY LOADING OVERLAY ─── -->
+      <div class="gateway-loader" *ngIf="gatewayLoading">
+        <div class="gateway-loader__inner">
+          <div class="gateway-loader__logo">
+            <img
+              src="assets/logo/LOGO.png"
+              alt="Shree Shyam Ji Sewa Samiti"
+              onerror="this.style.display='none'"
+            />
+          </div>
+          <div class="gateway-loader__spinner">
+            <div class="spinner-ring"></div>
+          </div>
+          <p class="gateway-loader__msg">{{ gatewayLoadingMsg || 'Please wait...' }}</p>
+          <p class="gateway-loader__sub">🔒 Secure payment via Razorpay</p>
+        </div>
+      </div>
 
       <!-- ─ STEP 1: SELECT DONATION DETAILS ─ -->
       <ng-container *ngIf="step === 'select'">
@@ -253,17 +272,21 @@
           <div class="payment-methods">
             <p class="methods-label">Secure Payment via Razorpay</p>
             <div class="razorpay-badge">
-              💳 Credit Card • 🏦 Bank Transfer • 📱 Digital Wallets
+              💳 Credit Card &nbsp;•&nbsp; 🏦 Bank Transfer &nbsp;•&nbsp; 📱 Digital Wallets
             </div>
           </div>
 
           <button
             class="btn-razorpay"
             (click)="initiatePayment()"
-            [disabled]="paymentProcessing"
+            [disabled]="paymentProcessing || gatewayLoading"
+            [attr.aria-busy]="paymentProcessing || gatewayLoading"
             type="button"
           >
-            {{ paymentProcessing ? '⏳ Processing...' : '💰 Pay Now' }}
+            <span *ngIf="!paymentProcessing && !gatewayLoading">💰 Pay Now</span>
+            <span *ngIf="paymentProcessing || gatewayLoading" class="btn-loading-text">
+              <span class="btn-spinner"></span> Opening Gateway...
+            </span>
           </button>
 
           <p class="secure-note">
@@ -282,7 +305,7 @@
           <div class="success-icon" *ngIf="lastDonation.status === 'success'">🙏</div>
           <div class="success-icon" *ngIf="lastDonation.status === 'failed'">❌</div>
 
-          <h3 *ngIf="lastDonation.status === 'success'">Jai Shri Ram! Thank You</h3>
+          <h3 *ngIf="lastDonation.status === 'success'">Jai Shri Shyam! Thank You</h3>
           <h3 *ngIf="lastDonation.status === 'failed'">Payment Failed</h3>
 
           <p class="success-msg" *ngIf="lastDonation.status === 'success'">

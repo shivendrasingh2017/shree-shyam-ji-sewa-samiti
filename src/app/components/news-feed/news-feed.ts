@@ -15,17 +15,17 @@ export class NewsFeed {
     {
       img: 'assets/news/news1.webp', tag: 'Temple, Aastha', date: 'May 20, 2026',
       title: 'Khatu Shyam ji ke darbar me Phagun Mela ka aagaaz',
-      author: 'Pt. Rakesh Sharma', avatar: 'assets/images/a1.jpg'
+      author: 'Pt. Rakesh Sharma', avatar: 'assets/volunteers/profile.jpg'
     },
     {
       img: 'assets/news/news2.webp', tag: 'Seva, Daan', date: 'May 20, 2026',
       title: 'Samiti dwara 1100 bhakton ko bhandara',
-      author: 'Mohan Lal Agarwal', avatar: 'assets/images/a2.jpg'
+      author: 'Mohan Lal Agarwal', avatar: 'assets/volunteers/profile.jpg'
     },
     {
       img: 'assets/news/news3.webp', tag: 'Bhajan, Satsang', date: 'May 20, 2026',
       title: 'Shyam Bhajan Sandhya — har Ekadashi shaam 7 baje',
-      author: 'Vinod Sharma', avatar: 'assets/images/a3.jpg'
+      author: 'Vinod Sharma', avatar: 'assets/volunteers/profile.jpg'
     },
   ];
 }

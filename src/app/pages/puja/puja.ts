@@ -78,7 +78,7 @@ export class Puja {
 
   upcomingPujas = [
     { date: '25 July 2026', time: '10:00 AM', location: 'Main Temple'       },
-    { date: '25 July 2026', time: '11:00 AM', location: 'Shyam Darbar Hall' }
+    { date: '21 August 2026', time: '11:00 AM', location: 'Shyam Darbar Hall' }
   ];
 
   selectPuja(name: string) {

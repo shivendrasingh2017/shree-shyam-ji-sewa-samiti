@@ -1,66 +1,57 @@
-<!-- ===================== HERO SECTION — Banner Image ===================== -->
-<section class="contact-hero">
-
-  <img
-    src="/assets/contact/banner_contact1.jpg"
-    alt="Contact Banner"
-    class="hero-banner-img"
-  />
-
-  <div class="hero-overlay">
-    <div class="container text-center">
-    
-
-      <div class="hero-eyebrow">
-        <span class="eyebrow-dot"></span>
-        <span>Seva · Samarpan · Sahyog</span>
-      </div>
-
-      <h1 class="hero-title mt-3">
-        Get In Touch<br>
-        <span class="title-highlight">With Us</span>
-      </h1>
-
-      <p class="hero-desc mt-3">
-        Whether you want to volunteer, make a donation, partner with us, or
-        simply learn more about our mission — we'd love to hear from you.
-      </p>
-
-      <div class="hero-stats mt-4">
-        <div class="stat-pill">
-          <span class="stat-num">5000+</span>
-          <span class="stat-label">Lives Impacted</span>
-        </div>
-        <div class="stat-pill">
-          <span class="stat-num">12+</span>
-          <span class="stat-label">Years of Service</span>
-        </div>
-        <div class="stat-pill">
-          <span class="stat-num">100%</span>
-          <span class="stat-label">Transparent</span>
-        </div>
-      </div>
-
-      <div class="hero-cta-wrap mt-4">
-        <a  (click)="scrollToForm()" class="btn btn-hero-primary">
-          <i class="fa-solid fa-paper-plane me-2"></i>Send Message
-        </a>
-        <a (click)="scrollToMap()" class="btn btn-hero-outline">
-          <i class="fa-solid fa-location-dot me-2"></i>Our Location
-        </a>
-      </div>
-
-    </div>
+@if (isLoading) {
+<div class="page-loader">
+  <div class="loader-card">
+    <img src="assets/logo/LOGO.png" alt="Shree Shyam Ji Sewa Samiti Logo" />
+    <h3>Shree Shyam Ji Sewa Samiti</h3>
+    <p>सेवा • भक्ति • समर्पण</p>
+    <div class="loader-ring"></div>
   </div>
+</div>
+}
 
-</section>
+<section class="contact-page" [class.loaded]="!isLoading">
 
-<!-- ===================== QUICK CONTACT INFO STRIP ===================== -->
-<section class="info-strip">
-  <div class="container">
-    <div class="row g-3">
+  <section class="contact-hero">
+    <img
+      src="/assets/contact/banner_contact1.jpg"
+      alt="Contact Banner"
+      class="hero-banner-img"
+    />
 
-      <div class="col-sm-6 col-lg-3" data-aos="fade-up" data-aos-delay="0">
+    <div class="hero-overlay">
+      <div class="container text-center">
+        <div class="hero-eyebrow">
+          <span class="eyebrow-dot"></span>
+          <span>Seva · Samarpan · Sahyog</span>
+        </div>
+
+        <h1 class="hero-title mt-3">
+          Contact<br />
+          <span class="title-highlight">Shree Shyam Ji Sewa Samiti</span>
+        </h1>
+
+        <p class="hero-desc mt-3">
+          Seva, donation, bhandara, bhajan sandhya, volunteer support ya kisi bhi
+          dharmik/samajik karyakram ke liye humse sampark karein.
+        </p>
+
+        <div class="hero-cta-wrap mt-4">
+          <a (click)="scrollToMap()" class="btn btn-hero-primary">
+            <i class="fa-solid fa-location-dot me-2"></i>Our Location
+          </a>
+
+          <a routerLink="/donation" class="btn btn-hero-outline">
+            <i class="fa-solid fa-heart me-2"></i>Donate Now
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="info-strip">
+    <div class="container">
+      <div class="contact-card-grid">
+
         <div class="info-tile">
           <div class="tile-icon-wrap phone">
             <i class="fa-solid fa-phone"></i>
@@ -71,9 +62,7 @@
             <span>Mon – Sat, 10am – 6pm</span>
           </div>
         </div>
-      </div>
 
-      <div class="col-sm-6 col-lg-3" data-aos="fade-up" data-aos-delay="100">
         <div class="info-tile">
           <div class="tile-icon-wrap email">
             <i class="fa-solid fa-envelope"></i>
@@ -84,247 +73,100 @@
             <span>We reply within 24h</span>
           </div>
         </div>
-      </div>
 
-      <div class="col-sm-6 col-lg-3" data-aos="fade-up" data-aos-delay="200">
         <div class="info-tile">
           <div class="tile-icon-wrap address">
             <i class="fa-solid fa-location-dot"></i>
           </div>
           <div class="tile-content">
             <h6>Office Address</h6>
-            <span class="addr-text">Blog C-23 Sector 63</span>
+            <span class="addr-text">Block C-23, Sector 63</span>
             <span>Noida, U.P.</span>
           </div>
         </div>
-      </div>
 
-      <div class="col-sm-6 col-lg-3" data-aos="fade-up" data-aos-delay="300">
         <div class="info-tile">
           <div class="tile-icon-wrap whatsapp">
             <i class="fa-brands fa-whatsapp"></i>
           </div>
           <div class="tile-content">
             <h6>WhatsApp</h6>
-            <a href="https://wa.me/91XXXXXXXXXX" target="_blank" rel="noopener">Chat With Us</a>
+            <a href="https://wa.me/91XXXXXXXXXX" target="_blank" rel="noopener">
+              Chat With Us
+            </a>
             <span>Quick Response</span>
           </div>
         </div>
+
       </div>
-
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- ===================== FULL WIDTH MAP ===================== -->
-<section class="map-section" id="map-section">
-
-  <div class="map-section-header">
+  <section class="map-section" id="map-section">
     <div class="container">
-      <div class="map-title-row">
-        <div>
-          <span class="label-chip">Our Location</span>
-          <h2 class="mt-2">Find Us On Map</h2>
-          <p>
-            <i class="fa-solid fa-location-dot me-1"></i>
-            Shree ShyamJi Sewa Samiti, Blog C-23 Sector 63, Noida U.P.
-          </p>
-        </div>
-        <a
-          href="https://maps.google.com/?q=28.616600927748127,77.38155745767135"
-          target="_blank"
-          rel="noopener"
-          class="btn btn-map-dir">
-          <i class="fa-solid fa-diamond-turn-right me-2"></i>Get Directions
-        </a>
-      </div>
-    </div>
-  </div>
+      <div class="map-card">
 
-  <!-- Full width map — no container -->
-  <div class="map-full-frame">
-    <iframe
-      [src]="mapUrl"
-      width="100%"
-      height="100%"
-      style="border:0; display:block;"
-      allowfullscreen
-      loading="lazy"
-      referrerpolicy="no-referrer-when-downgrade">
-    </iframe>
-  </div>
-
-</section>
-
-<!-- ===================== CONTACT FORM — below map ===================== -->
-<section class="contact-form-section" id="contact-form">
-  <div class="container">
-
-    <div class="section-heading text-center mb-5" data-aos="fade-up">
-      <span class="label-chip">Contact Form</span>
-      <h2 class="mt-2">Send Us a Message</h2>
-      <p>Fill in the form below and our team will get back to you shortly.</p>
-    </div>
-
-    <div class="row justify-content-center">
-      <div class="col-lg-8 col-xl-7" data-aos="fade-up" data-aos-delay="100">
-
-        <div class="form-card">
-
-          <!-- Success Alert -->
-          <div class="success-alert" *ngIf="successMsg">
-            <i class="fa-solid fa-circle-check me-2"></i>
-            {{ successMsg }}
+        <div class="map-header">
+          <div>
+            <span class="label-chip">Our Location</span>
+            <h2>Find Us On Map</h2>
+            <p>
+              <i class="fa-solid fa-location-dot me-1"></i>
+              Shree Shyam Ji Sewa Samiti, Block C-23, Sector 63, Noida, U.P.
+            </p>
           </div>
 
-          <form [formGroup]="contactForm" (ngSubmit)="onSubmit()" novalidate>
-            <div class="row g-3">
-
-              <div class="col-md-6">
-                <div class="field-group" [class.has-error]="submitted && f['name'].invalid">
-                  <label>Full Name <span class="required">*</span></label>
-                  <div class="input-wrap">
-                    <i class="fa-solid fa-user field-icon"></i>
-                    <input type="text" formControlName="name" placeholder="Your full name" />
-                  </div>
-                  <span class="err-msg" *ngIf="submitted && f['name'].errors?.['required']">
-                    Name is required.
-                  </span>
-                </div>
-              </div>
-
-              <div class="col-md-6">
-                <div class="field-group" [class.has-error]="submitted && f['email'].invalid">
-                  <label>Email Address <span class="required">*</span></label>
-                  <div class="input-wrap">
-                    <i class="fa-solid fa-envelope field-icon"></i>
-                    <input type="email" formControlName="email" placeholder="you&#64;example.com" />
-                  </div>
-                  <span class="err-msg" *ngIf="submitted && f['email'].errors?.['required']">Email is required.</span>
-                  <span class="err-msg" *ngIf="submitted && f['email'].errors?.['email']">Please enter a valid email.</span>
-                </div>
-              </div>
-
-              <div class="col-md-6">
-                <div class="field-group" [class.has-error]="submitted && f['phone'].invalid">
-                  <label>Mobile Number <span class="required">*</span></label>
-                  <div class="input-wrap">
-                    <i class="fa-solid fa-mobile-screen field-icon"></i>
-                    <input type="tel" formControlName="phone" placeholder="+91 98765 43210" />
-                  </div>
-                  <span class="err-msg" *ngIf="submitted && f['phone'].errors?.['required']">Phone number is required.</span>
-                  <span class="err-msg" *ngIf="submitted && f['phone'].errors?.['pattern']">Enter a valid 10-digit number.</span>
-                </div>
-              </div>
-
-              <div class="col-md-6">
-                <div class="field-group" [class.has-error]="submitted && f['subject'].invalid">
-                  <label>Subject <span class="required">*</span></label>
-                  <div class="input-wrap select-wrap">
-                    <i class="fa-solid fa-tag field-icon"></i>
-                    <select formControlName="subject">
-                      <option value="" disabled selected>Select a subject</option>
-                      <option value="donation">Donation / Financial Support</option>
-                      <option value="volunteer">Volunteer Registration</option>
-                      <option value="partnership">Partnership / CSR</option>
-                      <option value="event">Events & Programs</option>
-                      <option value="media">Media / Press</option>
-                      <option value="other">Other</option>
-                    </select>
-                  </div>
-                  <span class="err-msg" *ngIf="submitted && f['subject'].errors?.['required']">Please select a subject.</span>
-                </div>
-              </div>
-
-              <div class="col-12">
-                <div class="field-group" [class.has-error]="submitted && f['message'].invalid">
-                  <label>Your Message <span class="required">*</span></label>
-                  <div class="input-wrap textarea-wrap">
-                    <i class="fa-solid fa-comment-dots field-icon top-icon"></i>
-                    <textarea rows="6" formControlName="message" placeholder="Write your message here... (min. 10 characters)"></textarea>
-                  </div>
-                  <span class="err-msg" *ngIf="submitted && f['message'].errors?.['required']">Message is required.</span>
-                  <span class="err-msg" *ngIf="submitted && f['message'].errors?.['minlength']">Message must be at least 10 characters.</span>
-                </div>
-              </div>
-
-              <div class="col-12">
-                <button type="submit" class="btn submit-btn w-100" [disabled]="isSubmitting">
-                  <span *ngIf="!isSubmitting">
-                    <i class="fa-solid fa-paper-plane me-2"></i>Send Message
-                  </span>
-                  <span *ngIf="isSubmitting">
-                    <i class="fa-solid fa-spinner fa-spin me-2"></i>Sending...
-                  </span>
-                </button>
-              </div>
-
-            </div>
-          </form>
+          <a
+            href="https://maps.google.com/?q=28.616600927748127,77.38155745767135"
+            target="_blank"
+            rel="noopener"
+            class="btn-map-dir">
+            <i class="fa-solid fa-diamond-turn-right me-2"></i>
+            Get Directions
+          </a>
         </div>
 
-      </div>
-
-      <!-- Sidebar: How We Help + Social -->
-      <div class="col-lg-4 col-xl-4 mt-4 mt-lg-0" data-aos="fade-up" data-aos-delay="200">
-
-        <div class="sidebar-card topics-card mb-4">
-          <div class="sidebar-card-header">
-            <i class="fa-solid fa-circle-question"></i>
-            <h5>How Can We Help?</h5>
-          </div>
-          <ul class="topics-list">
-            <li><i class="fa-solid fa-hand-holding-dollar"></i><span>Donation & Financial Support</span></li>
-            <li><i class="fa-solid fa-people-group"></i><span>Volunteer Registration</span></li>
-            <li><i class="fa-solid fa-calendar-check"></i><span>Events & Programs Update</span></li>
-            <li><i class="fa-solid fa-graduation-cap"></i><span>Education Assistance</span></li>
-            <li><i class="fa-solid fa-kit-medical"></i><span>Health & Medical Aid</span></li>
-            <li><i class="fa-solid fa-handshake"></i><span>NGO Partnership / CSR</span></li>
-          </ul>
-        </div>
-
-        <div class="sidebar-card social-card">
-          <div class="sidebar-card-header">
-            <i class="fa-solid fa-share-nodes"></i>
-            <h5>Follow Us</h5>
-          </div>
-          <p class="social-desc">Stay updated with our campaigns and events.</p>
-          <div class="social-grid">
-            <a href="https://facebook.com/yourpage" target="_blank" rel="noopener" class="social-tile fb"><i class="fa-brands fa-facebook-f"></i><span>Facebook</span></a>
-            <a href="https://instagram.com/yourpage" target="_blank" rel="noopener" class="social-tile ig"><i class="fa-brands fa-instagram"></i><span>Instagram</span></a>
-            <a href="https://youtube.com/@yourchannel" target="_blank" rel="noopener" class="social-tile yt"><i class="fa-brands fa-youtube"></i><span>YouTube</span></a>
-            <a href="https://wa.me/91XXXXXXXXXX" target="_blank" rel="noopener" class="social-tile wa"><i class="fa-brands fa-whatsapp"></i><span>WhatsApp</span></a>
-            <a href="https://twitter.com/yourhandle" target="_blank" rel="noopener" class="social-tile tw"><i class="fa-brands fa-x-twitter"></i><span>Twitter</span></a>
-            <a href="https://t.me/yourchannel" target="_blank" rel="noopener" class="social-tile tg"><i class="fa-brands fa-telegram"></i><span>Telegram</span></a>
-          </div>
+        <div class="map-frame">
+          <iframe
+            [src]="mapUrl"
+            allowfullscreen
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade">
+          </iframe>
         </div>
 
       </div>
     </div>
+  </section>
 
-  </div>
-</section>
+  <section class="bottom-cta">
+    <div class="container">
+      <div class="cta-inner">
+        <div class="cta-icon-ring">
+          <i class="fa-solid fa-infinity"></i>
+        </div>
 
-<!-- ===================== BOTTOM CTA ===================== -->
-<section class="bottom-cta py-5">
-  <div class="container">
-    <div class="cta-inner text-center" data-aos="zoom-in">
-      <div class="cta-icon-ring">
-        <i class="fa-solid fa-infinity"></i>
-      </div>
-      <h2 class="mt-4">Join the Mission of Seva</h2>
-      <p>Together we can reach more people, create more impact, and build a better society.</p>
-      <div class="cta-actions mt-4">
-        <a href="tel:+91XXXXXXXXXX" class="btn btn-cta-call">
-          <i class="fa-solid fa-phone me-2"></i>Call Now
-        </a>
-        <a href="mailto:info@shyamjisewa.org" class="btn btn-cta-email">
-          <i class="fa-solid fa-envelope me-2"></i>Email Us
-        </a>
-        <a routerLink="/donation" target="_blank"  class="btn btn-cta-donate">
-          <i class="fa-solid fa-heart me-2"></i>Donate
-        </a>
+        <h2>Join the Mission of Seva</h2>
+        <p>
+          Aapka sahyog bhandara, food seva, dharmik karyakram aur zaruratmand
+          logon ki madad me yogdan deta hai.
+        </p>
+
+        <div class="cta-actions">
+          <a href="tel:+91XXXXXXXXXX" class="btn btn-cta-call">
+            <i class="fa-solid fa-phone me-2"></i>Call Now
+          </a>
+
+          <a href="mailto:info@shyamjisewa.org" class="btn btn-cta-email">
+            <i class="fa-solid fa-envelope me-2"></i>Email Us
+          </a>
+
+          <a routerLink="/donation" class="btn btn-cta-donate">
+            <i class="fa-solid fa-heart me-2"></i>Donate
+          </a>
+        </div>
       </div>
     </div>
-  </div>
+  </section>
+
 </section>

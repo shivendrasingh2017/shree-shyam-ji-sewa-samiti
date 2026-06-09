@@ -4,10 +4,11 @@ import { Header } from "./components/header/header";
 import { Footer } from "./components/footer/footer";
 import { ThemeSwitcherComponent } from "./components/theme-switcher/theme-switcher";
 import { ScrollButtons } from "./components/scroll-buttons/scroll-buttons";
+import { SiteBanner } from './banner/site-banner';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, Header, Footer, ThemeSwitcherComponent, ScrollButtons],
+  imports: [RouterOutlet, Header, Footer, ThemeSwitcherComponent, ScrollButtons, SiteBanner],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
