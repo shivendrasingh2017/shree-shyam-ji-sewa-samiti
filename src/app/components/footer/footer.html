@@ -20,6 +20,8 @@
         <li routerLink="/gallery">Phagun Mela</li>
         <li routerLink="/about">Sevadar</li>
         <li routerLink="/donation">Daan</li>
+        <li routerLink="/privacy-policy">Privacy Policy</li>
+        
       </ul>
     </div>
 
@@ -28,25 +30,40 @@
       <ul>
         <li routerLink="/our-gallery">Gallery</li>
         <li routerLink="/donation">Online Daan</li>
-        <li routerLink="/contact">Sampark</li>
-        <li routerLink="/about">About</li>
+        <li routerLink="/contact">Contact Us</li>
+        <li routerLink="/about">About Us</li>
         <li routerLink="/aarti">Live-Aarti</li>
+        <li routerLink="/terms-and-conditions">Terms and Conditions</li>
       </ul>
     </div>
 
-    <div>
-      <h4>Recent Posts</h4>
-      @for (i of images; track $index) {
-      <div class="post">
-        <img [src]="i.src" [alt]="i.alt" />
+   <div>
+  <h4>Recent Posts</h4>
 
-        <div>
-          <p class="d">📅 May 20, 2026</p>
-          <p class="t">Baba Shyam ki kripa se naya adhyay shuru</p>
-        </div>
+  @for (item of images; track $index) {
+
+    <div class="post">
+
+      <img
+        [src]="item.src"
+        [alt]="item.alt"
+        loading="lazy"
+      />
+
+      <div>
+        <p class="d">
+          📅 {{ item.date }}
+        </p>
+
+        <p class="t">
+          {{ item.title }}
+        </p>
       </div>
-      }
+
     </div>
+
+  }
+</div>
   </div>
 
   <div class="copy container">

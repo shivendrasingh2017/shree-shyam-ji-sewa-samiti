@@ -14,6 +14,8 @@ export const routes: Routes = [
 	{ path: 'admin', loadComponent: () => import('./components/admin/admin').then(m => m.Admin) },
 	{ path: 'contact', loadComponent: () => import('./pages/contact-bar/contact-bar').then(m => m.ContactBar) },
 	{path: 'our-gallery', loadComponent: ()=> import('./pages/gallery/gallery').then(m => m.Gallery)},
+	{path: 'privacy-policy', loadComponent: ()=> import('./components/privacy-policy/privacy-policy').then(m=>m.PrivacyPolicy)},
+	{ path: 'terms-and-conditions', loadComponent: () => import('./components/terms-conditions/terms-conditions').then(m => m.TermsConditions) },
 	{ path: '**', redirectTo: '' }
 ];
 
