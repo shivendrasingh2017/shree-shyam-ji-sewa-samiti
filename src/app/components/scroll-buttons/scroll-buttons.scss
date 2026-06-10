@@ -2,20 +2,20 @@
 
 .scroll-btns {
     position: fixed;
-    bottom: 28px;
+    bottom: 0px;
     right: 24px;
     z-index: 900;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 1px;
     align-items: center;
 }
 
 /* ── Each button ── */
 .scroll-btn {
     position: relative;
-    width: 56px;
-    height: 56px;
+    width: 54px;
+    height: 54px;
     background: transparent;
     border: none;
     cursor: pointer;
@@ -99,7 +99,7 @@
 /* ── Mobile: slightly smaller ── */
 @media (max-width: 600px) {
     .scroll-btns {
-        bottom: 16px;
+        bottom: 0px;
         right: 14px;
     }
 

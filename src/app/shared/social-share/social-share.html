@@ -1,0 +1,116 @@
+<div class="share-wrapper" [class.open]="isOpen">
+
+  <button
+    type="button"
+    class="share-main-btn"
+    (click)="toggleShare($event)"
+    aria-label="Share website"
+  >
+    <span *ngIf="!isOpen" class="main-icon">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M18 16.1c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11A2.99 2.99 0 1 0 15 5c0 .24.04.47.09.7L8.04 9.81A3 3 0 1 0 8.04 14.2l7.12 4.18c-.04.2-.06.41-.06.62a2.9 2.9 0 1 0 2.9-2.9Z"/>
+      </svg>
+    </span>
+
+    <span *ngIf="isOpen" class="main-icon close-main">✕</span>
+  </button>
+
+  <div class="share-panel" *ngIf="isOpen" (click)="$event.stopPropagation()">
+
+    <div class="share-top">
+      <label>Share Page URL</label>
+
+      <div class="url-box-wrap">
+        <div class="url-box">
+          <input
+            type="text"
+            [value]="pageUrl"
+            readonly
+            aria-label="Current page URL"
+          />
+
+          <button
+            type="button"
+            class="copy-btn"
+            (click)="copyUrl($event)"
+            [disabled]="isCopying"
+            aria-label="Copy URL"
+          >
+            <ng-container *ngIf="!isCopying; else copyLoader">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M16 1H4a2 2 0 0 0-2 2v12h2V3h12V1Zm3 4H8a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2Zm0 16H8V7h11v14Z"/>
+              </svg>
+            </ng-container>
+
+            <ng-template #copyLoader>
+              <span class="copy-loader"></span>
+            </ng-template>
+          </button>
+        </div>
+
+        <div class="copy-success" *ngIf="copied">
+          ✓ Copy successfully
+        </div>
+      </div>
+    </div>
+
+    <div class="share-bottom">
+
+      <button
+        type="button"
+        class="icon-btn native"
+        (click)="nativeShare($event)"
+        aria-label="Share"
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M18 16.1c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11A2.99 2.99 0 1 0 15 5c0 .24.04.47.09.7L8.04 9.81A3 3 0 1 0 8.04 14.2l7.12 4.18c-.04.2-.06.41-.06.62a2.9 2.9 0 1 0 2.9-2.9Z"/>
+        </svg>
+      </button>
+
+      <button
+        type="button"
+        class="icon-btn whatsapp"
+        (click)="shareWhatsapp($event)"
+        aria-label="Share on WhatsApp"
+      >
+        <svg viewBox="0 0 32 32" aria-hidden="true">
+          <path d="M16.01 3C8.84 3 3 8.83 3 16c0 2.3.61 4.55 1.77 6.53L3 29l6.66-1.75A12.93 12.93 0 0 0 16.01 29C23.18 29 29 23.17 29 16S23.18 3 16.01 3Zm0 23.82c-2.02 0-4-.54-5.73-1.57l-.41-.24-3.95 1.04 1.06-3.85-.27-.44A10.74 10.74 0 0 1 5.18 16c0-5.97 4.86-10.82 10.83-10.82 5.96 0 10.81 4.85 10.81 10.82s-4.85 10.82-10.81 10.82Zm5.93-8.1c-.33-.17-1.94-.96-2.24-1.07-.3-.11-.52-.17-.74.17-.22.33-.85 1.07-1.04 1.29-.19.22-.38.25-.71.08-.33-.17-1.38-.51-2.63-1.63-.97-.86-1.62-1.92-1.81-2.25-.19-.33-.02-.51.14-.68.15-.15.33-.38.5-.57.17-.19.22-.33.33-.55.11-.22.06-.41-.03-.57-.08-.17-.74-1.78-1.01-2.44-.27-.64-.54-.55-.74-.56h-.63c-.22 0-.57.08-.87.41-.3.33-1.14 1.12-1.14 2.73s1.17 3.16 1.34 3.38c.17.22 2.31 3.53 5.59 4.95.78.34 1.39.54 1.86.69.78.25 1.49.21 2.05.13.63-.09 1.94-.79 2.21-1.56.27-.77.27-1.43.19-1.56-.08-.14-.3-.22-.63-.38Z"/>
+        </svg>
+      </button>
+
+      <button
+        type="button"
+        class="icon-btn facebook"
+        (click)="shareFacebook($event)"
+        aria-label="Share on Facebook"
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M22 12.06C22 6.5 17.52 2 12 2S2 6.5 2 12.06c0 5.02 3.66 9.18 8.44 9.94v-7.03H7.9v-2.91h2.54V9.84c0-2.52 1.49-3.91 3.77-3.91 1.09 0 2.23.2 2.23.2v2.47h-1.25c-1.23 0-1.61.77-1.61 1.56v1.9h2.74l-.44 2.91h-2.3V22C18.34 21.24 22 17.08 22 12.06Z"/>
+        </svg>
+      </button>
+
+      <button
+        type="button"
+        class="icon-btn twitter"
+        (click)="shareTwitter($event)"
+        aria-label="Share on X"
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M18.9 2H22l-6.78 7.75L23.2 22h-6.24l-4.89-7.02L6.47 22H3.36l7.25-8.29L2.96 2h6.4l4.42 6.35L18.9 2Zm-1.1 17.84h1.72L8.43 4.05H6.58l11.22 15.79Z"/>
+        </svg>
+      </button>
+
+      <button
+        type="button"
+        class="icon-btn telegram"
+        (click)="shareTelegram($event)"
+        aria-label="Share on Telegram"
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M21.94 4.16c.3-1.25-.45-1.74-1.43-1.34L2.88 9.62c-1.2.47-1.18 1.14-.2 1.44l4.52 1.41 10.48-6.61c.5-.3.95-.14.58.19l-8.49 7.66-.32 4.78c.47 0 .67-.22.93-.47l2.24-2.18 4.66 3.44c.86.47 1.48.23 1.69-.8l3.07-14.32Z"/>
+        </svg>
+      </button>
+
+    </div>
+  </div>
+</div>

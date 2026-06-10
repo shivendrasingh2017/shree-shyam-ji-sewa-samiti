@@ -182,6 +182,14 @@
     }
 }
 
+.section-desc {
+  max-width: 720px;
+  margin: 18px 0 0;
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 16px;
+  line-height: 1.7;
+}
+
 /* ---------- Responsive ---------- */
 @media (max-width: 1024px) {
     .cards {

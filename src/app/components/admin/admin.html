@@ -1,10 +1,10 @@
 <div class="admin-panel">
   <div *ngIf="!loggedIn" class="login-container">
-    <div class="login-box">
-      <h2>Admin Login</h2>
-      <div class="form-group">
-        <label>Username</label>
-        <input type="text" placeholder="Enter username" [(ngModel)]="user" />
+    <div class="login-card">
+      <div class="login-logo">
+        <span class="login-logo-icon">🛕</span>
+        <h2>Shree Shyam Ji Sewa Samiti</h2>
+        <p>Admin Portal</p>
       </div>
       <!-- Admins List -->
       <div class="admins-card" *ngIf="admins && admins.length > 0">
@@ -16,11 +16,23 @@
           </div>
         </div>
       </div>
-      <div class="form-group">
-        <label>Password</label>
-        <input type="password" placeholder="Enter password" [(ngModel)]="pass" />
+      <div class="login-form">
+        <div class="form-group">
+          <label>Username</label>
+          <div class="input-wrap">
+            <span class="input-icon">👤</span>
+            <input type="text" placeholder="Enter username" [(ngModel)]="user" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <div class="input-wrap">
+            <span class="input-icon">🔑</span>
+            <input type="password" placeholder="Enter password" [(ngModel)]="pass" />
+          </div>
+        </div>
+        <button class="btn-login" (click)="login()">Sign In →</button>
       </div>
-      <button class="btn-primary" (click)="login()">Login</button>
     </div>
   </div>
 
@@ -28,129 +40,158 @@
     <!-- Header -->
     <div class="admin-header">
       <div class="header-left">
-        <h1>🛕 Admin Dashboard</h1>
+        <span class="header-logo">🛕</span>
+        <div class="header-titles">
+          <h1>Admin Dashboard</h1>
+          <span class="header-sub">Shree Shyam Ji Sewa Samiti</span>
+        </div>
       </div>
       <div class="header-right">
-        <button class="btn-logout" (click)="logout()">Logout</button>
+        <button class="btn-logout" (click)="logout()">
+          <span>⏻</span> Logout
+        </button>
       </div>
     </div>
 
     <!-- Navigation Tabs -->
     <div class="admin-tabs">
       <button [class.active]="currentTab === 'dashboard'" (click)="currentTab = 'dashboard'">
-        📊 Dashboard
+        <span class="tab-icon">📊</span><span class="tab-label">Dashboard</span>
       </button>
       <button [class.active]="currentTab === 'campaigns'" (click)="currentTab = 'campaigns'">
-        🎯 Campaigns
+        <span class="tab-icon">🎯</span><span class="tab-label">Campaigns</span>
       </button>
       <button [class.active]="currentTab === 'receipts'" (click)="currentTab = 'receipts'">
-        💳 Receipts
+        <span class="tab-icon">💳</span><span class="tab-label">Receipts</span>
       </button>
       <button [class.active]="currentTab === 'gallery'" (click)="currentTab = 'gallery'; loadGalleryItems()">
-        🖼️ Gallery
+        <span class="tab-icon">🖼️</span><span class="tab-label">Gallery</span>
       </button>
       <button [class.active]="currentTab === 'failed-receipts'"
         (click)="currentTab = 'failed-receipts'; loadFailedReceipts()">
-        ❌ Failed Payments
+        <span class="tab-icon">❌</span><span class="tab-label">Failed Payments</span>
       </button>
     </div>
 
-    <!-- DASHBOARD TAB -->
+    <!-- ═══════════════ DASHBOARD TAB ═══════════════ -->
     <div *ngIf="currentTab === 'dashboard'" class="tab-content dashboard-view">
+
       <!-- Key Metrics -->
       <div class="metrics-grid">
-        <div class="metric-card">
-          <div class="metric-icon">💰</div>
+        <div class="metric-card metric-raised">
+          <div class="metric-glow"></div>
+          <div class="metric-icon-wrap">
+            <span class="metric-icon">₹</span>
+          </div>
           <div class="metric-content">
             <div class="metric-label">Total Raised</div>
             <div class="metric-value">₹{{ totalRaised | number:'1.0-0' }}</div>
+            <div class="metric-badge">All Campaigns</div>
           </div>
         </div>
 
-        <div class="metric-card">
-          <div class="metric-icon">👥</div>
+        <div class="metric-card metric-donors">
+          <div class="metric-glow"></div>
+          <div class="metric-icon-wrap">
+            <span class="metric-icon">👥</span>
+          </div>
           <div class="metric-content">
             <div class="metric-label">Total Donors</div>
             <div class="metric-value">{{ totalDonors }}</div>
+            <div class="metric-badge">Generous Supporters</div>
           </div>
         </div>
 
-        <div class="metric-card">
-          <div class="metric-icon">📈</div>
+        <div class="metric-card metric-avg">
+          <div class="metric-glow"></div>
+          <div class="metric-icon-wrap">
+            <span class="metric-icon">📈</span>
+          </div>
           <div class="metric-content">
             <div class="metric-label">Avg Donation</div>
             <div class="metric-value">₹{{ avgDonation | number:'1.0-0' }}</div>
+            <div class="metric-badge">Per Donor</div>
           </div>
         </div>
 
-        <div class="metric-card">
-          <div class="metric-icon">✅</div>
+        <div class="metric-card metric-active">
+          <div class="metric-glow"></div>
+          <div class="metric-icon-wrap">
+            <span class="metric-icon">✅</span>
+          </div>
           <div class="metric-content">
             <div class="metric-label">Active Campaigns</div>
-            <div class="metric-value">{{ activeCampaigns }} / {{ campaigns.length }}</div>
+            <div class="metric-value">{{ activeCampaigns }}<span class="metric-sub"> / {{ campaigns.length }}</span></div>
+            <div class="metric-badge">Running Now</div>
           </div>
         </div>
       </div>
 
-      <!-- Charts Row 1 -->
-      <div class="charts-grid">
-        <!-- Campaign Progress Chart -->
-        <div class="chart-container">
-          <h3>📊 Campaign Progress (Top 5)</h3>
+      <!-- Charts Row 1: Campaign Progress + Completion % -->
+      <div class="charts-row">
+        <div class="chart-card">
+          <div class="chart-card-header">
+            <span class="chart-card-icon">📊</span>
+            <div>
+              <h3>Campaign Progress</h3>
+              <p>Raised vs Goal — Top 5</p>
+            </div>
+          </div>
           <div class="chart-wrapper">
-            <canvas baseChart [data]="campaignChartData" [options]="campaignChartOptions" type="bar">
-            </canvas>
+            <canvas baseChart [data]="campaignChartData" [options]="campaignChartOptions" type="bar"></canvas>
           </div>
         </div>
 
-        <!-- Campaign Performance Chart -->
-        <div class="chart-container">
-          <h3>🎯 Completion % (Top 5)</h3>
+        <div class="chart-card">
+          <div class="chart-card-header">
+            <span class="chart-card-icon">🎯</span>
+            <div>
+              <h3>Completion %</h3>
+              <p>Goal achievement — Top 5</p>
+            </div>
+          </div>
           <div class="chart-wrapper">
             <canvas baseChart [data]="campaignPerformanceChartData" [options]="campaignPerformanceChartOptions"
-              type="bar">
-            </canvas>
+              type="bar"></canvas>
           </div>
         </div>
       </div>
 
-      <!-- Charts Row 2 -->
-      <div class="charts-grid">
-        <!-- Donation Trend Chart -->
-        <div class="chart-container full-width">
-          <h3>📈 Daily Donation Trend</h3>
-          <div class="chart-wrapper">
-            <canvas baseChart [data]="donationTrendChartData" [options]="donationTrendChartOptions" type="line">
-            </canvas>
+      <!-- Charts Row 2: Daily Trend (full width) -->
+      <div class="charts-row charts-row-single">
+        <div class="chart-card chart-full">
+          <div class="chart-card-header">
+            <span class="chart-card-icon">📈</span>
+            <div>
+              <h3>Daily Donation Trend</h3>
+              <p>Amount collected per day</p>
+            </div>
           </div>
-        </div>
-
-        <!-- Donor Distribution Chart -->
-        <div class="chart-container">
-          <h3>👥 Donors by Campaign (Top 5)</h3>
-          <div class="chart-wrapper">
-            <canvas baseChart [data]="donationSourceChartData" [options]="donationSourceChartOptions" type="doughnut">
-            </canvas>
+          <div class="chart-wrapper chart-wrapper-tall">
+            <canvas baseChart [data]="donationTrendChartData" [options]="donationTrendChartOptions" type="line"></canvas>
           </div>
         </div>
       </div>
 
-      <!-- Recent Receipts Summary -->
-      <div class="recent-receipts">
-        <h3>💳 Recent Donations</h3>
-        <div class="receipts-table">
-          <div *ngIf="receipts.length === 0" class="empty-state">
-            No donations yet
+      <!-- Charts Row 3: Donors by Campaign doughnut -->
+      <div class="charts-row charts-row-single">
+        <div class="chart-card chart-doughnut-card">
+          <div class="chart-card-header">
+            <span class="chart-card-icon">👥</span>
+            <div>
+              <h3>Donors by Campaign</h3>
+              <p>Distribution — Top 5</p>
+            </div>
           </div>
-          <div *ngFor="let r of receipts | slice:0:10" class="receipt-item">
-            <div class="receipt-date">{{ r.createdAt | date:'dd MMM yyyy, h:mm a' }}</div>
-            <div class="receipt-amount">{{ r.amount | currency:'INR' }}</div>
-            <div class="receipt-campaign">{{ r.campaignId?.title || '—' }}</div>
-            <div class="receipt-id">Order: {{ r.razorpay_order_id?.substring(0, 10) }}...</div>
+          <div class="chart-wrapper chart-wrapper-doughnut">
+            <canvas baseChart [data]="donationSourceChartData" [options]="donationSourceChartOptions"
+              type="doughnut"></canvas>
           </div>
         </div>
       </div>
+
     </div>
+    <!-- ═════════════ END DASHBOARD ═════════════ -->
 
     <!-- CAMPAIGNS TAB -->
     <div *ngIf="currentTab === 'campaigns'" class="tab-content campaigns-view">
@@ -278,9 +319,7 @@
                 <td class="serial-no">{{ (currentReceiptPage - 1) * receiptLimit + i + 1 }}</td>
                 <td>{{ r.donorFullName || 'Anonymous' }}</td>
                 <td>
-
                   <div class="message-content">{{ r.donorPAN || '—' }}</div>
-
                 </td>
                 <td class="amount">{{ r.amount | currency:'INR' }}</td>
                 <td class="date-cell">{{ r.createdAt | date:'dd MMM yyyy, h:mm a' }}</td>
@@ -309,7 +348,6 @@
           </table>
         </div>
 
-        <!-- Pagination - Always show if we have receipts or pagination data -->
         <div *ngIf="receipts.length > 0 || receiptPagination.total > 0" class="pagination-controls">
           <button class="btn-pagination" [disabled]="currentReceiptPage === 1"
             (click)="loadReceipts(currentReceiptPage - 1)">
@@ -391,7 +429,6 @@
           </table>
         </div>
 
-        <!-- Pagination - Always show if we have failed receipts or pagination data -->
         <div *ngIf="failedReceipts.length > 0 || failedPagination.total > 0" class="pagination-controls">
           <button class="btn-pagination" [disabled]="currentFailedPage === 1"
             (click)="loadFailedReceipts(currentFailedPage - 1)">
@@ -416,18 +453,15 @@
           <h3>{{ galleryItemId ? '✏️ Edit Gallery Image' : '➕ Add Gallery Image' }}</h3>
           <button class="btn-close" (click)="closeGalleryModal()">✕</button>
         </div>
-
         <div class="modal-body">
           <div class="form-group">
             <label>Title *</label>
             <input placeholder="Image title" [(ngModel)]="galleryTitle" />
           </div>
-
           <div class="form-group">
             <label>Description</label>
             <textarea placeholder="Short description" [(ngModel)]="galleryDescription"></textarea>
           </div>
-
           <div class="form-group">
             <label>Image *</label>
             <input type="file" accept="image/*" (change)="handleGalleryImageChange($event)" />
@@ -436,7 +470,6 @@
             </div>
             <div class="input-error" *ngIf="galleryPreviewError">{{ galleryPreviewError }}</div>
           </div>
-
           <div class="form-group">
             <label>Status</label>
             <select [(ngModel)]="galleryStatus">
@@ -445,7 +478,6 @@
             </select>
           </div>
         </div>
-
         <div class="modal-footer">
           <button class="btn-secondary" (click)="closeGalleryModal()">Cancel</button>
           <button class="btn-primary" (click)="saveGalleryItem()">
@@ -462,7 +494,6 @@
           <h3>{{ editId ? '✏️ Edit Campaign' : '➕ Create New Campaign' }}</h3>
           <button class="btn-close" (click)="closeNewCampaignModal()">✕</button>
         </div>
-
         <div class="modal-body">
           <div class="form-row">
             <div class="form-group">
@@ -474,7 +505,6 @@
               <input placeholder="🛕" style="width:100px" [(ngModel)]="icon" />
             </div>
           </div>
-
           <div class="form-row">
             <div class="form-group">
               <label>Goal Amount (₹) *</label>
@@ -485,13 +515,11 @@
               <input placeholder="30" type="number" [(ngModel)]="daysLeft" />
             </div>
           </div>
-
           <div class="form-group">
             <label>Description *</label>
             <textarea placeholder="Campaign description" [(ngModel)]="description"></textarea>
           </div>
         </div>
-
         <div class="modal-footer">
           <button class="btn-secondary" (click)="closeNewCampaignModal()">Cancel</button>
           <button class="btn-primary" (click)="saveCampaign()">

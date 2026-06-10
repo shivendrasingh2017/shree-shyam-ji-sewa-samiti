@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { BaseChartDirective } from 'ng2-charts';
@@ -29,7 +29,7 @@ Chart.register(
   templateUrl: './admin.html',
   styleUrls: ['./admin.scss']
 })
-export class Admin implements OnInit {
+export class Admin implements OnInit, OnDestroy {
   // auth
   user = '';
   pass = '';
@@ -70,27 +70,149 @@ export class Admin implements OnInit {
 
   campaignChartOptions: ChartConfiguration['options'] = {
     responsive: true,
-    maintainAspectRatio: true,
-    plugins: { legend: { position: 'bottom' } }
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: 'bottom',
+        labels: { color: '#555', font: { size: 12 }, padding: 16, boxWidth: 14 }
+      },
+      tooltip: {
+        backgroundColor: 'rgba(30,30,60,0.92)',
+        titleColor: '#fff',
+        bodyColor: '#e0e0ff',
+        padding: 12,
+        cornerRadius: 8,
+        callbacks: {
+          label: (ctx) => ` ₹${Number(ctx.raw).toLocaleString('en-IN')}`
+        }
+      }
+    },
+    scales: {
+      x: {
+        ticks: { color: '#888', font: { size: 11 }, maxRotation: 30 },
+        grid: { color: 'rgba(0,0,0,0.04)' }
+      },
+      y: {
+        ticks: {
+          color: '#888',
+          font: { size: 11 },
+          callback: (val) => '₹' + Number(val).toLocaleString('en-IN')
+        },
+        grid: { color: 'rgba(0,0,0,0.06)' }
+      }
+    }
   };
 
   donationTrendChartOptions: ChartConfiguration['options'] = {
     responsive: true,
-    maintainAspectRatio: true,
-    plugins: { legend: { position: 'bottom' } }
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: 'bottom',
+        labels: { color: '#555', font: { size: 12 }, padding: 16, boxWidth: 14 }
+      },
+      tooltip: {
+        backgroundColor: 'rgba(30,30,60,0.92)',
+        titleColor: '#fff',
+        bodyColor: '#e0e0ff',
+        padding: 12,
+        cornerRadius: 8,
+        callbacks: {
+          label: (ctx) => ` ₹${Number(ctx.raw).toLocaleString('en-IN')}`
+        }
+      }
+    },
+    scales: {
+      x: {
+        ticks: { color: '#888', font: { size: 11 }, maxRotation: 30 },
+        grid: { color: 'rgba(0,0,0,0.04)' }
+      },
+      y: {
+        ticks: {
+          color: '#888',
+          font: { size: 11 },
+          callback: (val) => '₹' + Number(val).toLocaleString('en-IN')
+        },
+        grid: { color: 'rgba(0,0,0,0.06)' }
+      }
+    }
   };
 
   campaignPerformanceChartOptions: ChartConfiguration['options'] = {
     responsive: true,
-    maintainAspectRatio: true,
-    plugins: { legend: { position: 'bottom' } },
-    indexAxis: 'y' as const
+    maintainAspectRatio: false,
+    indexAxis: 'y' as const,
+    plugins: {
+      legend: {
+        position: 'bottom',
+        labels: { color: '#555', font: { size: 12 }, padding: 16, boxWidth: 14 }
+      },
+      tooltip: {
+        backgroundColor: 'rgba(30,30,60,0.92)',
+        titleColor: '#fff',
+        bodyColor: '#e0e0ff',
+        padding: 12,
+        cornerRadius: 8,
+        callbacks: {
+          label: (ctx) => ` ${ctx.raw}% completed`
+        }
+      }
+    },
+    scales: {
+      x: {
+        min: 0,
+        max: 100,
+        ticks: {
+          color: '#888',
+          font: { size: 11 },
+          callback: (val) => `${val}%`
+        },
+        grid: { color: 'rgba(0,0,0,0.06)' }
+      },
+      y: {
+        ticks: { color: '#666', font: { size: 11 } },
+        grid: { color: 'transparent' }
+      }
+    }
   };
 
   donationSourceChartOptions: ChartConfiguration['options'] = {
     responsive: true,
-    maintainAspectRatio: true,
-    plugins: { legend: { position: 'bottom' } }
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: 'bottom',
+        labels: {
+          color: '#555',
+          font: { size: 11 },
+          padding: 12,
+          boxWidth: 12,
+          generateLabels: (chart) => {
+            const data = chart.data;
+            if (data.labels && data.datasets.length) {
+              return (data.labels as string[]).map((label, i) => ({
+                text: label.length > 18 ? label.substring(0, 16) + '…' : label,
+                fillStyle: (data.datasets[0].backgroundColor as string[])[i],
+                strokeStyle: (data.datasets[0].backgroundColor as string[])[i],
+                hidden: false,
+                index: i
+              }));
+            }
+            return [];
+          }
+        }
+      },
+      tooltip: {
+        backgroundColor: 'rgba(30,30,60,0.92)',
+        titleColor: '#fff',
+        bodyColor: '#e0e0ff',
+        padding: 12,
+        cornerRadius: 8,
+        callbacks: {
+          label: (ctx) => ` ${ctx.raw} donors`
+        }
+      }
+    }
   };
 
   currentTab = 'dashboard';
@@ -124,6 +246,13 @@ export class Admin implements OnInit {
     }
   }
 
+  // ── Auto-logout jab component destroy ho ──
+  ngOnDestroy() {
+    if (this.loggedIn) {
+      this.logout();
+    }
+  }
+
   login() {
     this.auth.login(this.user, this.pass).subscribe((res: any) => {
       if (res && res.token) {
@@ -144,7 +273,7 @@ export class Admin implements OnInit {
     this.loggedIn = false;
     this.receipts = [];
     this.failedReceipts = [];
-    this.currentTab = 'campaigns';
+    this.currentTab = 'dashboard';
   }
 
   loadCampaigns() {
@@ -176,9 +305,10 @@ export class Admin implements OnInit {
   }
 
   prepareCampaignProgressChart() {
-    const labels = this.campaigns.slice(0, 5).map(c => c.title);
-    const raised = this.campaigns.slice(0, 5).map(c => c.raised || 0);
-    const goals = this.campaigns.slice(0, 5).map(c => c.goal || 0);
+    const top5 = this.campaigns.slice(0, 5);
+    const labels = top5.map(c => c.title?.length > 14 ? c.title.substring(0, 12) + '…' : c.title);
+    const raised = top5.map(c => c.raised || 0);
+    const goals = top5.map(c => c.goal || 0);
 
     this.campaignChartData = {
       labels,
@@ -186,26 +316,29 @@ export class Admin implements OnInit {
         {
           label: 'Amount Raised (₹)',
           data: raised,
-          backgroundColor: '#FF6384'
+          backgroundColor: 'rgba(102,126,234,0.85)',
+          borderRadius: 6,
+          borderSkipped: false
         },
         {
           label: 'Goal (₹)',
           data: goals,
-          backgroundColor: '#36A2EB'
+          backgroundColor: 'rgba(118,75,162,0.35)',
+          borderRadius: 6,
+          borderSkipped: false
         }
       ]
     };
   }
 
   prepareDonationTrendChart() {
-    // Group receipts by date
     const dateMap = new Map<string, number>();
     const sortedReceipts = [...this.receipts].sort((a, b) =>
       new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
     );
 
     sortedReceipts.forEach(r => {
-      const date = new Date(r.createdAt).toLocaleDateString('en-IN');
+      const date = new Date(r.createdAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short' });
       dateMap.set(date, (dateMap.get(date) || 0) + (r.amount || 0));
     });
 
@@ -218,21 +351,26 @@ export class Admin implements OnInit {
         {
           label: 'Daily Donations (₹)',
           data,
-          borderColor: '#4CAF50',
-          backgroundColor: 'rgba(76, 175, 80, 0.1)',
-          tension: 0.4,
-          fill: true
+          borderColor: '#667eea',
+          backgroundColor: 'rgba(102,126,234,0.12)',
+          tension: 0.45,
+          fill: true,
+          pointBackgroundColor: '#764ba2',
+          pointBorderColor: '#fff',
+          pointBorderWidth: 2,
+          pointRadius: 5,
+          pointHoverRadius: 7
         }
       ]
     };
   }
 
   prepareCampaignPerformanceChart() {
-    const campaigns = this.campaigns.slice(0, 5);
-    const labels = campaigns.map(c => c.title);
-    const percentages = campaigns.map(c => {
+    const top5 = this.campaigns.slice(0, 5);
+    const labels = top5.map(c => c.title?.length > 18 ? c.title.substring(0, 16) + '…' : c.title);
+    const percentages = top5.map(c => {
       const goal = c.goal || 1;
-      return Math.round((c.raised / goal) * 100);
+      return Math.min(Math.round((c.raised / goal) * 100), 100);
     });
 
     this.campaignPerformanceChartData = {
@@ -242,12 +380,14 @@ export class Admin implements OnInit {
           label: 'Completion %',
           data: percentages,
           backgroundColor: [
-            '#FF6384',
-            '#36A2EB',
-            '#FFCE56',
-            '#4CAF50',
-            '#9C27B0'
-          ]
+            'rgba(102,126,234,0.85)',
+            'rgba(118,75,162,0.85)',
+            'rgba(255,99,132,0.85)',
+            'rgba(54,162,235,0.85)',
+            'rgba(255,206,86,0.85)'
+          ],
+          borderRadius: 6,
+          borderSkipped: false
         }
       ]
     };
@@ -256,8 +396,9 @@ export class Admin implements OnInit {
   prepareDonationSourceChart() {
     if (!this.campaigns || this.campaigns.length === 0) return;
 
-    const labels = this.campaigns.slice(0, 5).map(c => c.title);
-    const data = this.campaigns.slice(0, 5).map(c => c.donors || 0);
+    const top5 = this.campaigns.slice(0, 5);
+    const labels = top5.map(c => c.title);
+    const data = top5.map(c => c.donors || 0);
 
     this.donationSourceChartData = {
       labels,
@@ -266,12 +407,15 @@ export class Admin implements OnInit {
           label: 'Number of Donors',
           data,
           backgroundColor: [
-            '#FF6384',
-            '#36A2EB',
-            '#FFCE56',
-            '#4CAF50',
-            '#9C27B0'
-          ]
+            'rgba(102,126,234,0.88)',
+            'rgba(118,75,162,0.88)',
+            'rgba(255,99,132,0.88)',
+            'rgba(54,162,235,0.88)',
+            'rgba(255,159,64,0.88)'
+          ],
+          borderColor: '#fff',
+          borderWidth: 3,
+          hoverOffset: 8
         }
       ]
     };
@@ -339,10 +483,8 @@ export class Admin implements OnInit {
   toggleCampaignActive(campaign: any) {
     campaign.active = !campaign.active;
     this.campaignService.toggleActive(campaign._id, campaign.active).subscribe(
+      () => { this.loadCampaigns(); },
       () => {
-        this.loadCampaigns();
-      },
-      (err) => {
         campaign.active = !campaign.active;
         alert('Failed to update campaign status');
       }
@@ -365,11 +507,9 @@ export class Admin implements OnInit {
       (res: any) => {
         if (res && res.success) {
           this.receipts = res.data || [];
-          // Handle pagination response
           if (res.pagination) {
             this.receiptPagination = res.pagination;
           } else {
-            // Calculate pages from total if pagination not provided
             const total = res.data?.length || 0;
             const pages = Math.ceil(total / this.receiptLimit) || 1;
             this.receiptPagination = { total, pages, page, limit: this.receiptLimit };
@@ -391,11 +531,9 @@ export class Admin implements OnInit {
       (res: any) => {
         if (res && res.success) {
           this.failedReceipts = res.data || [];
-          // Handle pagination response
           if (res.pagination) {
             this.failedPagination = res.pagination;
           } else {
-            // Calculate pages from total if pagination not provided
             const total = res.data?.length || 0;
             const pages = Math.ceil(total / this.receiptLimit) || 1;
             this.failedPagination = { total, pages, page, limit: this.receiptLimit };
@@ -412,22 +550,7 @@ export class Admin implements OnInit {
 
   exportReceiptsCsv() {
     if (!this.receipts || this.receipts.length === 0) return;
-
-    const header = [
-      'Date',
-      'Invoice',
-      'Amount',
-      'Donor',
-      'PAN',
-      'Address',
-      'Message',
-      'Campaign',
-      'Remaining',
-      'Days Left',
-      'Order ID',
-      'Payment ID'
-    ];
-
+    const header = ['Date', 'Invoice', 'Amount', 'Donor', 'PAN', 'Address', 'Message', 'Campaign', 'Remaining', 'Days Left', 'Order ID', 'Payment ID'];
     const rows = this.receipts.map(r => [
       new Date(r.createdAt).toLocaleString('en-IN'),
       r.invoiceNumber || '',
@@ -442,11 +565,9 @@ export class Admin implements OnInit {
       r.razorpay_order_id || '',
       r.razorpay_payment_id || ''
     ]);
-
     const csvContent = [header, ...rows]
       .map(row => row.map(item => `"${String(item).replace(/"/g, '""')}"`).join(','))
       .join('\n');
-
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
@@ -460,20 +581,7 @@ export class Admin implements OnInit {
 
   exportFailedReceiptsCsv() {
     if (!this.failedReceipts || this.failedReceipts.length === 0) return;
-
-    const header = [
-      'Donor',
-      'Pan Card',
-      'Amount',
-      'Date',
-      'Invoice',
-      'Campaign',
-      'Address',
-      'Message',
-      'Order ID',
-      'Payment ID'
-    ];
-
+    const header = ['Donor', 'Pan Card', 'Amount', 'Date', 'Invoice', 'Campaign', 'Address', 'Message', 'Order ID', 'Payment ID'];
     const rows = this.failedReceipts.map(r => [
       r.donorFullName || 'Anonymous',
       r.donorPAN || '',
@@ -486,11 +594,9 @@ export class Admin implements OnInit {
       r.razorpay_order_id || '',
       r.razorpay_payment_id || ''
     ]);
-
     const csvContent = [header, ...rows]
       .map(row => row.map(item => `"${String(item).replace(/"/g, '""')}"`).join(','))
       .join('\n');
-
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
@@ -520,7 +626,6 @@ export class Admin implements OnInit {
   loadGalleryItems() {
     this.galleryService.getAll().subscribe(items => {
       this.galleryItems = items;
-      console.log('Gallery items loaded:>>>>>>>>>>>>>>>', items);
     });
   }
 
@@ -547,17 +652,12 @@ export class Admin implements OnInit {
   handleGalleryImageChange(event: Event) {
     const input = event.target as HTMLInputElement;
     const file = input.files?.[0];
-    if (!file) {
-      return;
-    }
-
+    if (!file) return;
     if (!file.type.startsWith('image/')) {
       this.galleryPreviewError = 'Please select a valid image file.';
       return;
     }
-
     this.gallerySelectedFile = file;
-
     const reader = new FileReader();
     reader.onload = () => {
       this.galleryImageUrl = reader.result as string;
@@ -571,28 +671,18 @@ export class Admin implements OnInit {
       this.galleryPreviewError = 'Title is required.';
       return;
     }
-
     if (this.galleryItemId) {
-      // Update: image is optional
-      const payload: {
-        title?: string;
-        description?: string;
-        status?: 'active' | 'inactive';
-        image?: File;
-      } = {
+      const payload: { title?: string; description?: string; status?: 'active' | 'inactive'; image?: File } = {
         title: this.galleryTitle.trim(),
         description: this.galleryDescription.trim(),
         status: this.galleryStatus,
       };
-      if (this.gallerySelectedFile) {
-        payload.image = this.gallerySelectedFile;
-      }
+      if (this.gallerySelectedFile) payload.image = this.gallerySelectedFile;
       this.galleryService.update(this.galleryItemId, payload).subscribe({
         next: () => { this.loadGalleryItems(); this.closeGalleryModal(); },
         error: () => { this.galleryPreviewError = 'Failed to update gallery item.'; }
       });
     } else {
-      // Create: image is required
       if (!this.gallerySelectedFile) {
         this.galleryPreviewError = 'Please select an image.';
         return;
@@ -604,18 +694,16 @@ export class Admin implements OnInit {
         image: this.gallerySelectedFile
       }).subscribe({
         next: () => { this.loadGalleryItems(); this.closeGalleryModal(); },
-       error: (err) => {
-  console.error('Gallery create error:', err);   // ← ADD
-  this.galleryPreviewError = 'Failed to add gallery item.';
-}
+        error: (err) => {
+          console.error('Gallery create error:', err);
+          this.galleryPreviewError = 'Failed to add gallery item.';
+        }
       });
     }
   }
 
   deleteGalleryItem(id: string) {
-    if (!confirm('Delete this gallery image?')) {
-      return;
-    }
+    if (!confirm('Delete this gallery image?')) return;
     this.galleryService.remove(id).subscribe(() => this.loadGalleryItems());
   }
 

@@ -10,8 +10,8 @@ import { RouterLink } from '@angular/router';
 export class Footer {
    currentYear = new Date().getFullYear();
    images = [
-    {src: 'assets/footer/footer1.webp', alt: 'Footer Image 1'},
-    {src: 'assets/footer/footer2.webp', alt: 'Footer Image 2'},
-    {src: 'assets/footer/footer3.webp', alt: 'Footer Image 3'}
+    {src: 'assets/footer/footer1.jpg', alt: 'Footer Image 1'},
+    {src: 'assets/footer/footer2.jpg', alt: 'Footer Image 2'},
+    {src: 'assets/footer/footer3.jpg', alt: 'Footer Image 3'}
    ];
 }
