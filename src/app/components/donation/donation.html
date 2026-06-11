@@ -16,7 +16,7 @@
     </p>
 
     <div class="ngo-trust-strip">
-      <div><strong>AAEBS4366FE20261</strong><span>Unique Registration No.</span></div>
+      <div><strong>Shree Shyam Ji Sewa Samiti</strong><span>Trusted Seva Organization</span></div>
       <div><strong>Secure</strong><span> Payment</span></div>
       <div><strong>Tax Benefit</strong><span>As applicable</span></div>
     </div>
@@ -32,18 +32,11 @@
     </div>
 
     <div class="campaigns-grid">
-      <div
-        class="campaign-card"
-        *ngFor="let c of campaigns | slice:0:visibleCount"
-        [class.active]="isSelectedCampaign(c)"
-        (click)="selectCampaign(c)"
-        role="button"
-        [attr.aria-pressed]="isSelectedCampaign(c)"
-        tabindex="0"
-        (keydown.enter)="selectCampaign(c)"
-      >
+      <div class="campaign-card" *ngFor="let c of campaigns | slice:0:visibleCount"
+        [class.active]="isSelectedCampaign(c)" (click)="selectCampaign(c)" role="button"
+        [attr.aria-pressed]="isSelectedCampaign(c)" tabindex="0" (keydown.enter)="selectCampaign(c)">
         <div class="campaign-top">
-          <span class="c-icon">{{ c.icon }}</span>
+          <!-- <span class="c-icon">{{ c.icon }}</span> -->
           <span class="days-badge" [class.urgent]="c.daysLeft <= 7">
             {{ c.daysLeft }}d left
           </span>
@@ -57,13 +50,13 @@
             <div class="progress-fill" [style.width.%]="progressPercent(c)"></div>
           </div>
           <div class="progress-meta">
-            <span>{{ formatINR(c.raised) }} raised</span>
+            <!-- <span>{{ formatINR(c.raised) }} raised</span> -->
             <strong>{{ progressPercent(c) }}%</strong>
           </div>
         </div>
 
         <div class="campaign-footer">
-          <span>🎯 {{ formatINR(c.goal) }}</span>
+          <!-- <span>🎯 {{ formatINR(c.goal) }}</span> -->
           <span>👥 {{ c.donors }} donors</span>
         </div>
       </div>
@@ -79,13 +72,8 @@
   <div class="modal-overlay" *ngIf="modalOpen" (click)="closeModal($event)">
     <div class="modal-box" role="dialog" aria-modal="true">
 
-      <button
-        class="modal-close-btn"
-        (click)="closeModal(null)"
-        type="button"
-        aria-label="Close"
-        [disabled]="gatewayLoading || paymentProcessing || pdfLoading"
-      >
+      <button class="modal-close-btn" (click)="closeModal(null)" type="button" aria-label="Close"
+        [disabled]="gatewayLoading || paymentProcessing || pdfLoading">
         ✕
       </button>
 
@@ -116,13 +104,8 @@
           </div>
 
           <div class="preset-amounts">
-            <button
-              *ngFor="let amt of presetAmounts"
-              class="preset-btn"
-              [class.selected]="selectedAmount === amt"
-              (click)="selectPreset(amt)"
-              type="button"
-            >
+            <button *ngFor="let amt of presetAmounts" class="preset-btn" [class.selected]="selectedAmount === amt"
+              (click)="selectPreset(amt)" type="button">
               ₹{{ amt | number }}
             </button>
           </div>
@@ -131,9 +114,8 @@
             <label for="customAmt">Custom Amount</label>
             <div class="input-prefix-wrap">
               <span class="prefix">₹</span>
-              <input id="customAmt" type="number" min="1" max="100000"
-                placeholder="e.g. 2100" [(ngModel)]="customAmount"
-                (ngModelChange)="onCustomAmountChange()" [class.error]="!!amountError" />
+              <input id="customAmt" type="number" min="1" max="100000" placeholder="e.g. 2100"
+                [(ngModel)]="customAmount" (ngModelChange)="onCustomAmountChange()" [class.error]="!!amountError" />
             </div>
             <span class="error-msg" *ngIf="amountError">{{ amountError }}</span>
           </div>
@@ -141,8 +123,8 @@
           <div class="form-grid">
             <div class="input-group">
               <label for="donorFull">Full Name</label>
-              <input id="donorFull" type="text" maxlength="100"
-                [(ngModel)]="donorFullName" [class.error]="!!nameError" />
+              <input id="donorFull" type="text" maxlength="100" [(ngModel)]="donorFullName"
+                [class.error]="!!nameError" />
               <span class="error-msg" *ngIf="nameError">{{ nameError }}</span>
             </div>
 
@@ -176,7 +158,8 @@
 
           <div class="input-group">
             <label for="address">Address</label>
-            <textarea id="address" rows="2" maxlength="250" [(ngModel)]="donorAddress" [class.error]="!!addressError"></textarea>
+            <textarea id="address" rows="2" maxlength="250" [(ngModel)]="donorAddress"
+              [class.error]="!!addressError"></textarea>
             <span class="error-msg" *ngIf="addressError">{{ addressError }}</span>
           </div>
 
@@ -206,9 +189,11 @@
 
           <div class="donation-summary">
             <div class="summary-item"><span>Campaign</span><strong>{{ selectedCampaign?.title }}</strong></div>
-            <div class="summary-item"><span>Amount</span><strong class="amount">{{ formatINR(finalAmount) }}</strong></div>
+            <div class="summary-item"><span>Amount</span><strong class="amount">{{ formatINR(finalAmount) }}</strong>
+            </div>
             <div class="summary-item" *ngIf="donorFullName"><span>Name</span><strong>{{ donorFullName }}</strong></div>
-            <div class="summary-item" *ngIf="donorMobile"><span>Mobile</span><strong>{{ donorCountryCode }} {{ donorMobile }}</strong></div>
+            <div class="summary-item" *ngIf="donorMobile"><span>Mobile</span><strong>{{ donorCountryCode }} {{
+                donorMobile }}</strong></div>
             <div class="summary-item" *ngIf="donorPAN"><span>PAN</span><strong>{{ donorPAN }}</strong></div>
             <div class="summary-item" *ngIf="donorAddress"><span>Address</span><strong>{{ donorAddress }}</strong></div>
           </div>
@@ -218,7 +203,8 @@
             <span>UPI • Card • Netbanking • Wallet</span>
           </div>
 
-          <button class="btn-razorpay" (click)="initiatePayment()" [disabled]="paymentProcessing || gatewayLoading" type="button">
+          <button class="btn-razorpay" (click)="initiatePayment()" [disabled]="paymentProcessing || gatewayLoading"
+            type="button">
             <span *ngIf="!paymentProcessing && !gatewayLoading">💰 Pay Now</span>
             <span *ngIf="paymentProcessing || gatewayLoading" class="btn-loading-text">
               <span class="btn-spinner"></span> Please wait...
@@ -258,17 +244,36 @@
           <div class="receipt" *ngIf="lastDonation.status === 'success'">
             <div class="receipt-header">🧾 Donation Receipt</div>
             <table class="receipt-table">
-              <tr><td>Transaction ID</td><td><code>{{ lastDonation.txnId }}</code></td></tr>
-              <tr><td>Payment ID</td><td><code>{{ lastDonation.paymentId }}</code></td></tr>
-              <tr><td>Donor</td><td>{{ lastDonation.name }}</td></tr>
-              <tr><td>Campaign</td><td>{{ lastDonation.campaign }}</td></tr>
-              <tr><td>Amount</td><td><strong>{{ formatINR(lastDonation.amount) }}</strong></td></tr>
-              <tr><td>Date & Time</td><td>{{ lastDonation.timestamp | date:'dd MMM yyyy, h:mm a' }}</td></tr>
+              <tr>
+                <td>Transaction ID</td>
+                <td><code>{{ lastDonation.txnId }}</code></td>
+              </tr>
+              <tr>
+                <td>Payment ID</td>
+                <td><code>{{ lastDonation.paymentId }}</code></td>
+              </tr>
+              <tr>
+                <td>Donor</td>
+                <td>{{ lastDonation.name }}</td>
+              </tr>
+              <tr>
+                <td>Campaign</td>
+                <td>{{ lastDonation.campaign }}</td>
+              </tr>
+              <tr>
+                <td>Amount</td>
+                <td><strong>{{ formatINR(lastDonation.amount) }}</strong></td>
+              </tr>
+              <tr>
+                <td>Date & Time</td>
+                <td>{{ lastDonation.timestamp | date:'dd MMM yyyy, h:mm a' }}</td>
+              </tr>
             </table>
           </div>
 
           <div class="success-actions">
-            <button class="btn-secondary" type="button" (click)="downloadInvoice()" [disabled]="pdfLoading" *ngIf="lastDonation.status === 'success'">
+            <button class="btn-secondary" type="button" (click)="downloadInvoice()" [disabled]="pdfLoading"
+              *ngIf="lastDonation.status === 'success'">
               📄 Download PDF
             </button>
             <button class="btn-donate-again" (click)="donateAgain()" type="button">

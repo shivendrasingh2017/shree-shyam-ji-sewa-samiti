@@ -11,7 +11,7 @@ import { RouterModule } from '@angular/router';
   styleUrls: ['./contact.scss'],
 })
 export class Contact implements OnInit {
-  isLoading = true;
+  isLoading = false;
   mapUrl!: SafeResourceUrl;
 
   private readonly latitude = 28.616600927748127;

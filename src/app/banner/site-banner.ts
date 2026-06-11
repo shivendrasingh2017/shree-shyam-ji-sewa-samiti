@@ -12,7 +12,7 @@ import { RouterLink } from '@angular/router';
 export class SiteBanner implements OnInit {
   showBanner = false;
 
-  bannerImage = 'assets/banner/banner003.jpg';
+  bannerImage = 'assets/banner/banner01.jpg';
 
   ngOnInit(): void {
     const alreadyShown = sessionStorage.getItem('siteDonationBannerShown');
