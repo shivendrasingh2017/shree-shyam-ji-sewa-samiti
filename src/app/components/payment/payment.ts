@@ -24,7 +24,7 @@ export class Payment {
           key: k.key,
           amount: order.amount,
           currency: 'INR',
-          name: 'Shree Shyam Ji Sewa Samiti',
+          name: 'Shyam Ji Sewa Samiti',
           description: 'Donation',
           order_id: order.id,
           handler: (response: any) => {

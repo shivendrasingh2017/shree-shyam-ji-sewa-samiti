@@ -430,7 +430,7 @@ export class Aarti {
                 margin-top:5px;
                 font-style:italic;
               ">
-                Shree Shyam Ji Sewa Samiti
+                Shyam Ji Sewa Samiti
               </div>
             </div>
 

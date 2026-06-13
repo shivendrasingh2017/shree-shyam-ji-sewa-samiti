@@ -2,7 +2,7 @@
 
   <div class="gateway-loader page-loader" *ngIf="gatewayLoading && !modalOpen">
     <div class="gateway-loader__inner">
-      <img src="assets/logo/LOGO.png" alt="Shree Shyam Ji Sewa Samiti" />
+      <img src="assets/logo/LOGO.png" alt="Shyam Ji Sewa Samiti" />
       <div class="spinner-ring"></div>
       <p>{{ gatewayLoadingMsg || 'Please wait...' }}</p>
     </div>
@@ -10,13 +10,13 @@
 
   <div class="container donation-hero">
     <span class="eyebrow">🕉 DONATE TO HELP 🕉</span>
-    <h2>Make a Donation<br />Support Seva</h2>
+    <h2>Make a Donation<br />Support Sewa</h2>
     <p class="subtitle">
       Aapka yogdan bhandara, food, dharmik karyakram aur samaj kalyan ke liye istemal hota hai.
     </p>
 
     <div class="ngo-trust-strip">
-      <div><strong>Shree Shyam Ji Sewa Samiti</strong><span>Trusted Seva Organization</span></div>
+      <div><strong>Shyam Ji Sewa Samiti</strong><span>Trusted Sewa Organization</span></div>
       <div><strong>Secure</strong><span> Payment</span></div>
       <div><strong>Tax Benefit</strong><span>As applicable</span></div>
     </div>
@@ -28,7 +28,7 @@
         <span class="label-chip">Choose Campaign</span>
         <h3>Support a Cause</h3>
       </div>
-      <p>Select any seva campaign and continue donation securely.</p>
+      <p>Select any sewa campaign and continue donation securely.</p>
     </div>
 
     <div class="campaigns-grid">
@@ -79,7 +79,7 @@
 
       <div class="gateway-loader modal-loader" *ngIf="gatewayLoading">
         <div class="gateway-loader__inner">
-          <img src="assets/logo/LOGO.png" alt="Shree Shyam Ji Sewa Samiti" />
+          <img src="assets/logo/LOGO.png" alt="Shyam Ji Sewa Samiti" />
           <div class="spinner-ring"></div>
           <p>{{ gatewayLoadingMsg || 'Please wait...' }}</p>
           <small>🔒 Secure process. Please do not refresh.</small>
@@ -223,7 +223,7 @@
             {{ lastDonation.status === 'success' ? '🙏' : '❌' }}
           </div>
 
-          <h3>{{ lastDonation.status === 'success' ? 'Jai Shri Shyam! Thank You' : 'Payment Failed' }}</h3>
+          <h3>{{ lastDonation.status === 'success' ? 'Jai Shree Shyam! Thank You' : 'Payment Failed' }}</h3>
 
           <p class="success-msg" *ngIf="lastDonation.status === 'success'">
             Your donation of <strong>{{ formatINR(lastDonation.amount) }}</strong>

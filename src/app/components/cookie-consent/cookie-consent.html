@@ -1,0 +1,34 @@
+@if (showCookie) {
+  <div class="cookie-box">
+
+    <button
+      type="button"
+      class="cookie-close"
+      (click)="closeCookie()"
+      aria-label="Close cookie notice">
+      ✕
+    </button>
+
+    <div class="cookie-icon">
+      🍪
+    </div>
+
+    <div class="cookie-content">
+      <h4>We use cookies</h4>
+
+      <p>
+        Our website uses essential cookies to improve performance, security and user experience.
+        By continuing, you agree to our
+        <a routerLink="/privacy-policy">Privacy Policy</a>.
+      </p>
+    </div>
+
+    <button
+      type="button"
+      class="accept-btn"
+      (click)="acceptCookies()">
+      Accept
+    </button>
+
+  </div>
+}

@@ -365,7 +365,7 @@ export class Donation implements OnInit, AfterViewInit {
       key: this.razorpayKey,
       amount: order.amount,
       currency: order.currency || 'INR',
-      name: 'Shree Shyam Ji Sewa Samiti',
+      name: 'Shyam Ji Sewa Samiti',
       description: `Donation to ${this.selectedCampaign?.title || 'Campaign'}`,
       order_id: order.id,
 

@@ -16,7 +16,7 @@ export class SocialShare implements OnInit {
   isCopying = false;
 
   pageUrl = '';
-  pageTitle = 'Shree Shyam Ji Sewa Samiti';
+  pageTitle = 'Shyam Ji Sewa Samiti';
 
   private readonly liveBaseUrl = 'https://shyamjisewasamiti.org';
 
@@ -66,7 +66,7 @@ export class SocialShare implements OnInit {
       this.document.location.hash;
 
     this.pageUrl = `${this.liveBaseUrl}${path}`;
-    this.pageTitle = this.document.title || 'Shree Shyam Ji Sewa Samiti';
+    this.pageTitle = this.document.title || 'Shyam Ji Sewa Samiti';
   }
 
   async copyUrl(event?: MouseEvent): Promise<void> {
@@ -118,7 +118,7 @@ export class SocialShare implements OnInit {
       try {
         await navigator.share({
           title: this.pageTitle,
-          text: 'Shree Shyam Ji Sewa Samiti ki seva aur donation campaign dekhein.',
+          text: 'Shyam Ji Sewa Samiti ki seva aur donation campaign dekhein.',
           url: this.pageUrl,
         });
       } catch {
@@ -133,7 +133,7 @@ export class SocialShare implements OnInit {
     event?.stopPropagation();
 
     const text = encodeURIComponent(
-      `Shree Shyam Ji Sewa Samiti\nSeva, Bhandara aur Donation ke liye visit karein:\n${this.pageUrl}`
+      `Shyam Ji Sewa Samiti\nSeva, Bhandara aur Donation ke liye visit karein:\n${this.pageUrl}`
     );
 
     this.openShareUrl(`https://wa.me/?text=${text}`);
@@ -149,7 +149,7 @@ export class SocialShare implements OnInit {
   shareTwitter(event?: MouseEvent): void {
     event?.stopPropagation();
 
-    const text = encodeURIComponent('Shree Shyam Ji Sewa Samiti');
+    const text = encodeURIComponent('Shyam Ji Sewa Samiti');
     const url = encodeURIComponent(this.pageUrl);
 
     this.openShareUrl(`https://twitter.com/intent/tweet?text=${text}&url=${url}`);
@@ -159,7 +159,7 @@ export class SocialShare implements OnInit {
     event?.stopPropagation();
 
     const url = encodeURIComponent(this.pageUrl);
-    const text = encodeURIComponent('Shree Shyam Ji Sewa Samiti');
+    const text = encodeURIComponent('Shyam Ji Sewa Samiti');
 
     this.openShareUrl(`https://t.me/share/url?url=${url}&text=${text}`);
   }

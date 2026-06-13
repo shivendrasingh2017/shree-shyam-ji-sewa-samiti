@@ -21,7 +21,7 @@ export class HowWeHelpComponent {
     {
       icon: 'assets/svg/temple.svg',
       title: 'Food Seva & Bhandara',
-      desc: 'Shree Shyam Ji Sewa Samiti bhakton aur zaruratmand logon ke liye food seva, bhandara aur prasad vitran ka ayojan karti hai.',
+      desc: 'Shyam Ji Sewa Samiti bhakton aur zaruratmand logon ke liye food seva, bhandara aur prasad vitran ka ayojan karti hai.',
       variant: 'mauve',
       link: '/donation',
     },

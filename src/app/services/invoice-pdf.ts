@@ -87,7 +87,7 @@ export class InvoicePdf {
                   श्री श्याम जी सेवा समिति
                 </div>
                 <div style="font-size:14px;color:#555;font-style:italic;margin-top:8px;">
-                  Shree Shyam Ji Sewa Samiti
+                  Shyam Ji Sewa Samiti
                 </div>
               </div>
             </div>

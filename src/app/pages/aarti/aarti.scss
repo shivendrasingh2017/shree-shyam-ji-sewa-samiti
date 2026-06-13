@@ -294,7 +294,8 @@
 @media (hover: hover) {
   .lyrics-card:hover {
     transform: translateY(-8px);
-    color:#f7f0f0
+    color: var(--accent);
+    border-color: var(--gold);
   }
   .action-buttons .btn {
  
