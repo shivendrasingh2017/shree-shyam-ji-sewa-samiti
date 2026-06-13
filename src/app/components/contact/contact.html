@@ -12,11 +12,7 @@
 <section class="contact-page" [class.loaded]="!isLoading">
 
   <section class="contact-hero">
-    <img
-      src="/assets/contact/banner_contact1.jpg"
-      alt="Contact Banner"
-      class="hero-banner-img"
-    />
+    <img src="/assets/contact/banner_contact1.jpg" alt="Contact Banner" class="hero-banner-img" />
 
     <div class="hero-overlay">
       <div class="container text-center">
@@ -79,9 +75,9 @@
             <i class="fa-solid fa-location-dot"></i>
           </div>
           <div class="tile-content">
-            <h6>Office Address</h6>
-            <span class="addr-text">Block C-23, Sector 63</span>
-            <span>Noida, U.P.</span>
+            <h6>Address</h6>
+            <span class="addr-text">Sagar parisar gulmohar</span>
+            <span>huzur Bhopal Madhya Pradesh</span>
           </div>
         </div>
 
@@ -109,29 +105,22 @@
         <div class="map-header">
           <div>
             <span class="label-chip">Our Location</span>
-            <h2>Find Us On Map</h2>
+            <h2>Our Location on Map</h2>
             <p>
               <i class="fa-solid fa-location-dot me-1"></i>
-              Shyam Ji Sewa Samiti, Block C-23, Sector 63, Noida, U.P.
+              Shyam Ji Sewa Samiti, Sagar Parisar, Gulmohar, Huzur, Bhopal, Madhya Pradesh
             </p>
           </div>
 
-          <a
-            href="https://maps.google.com/?q=28.616600927748127,77.38155745767135"
-            target="_blank"
-            rel="noopener"
-            class="btn-map-dir">
+          <a href="https://www.google.com/maps/search/?api=1&query=+Sagar+Parisar,+Gulmohar,+Huzur,+Bhopal,+Madhya+Pradesh+462039"
+            target="_blank" rel="noopener" class="btn-map-dir">
             <i class="fa-solid fa-diamond-turn-right me-2"></i>
             Get Directions
           </a>
         </div>
 
         <div class="map-frame">
-          <iframe
-            [src]="mapUrl"
-            allowfullscreen
-            loading="lazy"
-            referrerpolicy="no-referrer-when-downgrade">
+          <iframe [src]="mapUrl" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade">
           </iframe>
         </div>
 

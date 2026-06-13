@@ -14,14 +14,13 @@ export class Contact implements OnInit {
   isLoading = false;
   mapUrl!: SafeResourceUrl;
 
-  private readonly latitude = 28.616600927748127;
-  private readonly longitude = 77.38155745767135;
+  private readonly address = 'H.No.24, Sagar Parisar, Gulmohar, Huzur, Bhopal, Madhya Pradesh 462039';
 
   constructor(private sanitizer: DomSanitizer) {}
 
   ngOnInit(): void {
     const rawUrl =
-      `https://maps.google.com/maps?q=${this.latitude},${this.longitude}&t=k&z=17&output=embed`;
+      `https://maps.google.com/maps?q=${encodeURIComponent(this.address)}&t=k&z=16&output=embed`;
 
     this.mapUrl = this.sanitizer.bypassSecurityTrustResourceUrl(rawUrl);
 
