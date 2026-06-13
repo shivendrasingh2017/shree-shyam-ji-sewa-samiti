@@ -106,8 +106,8 @@ export class InvoicePdf {
           </div>
 
           <div style="text-align:center;margin-top:18px;font-size:13px;line-height:1.55;">
-            <div>Noida Sector 63, Uttar Pradesh, India</div>
-            <div>Unique Registration Number :  '<strong>AAEBS4366FE20261</strong>'</div>
+            <div> Gulmohar Huzur, Bhopal, Madhya Pradesh, India</div>
+            
             <div>E-Mail : shyamjisewasamiti@gmail.com</div>
           </div>
 
