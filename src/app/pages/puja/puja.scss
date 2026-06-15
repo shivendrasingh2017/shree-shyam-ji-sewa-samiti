@@ -137,6 +137,7 @@
   cursor: pointer;
   background: linear-gradient(135deg, var(--gold), var(--gold-2));
   transition: opacity 0.2s ease;
+  text-decoration: none;
 
   &:hover {
     opacity: 0.88;
@@ -152,7 +153,7 @@
 .upcoming-card,
 .form-wrapper,
 .step {
-  background: var(--card);
+  background: linear-gradient(185deg, var(--accent), var(--card));
   border-radius: 20px;
   padding: 24px;
   border: 1px solid rgba(255, 255, 255, 0.08);

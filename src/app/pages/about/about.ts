@@ -34,7 +34,7 @@ export class About implements OnInit, AfterViewInit {
     'Education Support',
     'Medical Assistance',
     'Festival Celebrations',
-    'Gau Seva',
+    'Gau Sewa',
   ];
 
   ngOnInit(): void {

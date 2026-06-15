@@ -58,7 +58,7 @@ export class Gallery {
     {
       image:    'assets/gallery/food_sewa1.jpg',
       category: 'Food Distribution',
-      title:    'Food Seva'
+      title:    'Food Sewa'
     }
   ];
 

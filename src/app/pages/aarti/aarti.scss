@@ -73,6 +73,11 @@
 .theme-btn:hover {
   transform: translateY(-3px);
   color: #fff;
+  background: linear-gradient(
+    135deg,
+    var(--gold-2),
+    var(--gold)
+  );
 }
 
 .theme-btn:active {

@@ -18,7 +18,7 @@ export class NewsFeed {
       author: 'Pt. Rakesh Sharma', avatar: 'assets/volunteers/profile.jpg'
     },
     {
-      img: 'assets/news/news03.jpg', tag: 'Seva, Daan', date: 'May 20, 2026',
+      img: 'assets/news/news03.jpg', tag: 'Sewa Daan', date: 'May 20, 2026',
       title: 'Samiti dwara 1100 bhakton ko bhandara',
       author: 'Mohan Lal Agarwal', avatar: 'assets/volunteers/profile.jpg'
     },

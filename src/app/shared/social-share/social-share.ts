@@ -118,7 +118,7 @@ export class SocialShare implements OnInit {
       try {
         await navigator.share({
           title: this.pageTitle,
-          text: 'Shyam Ji Sewa Samiti ki seva aur donation campaign dekhein.',
+          text: 'Shyam Ji Sewa Samiti ki sewa aur donation campaign dekhein.',
           url: this.pageUrl,
         });
       } catch {
@@ -133,7 +133,7 @@ export class SocialShare implements OnInit {
     event?.stopPropagation();
 
     const text = encodeURIComponent(
-      `Shyam Ji Sewa Samiti\nSeva, Bhandara aur Donation ke liye visit karein:\n${this.pageUrl}`
+      `Shyam Ji Sewa Samiti\nSewa, Bhandara aur Donation ke liye visit karein:\n${this.pageUrl}`
     );
 
     this.openShareUrl(`https://wa.me/?text=${text}`);
