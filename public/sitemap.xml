@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<urlset
+xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+  <url>
+    <loc>https://shyamjisewasamiti.org/</loc>
+    <priority>1.0</priority>
+  </url>
+
+  <url>
+    <loc>https://shyamjisewasamiti.org/about</loc>
+    <priority>0.9</priority>
+  </url>
+
+  <url>
+    <loc>https://shyamjisewasamiti.org/contact</loc>
+    <priority>0.9</priority>
+  </url>
+
+  <url>
+    <loc>https://shyamjisewasamiti.org/donation</loc>
+    <priority>0.9</priority>
+  </url>
+
+  <url>
+    <loc>https://shyamjisewasamiti.org/aarti</loc>
+    <priority>0.9</priority>
+  </url>
+
+  <url>
+    <loc>https://shyamjisewasamiti.org/gallery</loc>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://shyamjisewasamiti.org/privacy-policy</loc>
+    <priority>0.6</priority>
+  </url>
+
+  <url>
+    <loc>https://shyamjisewasamiti.org/terms-and-conditions</loc>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+  <loc>https://shyamjisewasamiti.org/puja</loc>
+  <priority>0.9</priority>
+</url>
+
+<url>
+  <loc>https://shyamjisewasamiti.org/our-puja</loc>
+  <priority>0.8</priority>
+</url>
+
+<url>
+  <loc>https://shyamjisewasamiti.org/live-broadcast</loc>
+  <priority>0.8</priority>
+</url>
+
+<url>
+  <loc>https://shyamjisewasamiti.org/donation-page</loc>
+  <priority>0.9</priority>
+</url>
+
+<url>
+  <loc>https://shyamjisewasamiti.org/our-gallery</loc>
+  <priority>0.8</priority>
+</url>
+
+</urlset>
