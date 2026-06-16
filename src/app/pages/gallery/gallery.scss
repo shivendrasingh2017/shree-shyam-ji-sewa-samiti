@@ -299,18 +299,31 @@
 /* ================================================
    SOCIAL CARDS
    ================================================ */
-
+   
 .social-card {
   background: var(--card);
   border-radius: 18px;
   padding: 36px 20px;
   text-align: center;
   border: 1px solid rgba(255, 255, 255, 0.07);
-  transition: transform 0.25s ease;
+
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease,
+    border-color 0.3s ease;
 }
 
 .social-card:hover {
-  transform: translateY(-4px);
+  transform: translateY(-8px);
+  border-color: rgba(212, 175, 55, 0.35);
+
+  box-shadow:
+    0 15px 35px rgba(0, 0, 0, 0.18),
+    0 0 20px rgba(212, 175, 55, 0.12);
 }
 
 .social-card i {
@@ -318,6 +331,49 @@
   color: var(--gold);
   margin-bottom: 14px;
   display: block;
+
+  transition:
+    transform 0.3s ease,
+    color 0.3s ease;
+}
+
+.social-card:hover i {
+  transform: scale(1.18);
+}
+
+.social-card h5 {
+  margin: 0;
+  transition: color 0.3s ease;
+}
+
+.social-card:hover h5 {
+  color: var(--gold);
+}
+
+.social-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+
+  background: linear-gradient(
+    135deg,
+    rgba(212, 175, 55, 0.08),
+    transparent 60%
+  );
+
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.social-card:hover::before {
+  opacity: 1;
+}
+
+.social-card-link {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  height: 100%;
 }
 
 /* ================================================

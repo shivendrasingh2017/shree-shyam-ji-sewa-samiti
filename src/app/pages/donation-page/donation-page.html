@@ -1,127 +1,277 @@
 <section class="donation-hero">
-
-  <!-- Full banner image — 1920x600px, no crop -->
-  <img
-    [src]="bannerImage"
-    alt="Donation Banner"
-    class="hero-banner-img"
-  />
-
-  <!-- <div class="hero-overlay">
-
-    <div class="container text-center">
-
-      <span class="hero-badge">
-        Khatu Shyam Ji Sewa
-      </span>
-
-      <h1>Support Our Mission</h1>
-
-      <p>
-        Your donation helps us serve society and continue
-        religious activities.
-      </p>
-
-    </div>
-
-  </div> -->
-
+  <img [src]="bannerImage" alt="Donation Banner" class="hero-banner-img" />
 </section>
+
 <app-donation></app-donation>
 
-<!-- IMPACT STATS -->
-
-<section class="section-space">
-
+<!-- ═══════════════════════════════════════════════
+     INLINE DONATION FORM (QR Scan / Direct Link)
+     URL: /donation?open=true
+     ═══════════════════════════════════════════════ -->
+<section class="section-space inline-form-section" id="inline-donation-form">
   <div class="container">
 
     <div class="section-heading">
-
-      <h2>Our Impact</h2>
-
-      <p>
-        Together we are creating positive change.
-      </p>
-
+      <span class="form-eyebrow">🕉 JAI SHREE SHYAM 🕉</span>
+      <h2>Direct Donation</h2>
+      <p>Fill the form below and complete your donation securely.</p>
     </div>
 
-    <div class="stats-grid">
+    <div class="inline-form-card">
 
-      <div class="stat-card">
-        <h3>5000+</h3>
-        <p>Families Helped</p>
-      </div>
+      <!-- ── STEP 1: FORM ── -->
+      <ng-container *ngIf="inlineFormStep === 'form'">
 
-      <div class="stat-card">
-        <h3>200+</h3>
-        <p>Events Organized</p>
-      </div>
+        <!-- Trust badges -->
+        <div class="trust-badges">
+          <span>✅ Tax benefit eligible</span>
+          <span>🔒 Secure Payment</span>
+          <span>🧾 PDF Receipt</span>
+          <span>🏛️ Shyam Ji Sewa Samiti</span>
+        </div>
 
-      <div class="stat-card">
-        <h3>1000+</h3>
-        <p>Volunteers</p>
-      </div>
+        <!-- Preset amounts -->
+        <div class="if-section-label">Select Amount</div>
+        <div class="if-preset-row">
+          <button *ngFor="let amt of presetAmounts" type="button"
+            class="if-preset-btn" [class.selected]="selectedAmount === amt"
+            (click)="selectPreset(amt)">
+            ₹{{ amt | number }}
+          </button>
+        </div>
 
-      <div class="stat-card">
-        <h3>50000+</h3>
-        <p>Meals Distributed</p>
-      </div>
+        <!-- Custom amount -->
+        <div class="if-input-group">
+          <label for="ifCustomAmt">Custom Amount</label>
+          <div class="if-prefix-wrap">
+            <span class="if-prefix">₹</span>
+            <input id="ifCustomAmt" type="number" min="1" max="100000"
+              placeholder="e.g. 2100" [(ngModel)]="customAmount"
+              (ngModelChange)="onCustomAmountChange()"
+              [class.error]="!!amountError" />
+          </div>
+          <span class="if-error" *ngIf="amountError">{{ amountError }}</span>
+        </div>
+
+        <!-- Form grid -->
+        <div class="if-grid">
+
+          <div class="if-input-group">
+            <label for="ifName">Full Name <span class="req">*</span></label>
+            <input id="ifName" type="text" maxlength="100"
+              placeholder="Enter your full name"
+              [(ngModel)]="donorFullName" [class.error]="!!nameError" />
+            <span class="if-error" *ngIf="nameError">{{ nameError }}</span>
+          </div>
+
+          <!-- Mobile with country code -->
+          <div class="if-input-group">
+            <label for="ifMobile">Mobile Number <span class="req">*</span></label>
+            <div class="if-mobile-wrap">
+              <select [(ngModel)]="donorCountryCode" class="if-country-select">
+                <option *ngFor="let c of countryCodes" [value]="c.code">
+                  {{ c.flag }} {{ c.code }} {{ c.name }}
+                </option>
+              </select>
+              <input id="ifMobile" type="tel" placeholder="Mobile number"
+                [(ngModel)]="donorMobile" [class.error]="!!mobileError" />
+            </div>
+            <span class="if-error" *ngIf="mobileError">{{ mobileError }}</span>
+          </div>
+
+          <div class="if-input-group">
+            <label for="ifPAN">PAN Number <span class="req">*</span></label>
+            <input id="ifPAN" type="text" maxlength="10"
+              placeholder="e.g. ABCDE1234F"
+              [(ngModel)]="donorPAN" [class.error]="!!panError" />
+            <span class="if-error" *ngIf="panError">{{ panError }}</span>
+          </div>
+
+          <div class="if-input-group">
+            <label for="ifEmail">Email <span class="optional">(optional)</span></label>
+            <input id="ifEmail" type="email" placeholder="your@email.com"
+              [(ngModel)]="donorEmail" />
+          </div>
+
+        </div>
+
+        <div class="if-input-group">
+          <label for="ifAddress">Address <span class="req">*</span></label>
+          <textarea id="ifAddress" rows="2" maxlength="250"
+            placeholder="House no, Street, City, State, Pincode"
+            [(ngModel)]="donorAddress" [class.error]="!!addressError"></textarea>
+          <span class="if-error" *ngIf="addressError">{{ addressError }}</span>
+        </div>
+
+        <div class="if-input-group">
+          <label for="ifMsg">Message <span class="optional">(optional)</span></label>
+          <textarea id="ifMsg" rows="2" maxlength="200"
+            placeholder="Any message for the samiti..."
+            [(ngModel)]="donorMessage"></textarea>
+        </div>
+
+        <button class="if-btn-primary" type="button"
+          (click)="proceedToConfirm()"
+          [disabled]="finalAmount < 1">
+          Continue to Confirm →
+        </button>
+
+      </ng-container>
+
+      <!-- ── STEP 2: CONFIRM ── -->
+      <ng-container *ngIf="inlineFormStep === 'confirm'">
+
+        <button class="if-back-btn" type="button" (click)="goBackToForm()">
+          ← Back
+        </button>
+
+        <div class="if-confirm-header">
+          <span class="if-icon">💳</span>
+          <div>
+            <span class="form-eyebrow">Confirm Donation</span>
+            <h3>Complete Your Donation</h3>
+            <p>Please review details before payment.</p>
+          </div>
+        </div>
+
+        <div class="if-summary">
+          <div class="if-summary-row">
+            <span>Organisation</span>
+            <strong>Shyam Ji Sewa Samiti</strong>
+          </div>
+          <div class="if-summary-row">
+            <span>Amount</span>
+            <strong class="if-amount">{{ formatINR(finalAmount) }}</strong>
+          </div>
+          <div class="if-summary-row" *ngIf="donorFullName">
+            <span>Name</span>
+            <strong>{{ donorFullName }}</strong>
+          </div>
+          <div class="if-summary-row" *ngIf="donorMobile">
+            <span>Mobile</span>
+            <strong>{{ donorCountryCode }} {{ donorMobile }}</strong>
+          </div>
+          <div class="if-summary-row" *ngIf="donorPAN">
+            <span>PAN</span>
+            <strong>{{ donorPAN }}</strong>
+          </div>
+          <div class="if-summary-row" *ngIf="donorAddress">
+            <span>Address</span>
+            <strong>{{ donorAddress }}</strong>
+          </div>
+        </div>
+
+        <div class="if-payment-methods">
+          <strong>Secure Payment via Razorpay</strong>
+          <span>UPI • Card • Netbanking • Wallet</span>
+        </div>
+
+        <button class="if-btn-primary" type="button"
+          (click)="initiatePayment()"
+          [disabled]="isSubmitting">
+          <span *ngIf="!isSubmitting">💰 Pay Now – {{ formatINR(finalAmount) }}</span>
+          <span *ngIf="isSubmitting" class="if-btn-loading">
+            <span class="if-spinner"></span> Please wait...
+          </span>
+        </button>
+
+        <p class="if-secure-note">🔒 We never store your card or banking details.</p>
+
+        <div class="if-error-box" *ngIf="paymentError">{{ paymentError }}</div>
+
+      </ng-container>
+
+      <!-- ── STEP 3: SUCCESS / FAILED ── -->
+      <ng-container *ngIf="inlineFormStep === 'success' && lastDonation">
+
+        <div class="if-success-icon" [class.failed]="lastDonation.status === 'failed'">
+          {{ lastDonation.status === 'success' ? '🙏' : '❌' }}
+        </div>
+
+        <h3 class="if-success-title">
+          {{ lastDonation.status === 'success' ? 'Jai Shree Shyam! Thank You 🙏' : 'Payment Failed' }}
+        </h3>
+
+        <p class="if-success-msg" *ngIf="lastDonation.status === 'success'">
+          Your donation of <strong>{{ formatINR(lastDonation.amount) }}</strong>
+          to <strong>Shyam Ji Sewa Samiti</strong> has been recorded successfully.
+        </p>
+
+        <p class="if-success-msg" *ngIf="lastDonation.status === 'failed'">
+          Unfortunately, your payment could not be completed. Please try again.
+        </p>
+
+        <div class="if-invoice-row" *ngIf="lastDonation.invoiceNumber">
+          <span><strong>Invoice:</strong> {{ lastDonation.invoiceNumber }}</span>
+          <button class="if-btn-secondary" type="button"
+            (click)="downloadInvoice()" [disabled]="pdfLoading">
+            {{ pdfLoading ? 'Generating...' : '📄 Download PDF' }}
+          </button>
+        </div>
+
+        <div class="if-receipt" *ngIf="lastDonation.status === 'success'">
+          <div class="if-receipt-header">🧾 Donation Receipt</div>
+          <table class="if-receipt-table">
+            <tr><td>Transaction ID</td><td><code>{{ lastDonation.txnId }}</code></td></tr>
+            <tr><td>Payment ID</td><td><code>{{ lastDonation.paymentId }}</code></td></tr>
+            <tr><td>Donor</td><td>{{ lastDonation.name }}</td></tr>
+            <tr><td>Organisation</td><td>Shyam Ji Sewa Samiti</td></tr>
+            <tr><td>Amount</td><td><strong>{{ formatINR(lastDonation.amount) }}</strong></td></tr>
+            <tr><td>Date & Time</td><td>{{ lastDonation.timestamp | date:'dd MMM yyyy, h:mm a' }}</td></tr>
+          </table>
+        </div>
+
+        <div class="if-success-actions">
+          <button class="if-btn-secondary" type="button"
+            (click)="downloadInvoice()" [disabled]="pdfLoading"
+            *ngIf="lastDonation.status === 'success'">
+            📄 Download PDF
+          </button>
+          <button class="if-btn-primary" type="button" (click)="donateAgain()">
+            🪔 Donate Again
+          </button>
+        </div>
+
+      </ng-container>
 
     </div>
-
   </div>
-
 </section>
 
-
+<!-- IMPACT STATS -->
+<section class="section-space">
+  <div class="container">
+    <div class="section-heading">
+      <h2>Our Impact</h2>
+      <p>Together we are creating positive change.</p>
+    </div>
+    <div class="stats-grid">
+      <div class="stat-card"><h3>5000+</h3><p>Families Helped</p></div>
+      <div class="stat-card"><h3>200+</h3><p>Events Organized</p></div>
+      <div class="stat-card"><h3>1000+</h3><p>Volunteers</p></div>
+      <div class="stat-card"><h3>50000+</h3><p>Meals Distributed</p></div>
+    </div>
+  </div>
+</section>
 
 <!-- FAQ -->
-
 <section class="section-space">
-
   <div class="container">
-
     <div class="section-heading">
-
       <h2>Frequently Asked Questions</h2>
-
     </div>
-
     <div class="faq-wrapper">
-
       @for(faq of faqs; track faq.question; let i = $index){
-
       <div class="faq-item">
-
-        <div
-          class="faq-header"
-          (click)="toggleFaq(i)"
-        >
-
+        <div class="faq-header" (click)="toggleFaq(i)">
           <h5>{{ faq.question }}</h5>
-
-          <i
-            class="fa-solid"
-            [class.fa-plus]="!faq.open"
-            [class.fa-minus]="faq.open"
-          ></i>
-
+          <i class="fa-solid" [class.fa-plus]="!faq.open" [class.fa-minus]="faq.open"></i>
         </div>
-
         @if(faq.open){
-
-        <div class="faq-body">
-          {{ faq.answer }}
-        </div>
-
+        <div class="faq-body">{{ faq.answer }}</div>
         }
-
       </div>
-
       }
-
     </div>
-
   </div>
-
 </section>

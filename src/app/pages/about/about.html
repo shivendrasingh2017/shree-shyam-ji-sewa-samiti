@@ -67,10 +67,18 @@
           </p>
 
           <div class="stats-grid">
-            <div class="stat-box"><h4>1000+</h4><span>Lives Helped</span></div>
-            <div class="stat-box"><h4>100+</h4><span>Events</span></div>
-            <div class="stat-box"><h4>24/7</h4><span>Support</span></div>
-            <div class="stat-box"><h4>100%</h4><span>Transparency</span></div>
+            <div class="stat-box">
+              <h4>1000+</h4><span>Lives Helped</span>
+            </div>
+            <div class="stat-box">
+              <h4>100+</h4><span>Events</span>
+            </div>
+            <div class="stat-box">
+              <h4>24/7</h4><span>Support</span>
+            </div>
+            <div class="stat-box">
+              <h4>100%</h4><span>Transparency</span>
+            </div>
           </div>
 
         </div>
@@ -213,7 +221,8 @@
         <div class="info-card">
           <i class="fa-solid fa-eye"></i>
           <h3>Our Vision</h3>
-          <p>To build a compassionate society where spirituality and service work together for positive transformation.</p>
+          <p>To build a compassionate society where spirituality and service work together for positive transformation.
+          </p>
         </div>
       </div>
 
@@ -237,10 +246,10 @@
 
     <div class="services-grid">
       @for(item of services; track item){
-        <div class="service-card">
-          <i class="fa-solid fa-check"></i>
-          <span>{{ item }}</span>
-        </div>
+      <div class="service-card">
+        <i class="fa-solid fa-check"></i>
+        <span>{{ item }}</span>
+      </div>
       }
     </div>
 
@@ -260,10 +269,10 @@
 
     <div class="impact-grid">
       @for(item of stats; track item.title){
-        <div class="stat-card">
-          <h3>{{ item.value }}</h3>
-          <p>{{ item.title }}</p>
-        </div>
+      <div class="stat-card">
+        <h3>{{ item.value }}</h3>
+        <p>{{ item.title }}</p>
+      </div>
       }
     </div>
 
@@ -290,18 +299,23 @@
           <p>
             Sagar Parisar, Gulmohar Huzur<br>
             Bhopal, Madhya Pradesh<br>
-            
+
           </p>
 
           <!-- <i class="fa-solid fa-envelope"></i> -->
-          <h4>Email</h4>
-          <p>
-           <a href="mailto:info&#64;shyamjisewasamiti.org">info&#64;shyamjisewasamiti.org</a>
-          </p>
-          <!-- <i class="fa-solid fa-phone"></i> -->
+
+
           <h4>Phone</h4>
           <p>
-            <a href="tel:+919876543210">+91 9876543210</a>
+            <a href="tel:+919289992530" class="footer-contact">
+              +91 9289992530
+            </a>
+          </p>
+          <h4>Email</h4>
+          <p>
+            <a href="mailto:info@shyamjisewasamiti.org" class="footer-contact">
+            info&#64;shyamjisewasamiti.org
+            </a>
           </p>
         </div>
       </div>
@@ -310,8 +324,7 @@
         <div class="map-wrapper">
           <iframe
             src="https://maps.google.com/maps?q=+Sagar+Parisar,+Gulmohar,+Huzur,+Bhopal,+Madhya+Pradesh+462039&z=15&output=embed"
-            loading="lazy"
-            allowfullscreen>
+            loading="lazy" allowfullscreen>
           </iframe>
         </div>
       </div>

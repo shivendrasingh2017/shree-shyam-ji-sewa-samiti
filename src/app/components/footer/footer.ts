@@ -22,11 +22,11 @@ export class Footer {
     date: 'May 25, 2026',
     title: 'Shyam Bhajan Sandhya mein bhakton ne liya adhyatmik anand'
   },
-  {
-    src: 'assets/footer/footer3.jpg',
-    alt: 'Bhajan Sandhya',
-    date: 'June 01, 2026',
-    title: 'Shyam Bhajan Sandhya har Ekadashi shaam 7 baje'
-  }
+  // {
+  //   src: 'assets/footer/footer3.jpg',
+  //   alt: 'Bhajan Sandhya',
+  //   date: 'June 01, 2026',
+  //   title: 'Shyam Bhajan Sandhya har Ekadashi shaam 7 baje'
+  // }
 ];
 }
