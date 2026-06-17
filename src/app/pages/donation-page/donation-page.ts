@@ -251,7 +251,7 @@ export class DonationPage implements OnInit {
         campaign_title: 'Shyam Ji Sewa Samiti',
         message: this.donorMessage.trim(),
       },
-      theme: { color: '#d4af37' },
+      theme: { color: '#8b7220' },
       handler: (response: any) => { this.verifyPayment(response, order); },
       modal: {
         ondismiss: () => {

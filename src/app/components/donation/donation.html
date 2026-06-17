@@ -198,14 +198,14 @@
             <div class="summary-item" *ngIf="donorAddress"><span>Address</span><strong>{{ donorAddress }}</strong></div>
           </div>
 
-          <div class="payment-methods">
+          <!-- <div class="payment-methods">
             <strong>Secure Payment via Razorpay</strong>
             <span>UPI • Card • Netbanking • Wallet</span>
-          </div>
+          </div> -->
 
           <button class="btn-razorpay" (click)="initiatePayment()" [disabled]="paymentProcessing || gatewayLoading"
             type="button">
-            <span *ngIf="!paymentProcessing && !gatewayLoading">💰 Pay Now</span>
+            <span *ngIf="!paymentProcessing && !gatewayLoading">Pay Now</span>
             <span *ngIf="paymentProcessing || gatewayLoading" class="btn-loading-text">
               <span class="btn-spinner"></span> Please wait...
             </span>
