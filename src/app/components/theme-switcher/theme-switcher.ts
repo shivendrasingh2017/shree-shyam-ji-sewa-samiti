@@ -19,6 +19,11 @@ export class ThemeSwitcherComponent {
     { id: 'ganesh',      name: 'Ganesh Chaturthi', sub: 'Bappa morya', icon: 'ॐ' },
   ];
 
-  constructor(public theme: ThemeService) {}
+  constructor(public theme: ThemeService) {
+     // Default dark mode on
+  if (!this.theme.dark()) {
+    this.theme.toggleDark();
+  }
+  }
   toggle() { this.open.set(!this.open()); }
 }
