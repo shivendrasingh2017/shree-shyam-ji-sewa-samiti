@@ -67,7 +67,7 @@
         </div>
       </div>
 
-      <button routerLink="/donation" class="btn-primary">
+      <button [routerLink]="['/donation-page']" [queryParams]="{ open: true }" class="btn-primary">
         DONATE NOW &nbsp;→
       </button>
     </div>

@@ -6,6 +6,18 @@
   padding: 30px 0 10px;
 
 }
+.qr-code {
+  margin-bottom: 20px;
+  text-align: center;
+
+  img {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 2px solid #f3e5cc;
+  }
+}
 
 .grid {
   display: grid;

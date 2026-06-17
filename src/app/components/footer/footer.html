@@ -1,10 +1,13 @@
 <footer class="footer">
   <div class="container grid">
     <div>
-      <h4>About Us</h4>
+      <!-- <h4>About Us</h4> -->
+      <div class="qr-code">
+        <img src="assets/QR/QR_code.jpg" alt="QR Code" loading="lazy" />
+      </div>
 
       <p class="lead">
-        Shree Shyam Ji Sewa Samiti — Baba Khatu Shyam Ji ki seva, bhakti aur
+        Shree Shyam Ji Sewa Samiti Baba Khatu Shyam Ji ki seva, bhakti aur
         samaj kalyan ko samarpit ek aastha parivaar.
       </p>
 
@@ -31,7 +34,7 @@
         <li routerLink="/our-gallery">Mandir Darshan</li>
         <li routerLink="/gallery">Phagun Mela</li>
         <li routerLink="/about">Sevadar</li>
-        <li routerLink="/donation">Daan</li>
+        <li routerLink="/donation-page">Donate Now</li>
         <li routerLink="/privacy-policy">Privacy Policy</li>
 
       </ul>
@@ -41,7 +44,7 @@
       <h4>Others</h4>
       <ul>
         <li routerLink="/our-gallery">Gallery</li>
-        <li routerLink="/donation">Online Daan</li>
+        <li [routerLink]="['/donation-page']" [queryParams]="{ open: true }">Online Daan</li>
         <li routerLink="/contact">Contact Us</li>
         <li routerLink="/about">About Us</li>
         <li routerLink="/aarti">Live-Aarti</li>

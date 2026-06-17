@@ -34,9 +34,9 @@
 
           <div class="hero-btns">
 
-            <a routerLink="/about" class="btn-primary-custom">
+            <a [routerLink]="['/donation-page']" [queryParams]="{ open: true }" class="btn-primary-custom">
               <i class="fa-solid fa-circle-info"></i>
-              About Us
+              Donate Now
             </a>
 
             <a routerLink="/donation" class="btn-outline-custom">

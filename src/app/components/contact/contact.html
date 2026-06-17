@@ -36,7 +36,7 @@
             <i class="fa-solid fa-location-dot me-2"></i>Our Location
           </a>
 
-          <a routerLink="/donation" class="btn btn-hero-outline">
+          <a [routerLink]="['/donation-page']" [queryParams]="{ open: true }" class="btn btn-hero-outline">
             <i class="fa-solid fa-heart me-2"></i>Donate Now
           </a>
         </div>

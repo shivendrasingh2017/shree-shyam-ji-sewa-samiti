@@ -9,11 +9,10 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Router, RouterLink } from '@angular/router';
 import { OurPuja } from "../../components/our-puja/our-puja";
-import { Donation } from "../../components/donation/donation";
 
 @Component({
   selector: 'app-puja',
-  imports: [CommonModule, ReactiveFormsModule, OurPuja, Donation,RouterLink],
+  imports: [CommonModule, ReactiveFormsModule, OurPuja,RouterLink],
   templateUrl: './puja.html',
   styleUrl: './puja.scss',
 })

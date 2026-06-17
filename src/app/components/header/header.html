@@ -61,7 +61,9 @@
       </nav>
 
       <div class="actions">
-        <a routerLink="/donation" class="btn">Donate</a>
+        <a [routerLink]="['/donation-page']" [queryParams]="{ open: true }" class="btn">
+          Donate
+        </a>
         <button class="hamburger" (click)="toggle()" aria-label="Menu">
           <span></span><span></span><span></span>
         </button>

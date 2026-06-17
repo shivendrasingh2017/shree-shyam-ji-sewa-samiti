@@ -3,9 +3,9 @@
     <div class="banner-carousel">
       <div class="banner-container">
         @for (banner of banners; track $index) {
-          <div class="banner-slide" [class.active]="currentBanner === $index">
-            <img [src]="banner" [alt]="'Banner ' + ($index + 1)" />
-          </div>
+        <div class="banner-slide" [class.active]="currentBanner === $index">
+          <img [src]="banner" [alt]="'Banner ' + ($index + 1)" />
+        </div>
         }
       </div>
 
@@ -14,12 +14,8 @@
 
       <div class="carousel-dots">
         @for (dot of [0, 1, 2]; track dot) {
-          <button
-            class="dot"
-            [class.active]="currentBanner === dot"
-            (click)="goToBanner(dot)"
-            [attr.aria-label]="'Go to banner ' + (dot + 1)"
-          ></button>
+        <button class="dot" [class.active]="currentBanner === dot" (click)="goToBanner(dot)"
+          [attr.aria-label]="'Go to banner ' + (dot + 1)"></button>
         }
       </div>
     </div>
@@ -33,7 +29,7 @@
         banein.</p>
       <div class="cta">
         <a routerLink="/aarti" class="btn">Live Aarti →</a>
-        <a routerLink="/donation" class="btn">Donate Now</a>
+        <a [routerLink]="['/donation-page']" [queryParams]="{ open: true }" class="btn">Donate Now</a>
       </div>
       <div class="stats">
         <div><strong>3+</strong><span>Years of Sewa</span></div>
@@ -45,5 +41,5 @@
 
 
 
-  
+
 </section>
