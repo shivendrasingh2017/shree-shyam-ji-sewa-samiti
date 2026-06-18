@@ -375,6 +375,101 @@ export class DonationPage implements OnInit {
     return `TXN-${ts}-${rand}`;
   }
 
+////////////////testing PDF download??????????????????start////////////////
+
+// async downloadInvoice(): Promise<void> {
+//   console.log('Download button clicked');
+
+//   if (this.pdfLoading) return;
+
+//   const testReceiptData = this._receiptData || {
+//     invoiceNumber: '001',
+//     donorFullName: 'Test Donor',
+//     donorEmail: 'test@example.com',
+//     donorMobile: '9289992530',
+//     donorPAN: 'ABCDE1234F',
+//     donorAddress: 'Bhopal, Madhya Pradesh',
+//     amount: 1100,
+//     currency: 'INR',
+//     createdAt: new Date(),
+//     campaignId: {
+//       title: 'Khatu Shyam Ji Seva',
+//       description: 'Bhog, shringar, bhandara aur bhakt seva ke liye sahyog.'
+//     },
+//     paymentId: 'pay_test_123456',
+//     orderId: 'order_test_123456'
+//   };
+
+//   this.pdfLoading = true;
+
+//   try {
+//     console.log('PDF data:', testReceiptData);
+//     await this.invoicePdfService.downloadPdf(testReceiptData);
+//   } catch (error) {
+//     console.error('PDF error:', error);
+//     alert('PDF generate nahi ho payi. Please try again.');
+//   } finally {
+//     this.pdfLoading = false;
+//   }
+// }
+
+
+////////////////testing PDF download??????????????????end////////////////
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   async downloadInvoice(): Promise<void> {
     if (this.pdfLoading || !this._receiptData) return;
     this.pdfLoading = true;

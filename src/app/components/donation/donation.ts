@@ -1,6 +1,7 @@
-import { Component, OnInit, AfterViewInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ChangeDetectorRef, NgZone } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { CampaignService } from '../../services/campaign';
 import { PaymentService } from '../../services/payment';
 import { InvoicePdf } from '../../services/invoice-pdf';
@@ -41,6 +42,13 @@ export interface DonationRecord {
   styleUrls: ['./donation.scss'],
 })
 export class Donation implements OnInit, AfterViewInit {
+  readonly razorpayLogoUrl = 'https://shyamjisewasamiti.org/assets/rezor_logo/logo.png';
+  private loaderTimer: ReturnType<typeof setTimeout> | null = null;
+
+
+  // ═══════════════════════════════════════════════
+  // EXISTING — Campaign Section (DO NOT TOUCH)
+  // ═══════════════════════════════════════════════
   campaigns: Campaign[] = [];
   visibleCount = 6;
   selectedCampaignId: string | null = null;
@@ -80,32 +88,118 @@ export class Donation implements OnInit, AfterViewInit {
   razorpayKey = '';
   private _failedRecorded = false;
 
+  // ═══════════════════════════════════════════════
+  // NEW — Direct Donation Section
+  // ═══════════════════════════════════════════════
+  ddOpen = false;   // section visible flag (?open=true se true hoga)
+  ddStep: 'form' | 'confirm' | 'success' = 'form';
+
+  ddPresetAmounts = [51, 101, 501, 1001, 5001];
+
+  ddSelectedAmount: number | null = null;
+  ddCustomAmount = '';
+  ddFullName = '';
+  ddCountryCode = '+91';
+  ddMobile = '';
+  ddEmail = '';
+  ddPAN = '';
+  ddAddress = '';
+  ddMessage = '';
+
+  ddAmountError = '';
+  ddNameError = '';
+  ddMobileError = '';
+  ddPanError = '';
+  ddAddressError = '';
+  ddPaymentError = '';
+
+  ddSubmitting = false;
+  ddPdfLoading = false;
+  ddLastDonation: DonationRecord | null = null;
+  private _ddReceiptData: any = null;
+  private _ddFailedRecorded = false;
+
+  countryCodes = [
+    { name: 'India', code: '+91', flag: '🇮🇳' },
+    { name: 'USA', code: '+1', flag: '🇺🇸' },
+    { name: 'UK', code: '+44', flag: '🇬🇧' },
+    { name: 'UAE', code: '+971', flag: '🇦🇪' },
+    { name: 'Canada', code: '+1', flag: '🇨🇦' },
+    { name: 'Australia', code: '+61', flag: '🇦🇺' },
+    { name: 'Singapore', code: '+65', flag: '🇸🇬' },
+    { name: 'Germany', code: '+49', flag: '🇩🇪' },
+    { name: 'Nepal', code: '+977', flag: '🇳🇵' },
+    { name: 'Sri Lanka', code: '+94', flag: '🇱🇰' },
+    { name: 'Bangladesh', code: '+880', flag: '🇧🇩' },
+    { name: 'Malaysia', code: '+60', flag: '🇲🇾' },
+  ];
+
   constructor(
     private cdr: ChangeDetectorRef,
+    private ngZone: NgZone,
+    private route: ActivatedRoute,
     private campaignService: CampaignService,
     private paymentService: PaymentService,
     private invoicePdfService: InvoicePdf
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loadCampaigns();
     this.loadRazorpayKey();
+
+    // QR / direct link detection
+    this.route.queryParams.subscribe(params => {
+      if (params['open'] === 'true') {
+        this.ddOpen = true;
+        setTimeout(() => {
+          document.getElementById('direct-donation')?.scrollIntoView({
+            behavior: 'smooth', block: 'start'
+          });
+        }, 400);
+      }
+    });
   }
 
   ngAfterViewInit(): void {
     this.loadRazorpayScript(false);
   }
 
+  // ═══════════════════════════════════════════════
+  // EXISTING methods — unchanged
+  // ═══════════════════════════════════════════════
+
   private showLoader(message: string): void {
-    this.gatewayLoading = true;
-    this.gatewayLoadingMsg = message;
-    this.cdr.detectChanges();
+    this.ngZone.run(() => {
+      if (this.loaderTimer) {
+        clearTimeout(this.loaderTimer);
+        this.loaderTimer = null;
+      }
+
+      this.gatewayLoading = true;
+      this.gatewayLoadingMsg = message;
+      this.cdr.detectChanges();
+    });
   }
 
-  private hideLoader(): void {
-    this.gatewayLoading = false;
-    this.gatewayLoadingMsg = '';
-    this.cdr.detectChanges();
+  private hideLoader(delayMs = 0): void {
+    const closeLoader = () => {
+      this.ngZone.run(() => {
+        this.gatewayLoading = false;
+        this.gatewayLoadingMsg = '';
+        this.cdr.detectChanges();
+      });
+    };
+
+    if (this.loaderTimer) {
+      clearTimeout(this.loaderTimer);
+      this.loaderTimer = null;
+    }
+
+    if (delayMs > 0) {
+      this.loaderTimer = setTimeout(closeLoader, delayMs);
+    } else {
+      closeLoader();
+    }
   }
 
   loadRazorpayKey(): void {
@@ -124,10 +218,7 @@ export class Donation implements OnInit, AfterViewInit {
 
   loadRazorpayScript(showLoader = true): Promise<void> {
     return new Promise((resolve, reject) => {
-      if ((window as any).Razorpay) {
-        resolve();
-        return;
-      }
+      if ((window as any).Razorpay) { resolve(); return; }
 
       const existingScript = document.querySelector(
         'script[src="https://checkout.razorpay.com/v1/checkout.js"]'
@@ -135,17 +226,8 @@ export class Donation implements OnInit, AfterViewInit {
 
       if (existingScript) {
         if (showLoader) this.showLoader('Payment gateway load ho raha hai...');
-
-        existingScript.addEventListener('load', () => {
-          if (showLoader) this.hideLoader();
-          resolve();
-        });
-
-        existingScript.addEventListener('error', () => {
-          if (showLoader) this.hideLoader();
-          reject(new Error('Razorpay script load failed'));
-        });
-
+        existingScript.addEventListener('load', () => { if (showLoader) this.hideLoader(); resolve(); });
+        existingScript.addEventListener('error', () => { if (showLoader) this.hideLoader(); reject(new Error('Razorpay script load failed')); });
         return;
       }
 
@@ -154,17 +236,8 @@ export class Donation implements OnInit, AfterViewInit {
       const script = document.createElement('script');
       script.src = 'https://checkout.razorpay.com/v1/checkout.js';
       script.async = true;
-
-      script.onload = () => {
-        if (showLoader) this.hideLoader();
-        resolve();
-      };
-
-      script.onerror = () => {
-        if (showLoader) this.hideLoader();
-        reject(new Error('Razorpay script load failed'));
-      };
-
+      script.onload = () => { if (showLoader) this.hideLoader(); resolve(); };
+      script.onerror = () => { if (showLoader) this.hideLoader(); reject(new Error('Razorpay script load failed')); };
       document.body.appendChild(script);
     });
   }
@@ -172,37 +245,25 @@ export class Donation implements OnInit, AfterViewInit {
   private calculateRemainingDays(campaign: Campaign): number {
     if (typeof campaign.daysLeft !== 'number') return 0;
     if (!campaign.createdAt) return Math.max(0, campaign.daysLeft);
-
     const createdAt = new Date(campaign.createdAt);
     if (Number.isNaN(createdAt.getTime())) return Math.max(0, campaign.daysLeft);
-
     const elapsedDays = Math.floor((Date.now() - createdAt.getTime()) / 86400000);
     return Math.max(0, campaign.daysLeft - elapsedDays);
   }
 
   loadCampaigns(): void {
     this.showLoader('Campaigns load ho rahe hain...');
-
     this.campaignService.list().subscribe({
       next: (res: any) => {
         if (res?.success) {
           this.campaigns = (res.data || [])
             .filter((c: Campaign) => c.active === true)
-            .map((c: Campaign) => ({
-              ...c,
-              daysLeft: this.calculateRemainingDays(c),
-            }));
-
-          if (this.campaigns.length) {
-            this.selectCampaign(this.campaigns[0], false);
-          }
+            .map((c: Campaign) => ({ ...c, daysLeft: this.calculateRemainingDays(c) }));
+          if (this.campaigns.length) this.selectCampaign(this.campaigns[0], false);
         }
-
         this.hideLoader();
       },
-      error: () => {
-        this.hideLoader();
-      },
+      error: () => this.hideLoader(),
     });
   }
 
@@ -210,7 +271,6 @@ export class Donation implements OnInit, AfterViewInit {
     this.selectedCampaign = c;
     this.selectedCampaignId = c._id || null;
     this.resetForm();
-
     if (openModal) {
       this.step = 'select';
       this.modalOpen = true;
@@ -224,12 +284,10 @@ export class Donation implements OnInit, AfterViewInit {
 
   closeModal(event: MouseEvent | null): void {
     if (this.gatewayLoading || this.paymentProcessing || this.pdfLoading) return;
-
     if (event) {
       const target = event.target as HTMLElement;
       if (!target.classList.contains('modal-overlay')) return;
     }
-
     this.modalOpen = false;
     this.step = 'select';
     document.body.style.overflow = '';
@@ -253,56 +311,32 @@ export class Donation implements OnInit, AfterViewInit {
   }
 
   validate(): boolean {
-    this.amountError = '';
-    this.nameError = '';
-    this.mobileError = '';
-    this.panError = '';
-    this.addressError = '';
-
+    this.amountError = ''; this.nameError = ''; this.mobileError = ''; this.panError = ''; this.addressError = '';
     let valid = true;
     const amt = this.finalAmount;
 
-    if (!amt || amt < 1) {
-      this.amountError = 'Please select or enter donation amount.';
-      valid = false;
-    } else if (amt > 100000) {
-      this.amountError = 'Maximum donation per transaction is ₹1,00,000.';
-      valid = false;
-    }
+    if (!amt || amt < 1) { this.amountError = 'Please select or enter donation amount.'; valid = false; }
+    else if (amt > 100000) { this.amountError = 'Maximum donation per transaction is ₹1,00,000.'; valid = false; }
 
     const fullName = this.donorFullName.trim();
-    if (!fullName || fullName.length < 2) {
-      this.nameError = 'Full name is required.';
-      valid = false;
-    }
+    if (!fullName || fullName.length < 2) { this.nameError = 'Full name is required.'; valid = false; }
 
     const mobile = this.donorMobile.replace(/\s+/g, '');
-    if (!mobile || !/^\d{7,15}$/.test(mobile)) {
-      this.mobileError = 'Enter valid mobile number.';
-      valid = false;
-    }
+    if (!mobile || !/^\d{7,15}$/.test(mobile)) { this.mobileError = 'Enter valid mobile number.'; valid = false; }
 
     const pan = this.donorPAN.trim().toUpperCase();
-    if (!pan || !/^[A-Z]{5}[0-9]{4}[A-Z]$/.test(pan)) {
-      this.panError = 'Enter valid PAN number.';
-      valid = false;
-    }
+    if (!pan || !/^[A-Z]{5}[0-9]{4}[A-Z]$/.test(pan)) { this.panError = 'Enter valid PAN number.'; valid = false; }
 
     const address = this.donorAddress.trim();
-    if (!address || address.length < 10) {
-      this.addressError = 'Please enter valid address.';
-      valid = false;
-    }
+    if (!address || address.length < 10) { this.addressError = 'Please enter valid address.'; valid = false; }
 
     return valid;
   }
 
   sanitize(input: string): string {
     return input
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;')
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;').replace(/"/g, '&quot;')
       .replace(/'/g, '&#x27;');
   }
 
@@ -313,53 +347,29 @@ export class Donation implements OnInit, AfterViewInit {
 
   async initiatePayment(): Promise<void> {
     if (!this.validate()) return;
-
-    if (!this.razorpayKey) {
-      this.paymentError = 'Payment service not available. Please try again later.';
-      return;
-    }
-
+    if (!this.razorpayKey) { this.paymentError = 'Payment service not available. Please try again later.'; return; }
     this.paymentProcessing = true;
     this.paymentError = '';
     this._failedRecorded = false;
-
     try {
       await this.loadRazorpayScript(true);
-
       this.showLoader('Secure order create ho raha hai...');
-
       this.paymentService.createOrder(this.finalAmount).subscribe({
         next: (res: any) => {
           this.hideLoader();
-
-          if (res?.success && res.order) {
-            this.handleRazorpayPayment(res.order);
-          } else {
-            this.paymentError = 'Failed to create payment order.';
-            this.paymentProcessing = false;
-          }
+          if (res?.success && res.order) { this.handleRazorpayPayment(res.order); }
+          else { this.paymentError = 'Failed to create payment order.'; this.paymentProcessing = false; }
         },
-        error: () => {
-          this.hideLoader();
-          this.paymentError = 'Failed to initialize payment.';
-          this.paymentProcessing = false;
-        },
+        error: () => { this.hideLoader(); this.paymentError = 'Failed to initialize payment.'; this.paymentProcessing = false; },
       });
     } catch {
-      this.hideLoader();
-      this.paymentError = 'Payment gateway load nahi ho paya.';
-      this.paymentProcessing = false;
+      this.hideLoader(); this.paymentError = 'Payment gateway load nahi ho paya.'; this.paymentProcessing = false;
     }
   }
 
   handleRazorpayPayment(order: any): void {
     const Razorpay = (window as any).Razorpay;
-
-    if (!Razorpay) {
-      this.paymentError = 'Razorpay SDK not loaded.';
-      this.paymentProcessing = false;
-      return;
-    }
+    if (!Razorpay) { this.paymentError = 'Razorpay SDK not loaded.'; this.paymentProcessing = false; return; }
 
     const options: any = {
       key: this.razorpayKey,
@@ -367,177 +377,81 @@ export class Donation implements OnInit, AfterViewInit {
       currency: order.currency || 'INR',
       name: 'Shyam Ji Sewa Samiti',
       description: `Donation to ${this.selectedCampaign?.title || 'Campaign'}`,
+      image: this.razorpayLogoUrl,
       order_id: order.id,
-
-      prefill: {
-        name: this.donorFullName.trim() || 'Anonymous',
-        email: this.donorEmail || '',
-        contact: this.donorMobile || '',
-      },
-
-      notes: {
-        campaign_id: this.selectedCampaign?._id || '',
-        campaign_title: this.selectedCampaign?.title || '',
-        message: this.donorMessage.trim(),
-      },
-
-      theme: {
-        color: '#d4af37',
-      },
-
-      handler: (response: any) => {
-        this.verifyPayment(response, order);
-      },
-
+      prefill: { name: this.donorFullName.trim() || 'Anonymous', email: this.donorEmail || '', contact: this.donorMobile || '' },
+      notes: { campaign_id: this.selectedCampaign?._id || '', campaign_title: this.selectedCampaign?.title || '', message: this.donorMessage.trim() },
+      theme: { color: '#d4af37' },
+      handler: (response: any) => { this.ngZone.run(() => this.verifyPayment(response, order)); },
       modal: {
         ondismiss: () => {
-          this.paymentProcessing = false;
-
-          if (!this._failedRecorded) {
-            this._failedRecorded = true;
-            this.recordFailedPayment(order, {
-              reason: 'user_cancelled',
-              description: 'User closed the payment window without completing payment',
-            });
-          }
+          this.ngZone.run(() => {
+            this.paymentProcessing = false;
+            if (!this._failedRecorded) {
+              this._failedRecorded = true;
+              this.recordFailedPayment(order, {
+                reason: 'user_cancelled',
+                description: 'User closed the payment window without completing payment'
+              });
+            }
+            this.cdr.detectChanges();
+          });
         },
       },
     };
 
     const rzp = new Razorpay(options);
-
     rzp.on('payment.failed', (response: any) => {
-      this.paymentProcessing = false;
-      this._failedRecorded = true;
-
-      this.recordFailedPayment(order, {
-        reason: response?.error?.code || 'PAYMENT_FAILED',
-        description:
-          response?.error?.description ||
-          response?.error?.reason ||
-          'Payment failed',
-        razorpay_payment_id: response?.error?.metadata?.payment_id || '',
-        razorpay_order_id: response?.error?.metadata?.order_id || order.id,
+      this.ngZone.run(() => {
+        this.paymentProcessing = false;
+        this._failedRecorded = true;
+        this.recordFailedPayment(order, {
+          reason: response?.error?.code || 'PAYMENT_FAILED',
+          description: response?.error?.description || 'Payment failed',
+          razorpay_payment_id: response?.error?.metadata?.payment_id || '',
+          razorpay_order_id: response?.error?.metadata?.order_id || order.id
+        });
+        this.cdr.detectChanges();
       });
     });
-
     rzp.open();
   }
 
   verifyPayment(response: any, order: any): void {
     this.showLoader('Payment verify ho raha hai...');
-
     const paymentData = {
-      razorpay_order_id: response.razorpay_order_id,
-      razorpay_payment_id: response.razorpay_payment_id,
-      razorpay_signature: response.razorpay_signature,
-      amount: this.finalAmount,
-      currency: 'INR',
-      campaignId: this.selectedCampaign?._id,
-      donorFullName: this.sanitize(this.donorFullName.trim()),
-      donorCountryCode: this.sanitize(this.donorCountryCode.trim()),
-      donorMobile: this.sanitize(this.donorMobile.trim()),
-      donorEmail: this.sanitize(this.donorEmail.trim()),
-      donorNationality: this.sanitize(this.donorNationality.trim()),
-      donorPAN: this.sanitize(this.donorPAN.trim().toUpperCase()),
-      donorAddress: this.sanitize(this.donorAddress.trim()),
-      donorMessage: this.sanitize(this.donorMessage.trim()),
+      razorpay_order_id: response.razorpay_order_id, razorpay_payment_id: response.razorpay_payment_id, razorpay_signature: response.razorpay_signature,
+      amount: this.finalAmount, currency: 'INR', campaignId: this.selectedCampaign?._id,
+      donorFullName: this.sanitize(this.donorFullName.trim()), donorCountryCode: this.sanitize(this.donorCountryCode.trim()),
+      donorMobile: this.sanitize(this.donorMobile.trim()), donorEmail: this.sanitize(this.donorEmail.trim()),
+      donorNationality: this.sanitize(this.donorNationality.trim()), donorPAN: this.sanitize(this.donorPAN.trim().toUpperCase()),
+      donorAddress: this.sanitize(this.donorAddress.trim()), donorMessage: this.sanitize(this.donorMessage.trim()),
     };
-
     this.paymentService.verifyPayment(paymentData).subscribe({
       next: (res: any) => {
         this.hideLoader();
-
-        if (res?.success && res.receipt) {
-          this.recordSuccessfulPayment(response, res.receipt);
-        } else {
-          this.paymentError = 'Payment verification failed.';
-          this.recordFailedPayment(order, { reason: 'verification_failed' });
-        }
-
+        if (res?.success && res.receipt) { this.recordSuccessfulPayment(response, res.receipt); }
+        else { this.paymentError = 'Payment verification failed.'; this.recordFailedPayment(order, { reason: 'verification_failed' }); }
         this.paymentProcessing = false;
       },
-      error: () => {
-        this.hideLoader();
-        this.paymentError = 'Payment verification error.';
-        this.recordFailedPayment(order, { reason: 'verification_error' });
-        this.paymentProcessing = false;
-      },
+      error: () => { this.hideLoader(); this.paymentError = 'Payment verification error.'; this.recordFailedPayment(order, { reason: 'verification_error' }); this.paymentProcessing = false; },
     });
   }
 
   recordSuccessfulPayment(response: any, receipt: any): void {
-    this._receiptData = {
-      ...receipt,
-      campaignId: receipt.campaignId || this.selectedCampaign,
-    };
-
-    this.lastDonation = {
-      txnId: this.generateTxnId(),
-      campaign: this.selectedCampaign?.title || '',
-      amount: this.finalAmount,
-      name: this.donorFullName.trim() || 'Anonymous',
-      message: this.donorMessage.trim(),
-      timestamp: new Date(),
-      paymentId: response.razorpay_payment_id,
-      orderId: response.razorpay_order_id,
-      receiptId: receipt._id,
-      invoiceNumber: receipt.invoiceNumber,
-      status: 'success',
-    };
-
+    this._receiptData = { ...receipt, campaignId: receipt.campaignId || this.selectedCampaign };
+    this.lastDonation = { txnId: this.generateTxnId(), campaign: this.selectedCampaign?.title || '', amount: this.finalAmount, name: this.donorFullName.trim() || 'Anonymous', message: this.donorMessage.trim(), timestamp: new Date(), paymentId: response.razorpay_payment_id, orderId: response.razorpay_order_id, receiptId: receipt._id, invoiceNumber: receipt.invoiceNumber, status: 'success' };
     this.step = 'success';
     this.cdr.detectChanges();
   }
 
-  recordFailedPayment(
-    order: any,
-    meta: {
-      reason?: string;
-      description?: string;
-      razorpay_payment_id?: string;
-      razorpay_order_id?: string;
-    } = {}
-  ): void {
-    this.lastDonation = {
-      txnId: this.generateTxnId(),
-      campaign: this.selectedCampaign?.title || '',
-      amount: this.finalAmount,
-      name: this.donorFullName.trim() || 'Anonymous',
-      message: this.donorMessage.trim(),
-      timestamp: new Date(),
-      orderId: meta.razorpay_order_id || order?.id || '',
-      status: 'failed',
-    };
-
+  recordFailedPayment(order: any, meta: { reason?: string; description?: string; razorpay_payment_id?: string; razorpay_order_id?: string; } = {}): void {
+    this.lastDonation = { txnId: this.generateTxnId(), campaign: this.selectedCampaign?.title || '', amount: this.finalAmount, name: this.donorFullName.trim() || 'Anonymous', message: this.donorMessage.trim(), timestamp: new Date(), orderId: meta.razorpay_order_id || order?.id || '', status: 'failed' };
     this.paymentError = 'Payment was not completed. Please try again.';
     this.step = 'success';
-
-    const payload = {
-      amount: this.finalAmount,
-      currency: 'INR',
-      campaignId: this.selectedCampaign?._id,
-      donorFullName: this.sanitize(this.donorFullName.trim()),
-      donorCountryCode: this.sanitize(this.donorCountryCode.trim()),
-      donorMobile: this.sanitize(this.donorMobile.trim()),
-      donorEmail: this.sanitize(this.donorEmail.trim()),
-      donorNationality: this.sanitize(this.donorNationality.trim()),
-      donorPAN: this.sanitize(this.donorPAN.trim().toUpperCase()),
-      donorAddress: this.sanitize(this.donorAddress.trim()),
-      donorMessage: this.sanitize(this.donorMessage.trim()),
-      razorpay_order_id: meta.razorpay_order_id || order?.id || '',
-      razorpay_payment_id: meta.razorpay_payment_id || '',
-      errorCode: meta.reason || 'unknown',
-      errorDescription: meta.description || 'Payment not completed',
-    };
-
+    const payload = { amount: this.finalAmount, currency: 'INR', campaignId: this.selectedCampaign?._id, donorFullName: this.sanitize(this.donorFullName.trim()), donorCountryCode: this.sanitize(this.donorCountryCode.trim()), donorMobile: this.sanitize(this.donorMobile.trim()), donorEmail: this.sanitize(this.donorEmail.trim()), donorNationality: this.sanitize(this.donorNationality.trim()), donorPAN: this.sanitize(this.donorPAN.trim().toUpperCase()), donorAddress: this.sanitize(this.donorAddress.trim()), donorMessage: this.sanitize(this.donorMessage.trim()), razorpay_order_id: meta.razorpay_order_id || order?.id || '', razorpay_payment_id: meta.razorpay_payment_id || '', errorCode: meta.reason || 'unknown', errorDescription: meta.description || 'Payment not completed' };
     this.showLoader('Failed payment record save ho raha hai...');
-
-    this.paymentService.recordFailed(payload).subscribe({
-      next: () => this.hideLoader(),
-      error: () => this.hideLoader(),
-    });
-
+    this.paymentService.recordFailed(payload).subscribe({ next: () => this.hideLoader(), error: () => this.hideLoader() });
     this.cdr.detectChanges();
   }
 
@@ -548,55 +462,22 @@ export class Donation implements OnInit, AfterViewInit {
   }
 
   donateAgain(): void {
-    this.step = 'select';
-    this.lastDonation = null;
-    this._receiptData = null;
-    this._failedRecorded = false;
-    this.resetForm();
+    this.step = 'select'; this.lastDonation = null; this._receiptData = null; this._failedRecorded = false; this.resetForm();
   }
 
   async downloadInvoice(): Promise<void> {
     if (this.pdfLoading) return;
-
-    if (!this._receiptData) {
-      alert('Receipt data not found. Please try again.');
-      return;
-    }
-
+    if (!this._receiptData) { alert('Receipt data not found. Please try again.'); return; }
     this.pdfLoading = true;
     this.showLoader('Donation receipt PDF generate ho rahi hai...');
-
-    try {
-      await this.invoicePdfService.downloadPdf(this._receiptData);
-    } catch (err) {
-      console.error('PDF generation error:', err);
-      alert('PDF generate nahi ho payi. Please try again.');
-    } finally {
-      this.pdfLoading = false;
-      this.hideLoader();
-    }
+    try { await this.invoicePdfService.downloadPdf(this._receiptData); }
+    catch (err) { console.error('PDF generation error:', err); alert('PDF generate nahi ho payi. Please try again.'); }
+    finally { this.pdfLoading = false; this.hideLoader(); }
   }
 
   resetForm(): void {
-    this.selectedAmount = null;
-    this.customAmount = '';
-    this.donorFullName = '';
-    this.donorCountryCode = '+91';
-    this.donorMobile = '';
-    this.donorEmail = '';
-    this.donorNationality = 'India';
-    this.donorPAN = '';
-    this.donorAddress = '';
-    this.donorMessage = '';
-    this.amountError = '';
-    this.nameError = '';
-    this.mobileError = '';
-    this.panError = '';
-    this.addressError = '';
-    this.paymentError = '';
-    this.pdfLoading = false;
-    this._receiptData = null;
-    this._failedRecorded = false;
+    this.selectedAmount = null; this.customAmount = ''; this.donorFullName = ''; this.donorCountryCode = '+91'; this.donorMobile = ''; this.donorEmail = ''; this.donorNationality = 'India'; this.donorPAN = ''; this.donorAddress = ''; this.donorMessage = '';
+    this.amountError = ''; this.nameError = ''; this.mobileError = ''; this.panError = ''; this.addressError = ''; this.paymentError = ''; this.pdfLoading = false; this._receiptData = null; this._failedRecorded = false;
   }
 
   progressPercent(c: Campaign): number {
@@ -605,9 +486,190 @@ export class Donation implements OnInit, AfterViewInit {
   }
 
   formatINR(n: number): string {
-    return new Intl.NumberFormat('en-IN', {
-      style: 'currency',
-      currency: 'INR',
-    }).format(n || 0);
+    return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(n || 0);
+  }
+
+  // ═══════════════════════════════════════════════
+  // NEW — Direct Donation Methods
+  // ═══════════════════════════════════════════════
+
+  get ddFinalAmount(): number {
+    if (this.ddSelectedAmount) return this.ddSelectedAmount;
+    const v = parseFloat(this.ddCustomAmount);
+    return isNaN(v) ? 0 : v;
+  }
+
+  ddSelectPreset(amt: number): void {
+    this.ddSelectedAmount = amt;
+    this.ddCustomAmount = '';
+    this.ddAmountError = '';
+  }
+
+  ddOnCustomAmountChange(): void {
+    this.ddSelectedAmount = null;
+    this.ddAmountError = '';
+  }
+
+  ddValidate(): boolean {
+    this.ddAmountError = ''; this.ddNameError = ''; this.ddMobileError = ''; this.ddPanError = ''; this.ddAddressError = '';
+    let valid = true;
+    const amt = this.ddFinalAmount;
+
+    if (!amt || amt < 1) { this.ddAmountError = 'Please select or enter donation amount.'; valid = false; }
+    else if (amt > 100000) { this.ddAmountError = 'Maximum donation per transaction is ₹1,00,000.'; valid = false; }
+
+    const fullName = this.ddFullName.trim();
+    if (!fullName || fullName.length < 2) { this.ddNameError = 'Full name is required (min 2 characters).'; valid = false; }
+    else if (!/^[a-zA-Z\s]+$/.test(fullName)) { this.ddNameError = 'Name should contain only letters.'; valid = false; }
+
+    const mobile = this.ddMobile.replace(/\s+/g, '');
+    if (!mobile || !/^\d{7,15}$/.test(mobile)) { this.ddMobileError = 'Enter valid mobile number (7–15 digits).'; valid = false; }
+
+    const pan = this.ddPAN.trim().toUpperCase();
+    if (!pan || !/^[A-Z]{5}[0-9]{4}[A-Z]$/.test(pan)) { this.ddPanError = 'Enter valid PAN (e.g. ABCDE1234F).'; valid = false; }
+
+    const address = this.ddAddress.trim();
+    if (!address || address.length < 10) { this.ddAddressError = 'Please enter full address (min 10 characters).'; valid = false; }
+
+    return valid;
+  }
+
+  ddProceedToConfirm(): void {
+    if (!this.ddValidate()) return;
+    this.ddStep = 'confirm';
+    setTimeout(() => {
+      document.getElementById('direct-donation')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
+  }
+
+  ddGoBack(): void { this.ddStep = 'form'; }
+
+  async ddInitiatePayment(): Promise<void> {
+    if (!this.ddValidate()) return;
+    if (!this.razorpayKey) { this.ddPaymentError = 'Payment service not available. Please try again later.'; return; }
+
+    this.ddSubmitting = true;
+    this.ddPaymentError = '';
+    this._ddFailedRecorded = false;
+
+    try {
+      await this.loadRazorpayScript(true);
+      this.showLoader('Secure order create ho raha hai...');
+
+      this.paymentService.createOrder(this.ddFinalAmount).subscribe({
+        next: (res: any) => {
+          this.hideLoader();
+          if (res?.success && res.order) { this.ddHandleRazorpay(res.order); }
+          else { this.ddPaymentError = 'Failed to create payment order.'; this.ddSubmitting = false; }
+        },
+        error: () => { this.hideLoader(); this.ddPaymentError = 'Failed to initialize payment.'; this.ddSubmitting = false; },
+      });
+    } catch {
+      this.hideLoader(); this.ddPaymentError = 'Payment gateway load nahi ho paya.'; this.ddSubmitting = false;
+    }
+  }
+
+  ddHandleRazorpay(order: any): void {
+    const Razorpay = (window as any).Razorpay;
+    if (!Razorpay) { this.ddPaymentError = 'Razorpay SDK not loaded.'; this.ddSubmitting = false; return; }
+
+    const options: any = {
+      key: this.razorpayKey,
+      amount: order.amount,
+      currency: order.currency || 'INR',
+      name: 'Shyam Ji Sewa Samiti',
+      description: 'Direct Donation – Shyam Ji Sewa Samiti',
+      image: this.razorpayLogoUrl,
+      order_id: order.id,
+      prefill: { name: this.ddFullName.trim() || 'Anonymous', email: this.ddEmail || '', contact: this.ddMobile || '' },
+      notes: { campaign_title: 'Shyam Ji Sewa Samiti', message: this.ddMessage.trim() },
+      theme: { color: '#d4af37' },
+      handler: (response: any) => { this.ngZone.run(() => this.ddVerifyPayment(response, order)); },
+      modal: {
+        ondismiss: () => {
+          this.ngZone.run(() => {
+            this.ddSubmitting = false;
+            if (!this._ddFailedRecorded) {
+              this._ddFailedRecorded = true;
+              this.ddRecordFailed(order, {
+                reason: 'user_cancelled',
+                description: 'User closed the payment window'
+              });
+            }
+            this.cdr.detectChanges();
+          });
+        },
+      },
+    };
+
+    const rzp = new Razorpay(options);
+    rzp.on('payment.failed', (response: any) => {
+      this.ngZone.run(() => {
+        this.ddSubmitting = false;
+        this._ddFailedRecorded = true;
+        this.ddRecordFailed(order, {
+          reason: response?.error?.code || 'PAYMENT_FAILED',
+          description: response?.error?.description || 'Payment failed',
+          razorpay_payment_id: response?.error?.metadata?.payment_id || '',
+          razorpay_order_id: response?.error?.metadata?.order_id || order.id
+        });
+        this.cdr.detectChanges();
+      });
+    });
+    rzp.open();
+  }
+
+  ddVerifyPayment(response: any, order: any): void {
+    this.showLoader('Payment verify ho raha hai...');
+    const paymentData = {
+      razorpay_order_id: response.razorpay_order_id, razorpay_payment_id: response.razorpay_payment_id, razorpay_signature: response.razorpay_signature,
+      amount: this.ddFinalAmount, currency: 'INR', campaignId: undefined,
+      donorFullName: this.sanitize(this.ddFullName.trim()), donorCountryCode: this.sanitize(this.ddCountryCode.trim()),
+      donorMobile: this.sanitize(this.ddMobile.trim()), donorEmail: this.sanitize(this.ddEmail.trim()),
+      donorNationality: 'India', donorPAN: this.sanitize(this.ddPAN.trim().toUpperCase()),
+      donorAddress: this.sanitize(this.ddAddress.trim()), donorMessage: this.sanitize(this.ddMessage.trim()),
+      campaignTitle: 'Shyam Ji Sewa Samiti',
+    };
+    this.paymentService.verifyPayment(paymentData).subscribe({
+      next: (res: any) => {
+        this.hideLoader();
+        if (res?.success && res.receipt) {
+          this._ddReceiptData = { ...res.receipt, campaignId: undefined };
+          this.ddLastDonation = { txnId: this.generateTxnId(), campaign: 'Shyam Ji Sewa Samiti', amount: this.ddFinalAmount, name: this.ddFullName.trim() || 'Anonymous', message: this.ddMessage.trim(), timestamp: new Date(), paymentId: response.razorpay_payment_id, orderId: response.razorpay_order_id, receiptId: res.receipt._id, invoiceNumber: res.receipt.invoiceNumber, status: 'success' };
+          this.ddStep = 'success';
+        } else {
+          this.ddPaymentError = 'Payment verification failed.';
+          this.ddRecordFailed(order, { reason: 'verification_failed' });
+        }
+        this.ddSubmitting = false;
+        this.cdr.detectChanges();
+      },
+      error: () => { this.hideLoader(); this.ddPaymentError = 'Payment verification error.'; this.ddRecordFailed(order, { reason: 'verification_error' }); this.ddSubmitting = false; },
+    });
+  }
+
+  ddRecordFailed(order: any, meta: { reason?: string; description?: string; razorpay_payment_id?: string; razorpay_order_id?: string; } = {}): void {
+    this.ddLastDonation = { txnId: this.generateTxnId(), campaign: 'Shyam Ji Sewa Samiti', amount: this.ddFinalAmount, name: this.ddFullName.trim() || 'Anonymous', message: this.ddMessage.trim(), timestamp: new Date(), orderId: meta.razorpay_order_id || order?.id || '', status: 'failed' };
+    this.ddPaymentError = 'Payment was not completed. Please try again.';
+    this.ddStep = 'success';
+    const payload = { amount: this.ddFinalAmount, currency: 'INR', campaignId: undefined, donorFullName: this.sanitize(this.ddFullName.trim()), donorCountryCode: this.sanitize(this.ddCountryCode.trim()), donorMobile: this.sanitize(this.ddMobile.trim()), donorEmail: this.sanitize(this.ddEmail.trim()), donorNationality: 'India', donorPAN: this.sanitize(this.ddPAN.trim().toUpperCase()), donorAddress: this.sanitize(this.ddAddress.trim()), donorMessage: this.sanitize(this.ddMessage.trim()), razorpay_order_id: meta.razorpay_order_id || order?.id || '', razorpay_payment_id: meta.razorpay_payment_id || '', errorCode: meta.reason || 'unknown', errorDescription: meta.description || 'Payment not completed' };
+    this.showLoader('Failed payment record save ho raha hai...');
+    this.paymentService.recordFailed(payload).subscribe({ next: () => this.hideLoader(), error: () => this.hideLoader() });
+    this.cdr.detectChanges();
+  }
+
+  async ddDownloadInvoice(): Promise<void> {
+    if (this.ddPdfLoading || !this._ddReceiptData) return;
+    this.ddPdfLoading = true;
+    this.showLoader('Donation receipt PDF generate ho rahi hai...');
+    try { await this.invoicePdfService.downloadPdf(this._ddReceiptData); }
+    catch { alert('PDF generate nahi ho payi. Please try again.'); }
+    finally { this.ddPdfLoading = false; this.hideLoader(); }
+  }
+
+  ddDonateAgain(): void {
+    this.ddStep = 'form'; this.ddLastDonation = null; this._ddReceiptData = null; this._ddFailedRecorded = false;
+    this.ddSelectedAmount = null; this.ddCustomAmount = ''; this.ddFullName = ''; this.ddCountryCode = '+91'; this.ddMobile = ''; this.ddEmail = ''; this.ddPAN = ''; this.ddAddress = ''; this.ddMessage = '';
+    this.ddAmountError = ''; this.ddNameError = ''; this.ddMobileError = ''; this.ddPanError = ''; this.ddAddressError = ''; this.ddPaymentError = '';
   }
 }

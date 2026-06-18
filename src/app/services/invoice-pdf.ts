@@ -42,6 +42,8 @@ export class InvoicePdf {
 
   private buildHtml(r: any): string {
     const logo = 'assets/logo/LOGO.png';
+    const stamp = 'assets/stamp/stamp.jpg';
+
     const campaign = r.campaignId || r.campaign || {};
     const createdAt = r.createdAt ? new Date(r.createdAt) : new Date();
 
@@ -84,7 +86,7 @@ export class InvoicePdf {
               <img src="${logo}" style="width:112px;height:82px;object-fit:contain;" />
               <div>
                 <div style="font-size:27px;font-weight:800;color:#8b3f17;line-height:1.05;">
-                  श्री श्याम जी सेवा समिति
+                   श्याम जी सेवा समिति
                 </div>
                 <div style="font-size:14px;color:#555;font-style:italic;margin-top:8px;">
                   Shyam Ji Sewa Samiti
@@ -106,9 +108,10 @@ export class InvoicePdf {
           </div>
 
           <div style="text-align:center;margin-top:18px;font-size:13px;line-height:1.55;">
-            <div> Gulmohar Huzur, Bhopal, Madhya Pradesh, India</div>
-            
-            <div>E-Mail : shyamjisewasamiti@gmail.com</div>
+            <div> E-810 Sagar Eden Garden Phase-2, Hoshangabad Road, Ashima Mall, Jatkhedi</div>
+            <div> Bhopal, Madhya Pradesh, INDIA - 462026</div>
+            <div> Pan No: AAEBS4366F</div>
+            <div>E-Mail : info@shyamjisewasamiti.org</div>
           </div>
 
           <div style="height:2px;background:#b8860b;margin:20px 0 30px;"></div>
@@ -162,7 +165,7 @@ export class InvoicePdf {
 
           <!-- TAX INFO -->
           <div style="margin-top:22px;font-size:13px;">
-            ${this.fullRow('Eligible for deduction Section', 'Section 35(1)(ii)')}
+            ${this.fullRow('this Donation is eligible for exemption under Income tax act', '1961 u/s 80GGB/80GGC')}
             ${this.fullRow('Our Income Tax Unique Registeration No', 'AAEBS4366FE20261')}
           </div>
 
@@ -179,24 +182,22 @@ export class InvoicePdf {
             </div>
 
             <div style="text-align:center;">
-              <div style="
-                width:90px;
-                height:90px;
-                border:2px dashed #b8860b;
-                border-radius:50%;
-                display:flex;
-                align-items:center;
-                justify-content:center;
-                color:#b8860b;
-                font-size:12px;
-                font-weight:700;
-                margin-left:auto;
-                margin-bottom:14px;
-              ">
-                Official Seal
-              </div>
+              <img
+                src="${stamp}"
+                alt="Official Seal"
+                style="
+                  width:96px;
+                  height:96px;
+                  object-fit:contain;
+                  display:block;
+                  margin-left:auto;
+                  margin-right:auto;
+                  margin-bottom:12px;
+                "
+              />
+
               <div style="font-size:16px;font-weight:800;color:#8b3f17;">
-                श्री श्याम जी सेवा समिति
+                 श्याम जी सेवा समिति
               </div>
             </div>
           </div>
@@ -210,8 +211,7 @@ export class InvoicePdf {
             color:#666;
             line-height:1.65;
           ">
-            <div>1. Cheque/DD is Subject to realisation &nbsp;&nbsp; 2. This is a system generated receipt.</div>
-            <div>✓ This is a system generated receipt. No physical signature required.</div>
+            <div>This is a system generated receipt. No physical signature required.</div>           
             <div>Generated on ${date}, ${time}</div>
           </div>
 

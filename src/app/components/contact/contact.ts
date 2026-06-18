@@ -14,7 +14,8 @@ export class Contact implements OnInit {
   isLoading = false;
   mapUrl!: SafeResourceUrl;
 
-  private readonly address = 'H.No.24, Sagar Parisar, Gulmohar, Huzur, Bhopal, Madhya Pradesh 462039';
+  private readonly address =
+    'E-810 Sagar Eden Garden Phase-2, Hoshangabad Road, Ashima Mall, Jatkhedi, Bhopal, Madhya Pradesh 462026, India';
 
   constructor(private sanitizer: DomSanitizer) {}
 
@@ -22,7 +23,8 @@ export class Contact implements OnInit {
     const rawUrl =
       `https://maps.google.com/maps?q=${encodeURIComponent(this.address)}&t=k&z=16&output=embed`;
 
-    this.mapUrl = this.sanitizer.bypassSecurityTrustResourceUrl(rawUrl);
+    this.mapUrl =
+      this.sanitizer.bypassSecurityTrustResourceUrl(rawUrl);
 
     setTimeout(() => {
       this.isLoading = false;

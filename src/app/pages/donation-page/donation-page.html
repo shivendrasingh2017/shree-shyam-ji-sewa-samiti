@@ -3,6 +3,16 @@
 </section>
 
 <app-donation></app-donation>
+<!-- testing invoice start  -->
+ <!-- <button
+  class="if-btn-secondary"
+  type="button"
+  (click)="downloadInvoice()"
+  [disabled]="pdfLoading"
+>
+  {{ pdfLoading ? 'Generating PDF...' : '📄 Download PDF' }}
+</button> -->
+<!-- testing invoice end  -->
 
 <!-- ═══════════════════════════════════════════════
      INLINE DONATION FORM (QR Scan / Direct Link)
@@ -202,7 +212,7 @@
         </p>
 
         <div class="if-invoice-row" *ngIf="lastDonation.invoiceNumber">
-          <span><strong>Invoice:</strong> {{ lastDonation.invoiceNumber }}</span>
+          <span><strong>Receipt:</strong> {{ lastDonation.invoiceNumber }}</span>
           <button class="if-btn-secondary" type="button"
             (click)="downloadInvoice()" [disabled]="pdfLoading">
             {{ pdfLoading ? 'Generating...' : '📄 Download PDF' }}

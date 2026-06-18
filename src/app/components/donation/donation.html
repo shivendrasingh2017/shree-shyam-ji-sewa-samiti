@@ -36,27 +36,21 @@
         [class.active]="isSelectedCampaign(c)" (click)="selectCampaign(c)" role="button"
         [attr.aria-pressed]="isSelectedCampaign(c)" tabindex="0" (keydown.enter)="selectCampaign(c)">
         <div class="campaign-top">
-          <!-- <span class="c-icon">{{ c.icon }}</span> -->
           <span class="days-badge" [class.urgent]="c.daysLeft <= 7">
             {{ c.daysLeft }}d left
           </span>
         </div>
-
         <h3>{{ c.title }}</h3>
         <p>{{ c.description }}</p>
-
         <div class="progress-wrap">
           <div class="progress-bar">
             <div class="progress-fill" [style.width.%]="progressPercent(c)"></div>
           </div>
           <div class="progress-meta">
-            <!-- <span>{{ formatINR(c.raised) }} raised</span> -->
             <strong>{{ progressPercent(c) }}%</strong>
           </div>
         </div>
-
         <div class="campaign-footer">
-          <!-- <span>🎯 {{ formatINR(c.goal) }}</span> -->
           <span>👥 {{ c.donors }} donors</span>
         </div>
       </div>
@@ -96,20 +90,17 @@
               <p>Fill donor details for receipt and payment verification.</p>
             </div>
           </div>
-
           <div class="trust-mini">
             <span>✅ Tax benefit eligible</span>
             <span>🔒 Secure Payment</span>
             <span>🧾 PDF Receipt</span>
           </div>
-
           <div class="preset-amounts">
             <button *ngFor="let amt of presetAmounts" class="preset-btn" [class.selected]="selectedAmount === amt"
               (click)="selectPreset(amt)" type="button">
               ₹{{ amt | number }}
             </button>
           </div>
-
           <div class="input-group">
             <label for="customAmt">Custom Amount</label>
             <div class="input-prefix-wrap">
@@ -119,7 +110,6 @@
             </div>
             <span class="error-msg" *ngIf="amountError">{{ amountError }}</span>
           </div>
-
           <div class="form-grid">
             <div class="input-group">
               <label for="donorFull">Full Name</label>
@@ -127,47 +117,39 @@
                 [class.error]="!!nameError" />
               <span class="error-msg" *ngIf="nameError">{{ nameError }}</span>
             </div>
-
             <div class="input-group">
               <label for="mobile">Mobile Number</label>
               <input id="mobile" type="tel" [(ngModel)]="donorMobile" [class.error]="!!mobileError" />
               <span class="error-msg" *ngIf="mobileError">{{ mobileError }}</span>
             </div>
-
             <div class="input-group">
               <label for="country">Country Code</label>
               <input id="country" type="text" [(ngModel)]="donorCountryCode" />
             </div>
-
             <div class="input-group">
               <label for="nationality">Nationality</label>
               <input id="nationality" type="text" [(ngModel)]="donorNationality" />
             </div>
-
             <div class="input-group">
               <label for="pan">PAN</label>
               <input id="pan" type="text" maxlength="10" [(ngModel)]="donorPAN" [class.error]="!!panError" />
               <span class="error-msg" *ngIf="panError">{{ panError }}</span>
             </div>
-
             <div class="input-group">
               <label for="email">Email <span>(optional)</span></label>
               <input id="email" type="email" [(ngModel)]="donorEmail" />
             </div>
           </div>
-
           <div class="input-group">
             <label for="address">Address</label>
             <textarea id="address" rows="2" maxlength="250" [(ngModel)]="donorAddress"
               [class.error]="!!addressError"></textarea>
             <span class="error-msg" *ngIf="addressError">{{ addressError }}</span>
           </div>
-
           <div class="input-group">
             <label for="donorMsg">Message <span>(optional)</span></label>
             <textarea id="donorMsg" rows="2" maxlength="200" [(ngModel)]="donorMessage"></textarea>
           </div>
-
           <button class="btn-donate" (click)="proceedToConfirm()" [disabled]="finalAmount < 1" type="button">
             Continue →
           </button>
@@ -177,7 +159,6 @@
       <ng-container *ngIf="step === 'confirm'">
         <div class="confirm-box">
           <button class="back-btn" (click)="step = 'select'" type="button">← Back</button>
-
           <div class="modal-header compact">
             <span class="modal-icon">💳</span>
             <div>
@@ -186,7 +167,6 @@
               <p>Please review details before payment.</p>
             </div>
           </div>
-
           <div class="donation-summary">
             <div class="summary-item"><span>Campaign</span><strong>{{ selectedCampaign?.title }}</strong></div>
             <div class="summary-item"><span>Amount</span><strong class="amount">{{ formatINR(finalAmount) }}</strong>
@@ -197,22 +177,18 @@
             <div class="summary-item" *ngIf="donorPAN"><span>PAN</span><strong>{{ donorPAN }}</strong></div>
             <div class="summary-item" *ngIf="donorAddress"><span>Address</span><strong>{{ donorAddress }}</strong></div>
           </div>
-
-          <!-- <div class="payment-methods">
+          <div class="payment-methods">
             <strong>Secure Payment via Razorpay</strong>
             <span>UPI • Card • Netbanking • Wallet</span>
-          </div> -->
-
+          </div>
           <button class="btn-razorpay" (click)="initiatePayment()" [disabled]="paymentProcessing || gatewayLoading"
             type="button">
-            <span *ngIf="!paymentProcessing && !gatewayLoading">Pay Now</span>
+            <span *ngIf="!paymentProcessing && !gatewayLoading">💰 Pay Now</span>
             <span *ngIf="paymentProcessing || gatewayLoading" class="btn-loading-text">
               <span class="btn-spinner"></span> Please wait...
             </span>
           </button>
-
           <p class="secure-note">🔒 We never store your card or banking details.</p>
-
           <div class="error-box" *ngIf="paymentError">{{ paymentError }}</div>
         </div>
       </ng-container>
@@ -222,25 +198,20 @@
           <div class="success-icon" [class.failed]="lastDonation.status === 'failed'">
             {{ lastDonation.status === 'success' ? '🙏' : '❌' }}
           </div>
-
           <h3>{{ lastDonation.status === 'success' ? 'Jai Shree Shyam! Thank You' : 'Payment Failed' }}</h3>
-
           <p class="success-msg" *ngIf="lastDonation.status === 'success'">
             Your donation of <strong>{{ formatINR(lastDonation.amount) }}</strong>
             towards <strong>{{ lastDonation.campaign }}</strong> has been recorded successfully.
           </p>
-
           <p class="success-msg" *ngIf="lastDonation.status === 'failed'">
             Unfortunately, your payment could not be completed. Please try again.
           </p>
-
           <div class="invoice-summary" *ngIf="lastDonation.invoiceNumber">
             <span><strong>Invoice:</strong> {{ lastDonation.invoiceNumber }}</span>
             <button class="btn-secondary" type="button" (click)="downloadInvoice()" [disabled]="pdfLoading">
               {{ pdfLoading ? 'Generating...' : '📄 Download PDF' }}
             </button>
           </div>
-
           <div class="receipt" *ngIf="lastDonation.status === 'success'">
             <div class="receipt-header">🧾 Donation Receipt</div>
             <table class="receipt-table">
@@ -270,13 +241,229 @@
               </tr>
             </table>
           </div>
-
           <div class="success-actions">
             <button class="btn-secondary" type="button" (click)="downloadInvoice()" [disabled]="pdfLoading"
               *ngIf="lastDonation.status === 'success'">
               📄 Download PDF
             </button>
-            <button class="btn-donate-again" (click)="donateAgain()" type="button">
+            <button class="btn-donate-again" (click)="donateAgain()" type="button">🪔 Donate Again</button>
+          </div>
+        </div>
+      </ng-container>
+
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       DIRECT DONATION SECTION
+       QR URL: /donation?open=true
+       ═══════════════════════════════════════════ -->
+  <div class="container dd-section" id="direct-donation">
+
+    <!-- Toggle button — always visible -->
+    <!-- <div class="dd-toggle-wrap">
+      <button class="dd-toggle-btn" type="button" (click)="ddOpen = !ddOpen">
+        {{ ddOpen ? '✕ Close Direct Donation' : '🪔 Direct Donation – Shyam Ji Sewa Samiti' }}
+      </button>
+      <p class="dd-toggle-sub">Scan QR or click above to donate directly</p>
+    </div> -->
+
+    <!-- Collapsible form card -->
+    <div class="dd-card" *ngIf="ddOpen">
+
+      <!-- ── STEP: FORM ── -->
+      <ng-container *ngIf="ddStep === 'form'">
+
+        <div class="dd-header">
+          <span class="dd-icon">🕉</span>
+          <div>
+            <span class="label-chip">Direct Donation</span>
+            <h3>Donate to Shyam Ji Sewa Samiti</h3>
+            <p>Fill details below and pay securely via Razorpay.</p>
+          </div>
+        </div>
+
+        <div class="trust-mini">
+          <span>✅ Tax benefit eligible</span>
+          <span>🔒 Secure Payment</span>
+          <span>🧾 PDF Receipt</span>
+          <span>🏛️ Shyam Ji Sewa Samiti</span>
+        </div>
+
+        <!-- Preset amounts -->
+        <div class="dd-label">Select Amount</div>
+        <div class="preset-amounts">
+          <button *ngFor="let amt of ddPresetAmounts" class="preset-btn" [class.selected]="ddSelectedAmount === amt"
+            (click)="ddSelectPreset(amt)" type="button">
+            ₹{{ amt | number }}
+          </button>
+        </div>
+
+        <!-- Custom amount -->
+        <div class="input-group">
+          <label for="ddCustomAmt">Custom Amount</label>
+          <div class="input-prefix-wrap">
+            <span class="prefix">₹</span>
+            <input id="ddCustomAmt" type="number" min="1" max="100000" placeholder="e.g. 2100"
+              [(ngModel)]="ddCustomAmount" (ngModelChange)="ddOnCustomAmountChange()" [class.error]="!!ddAmountError" />
+          </div>
+          <span class="error-msg" *ngIf="ddAmountError">{{ ddAmountError }}</span>
+        </div>
+
+        <!-- Form grid -->
+        <div class="form-grid">
+
+          <div class="input-group">
+            <label for="ddName">Full Name <span class="req">*</span></label>
+            <input id="ddName" type="text" maxlength="100" placeholder="Your full name" [(ngModel)]="ddFullName"
+              [class.error]="!!ddNameError" />
+            <span class="error-msg" *ngIf="ddNameError">{{ ddNameError }}</span>
+          </div>
+
+          <!-- Mobile with country code dropdown -->
+          <div class="input-group">
+            <label for="ddMobile">Mobile Number <span class="req">*</span></label>
+            <div class="dd-mobile-wrap">
+              <select [(ngModel)]="ddCountryCode" class="dd-country-select">
+                <option *ngFor="let c of countryCodes" [value]="c.code">
+                  {{ c.flag }} {{ c.code }} {{ c.name }}
+                </option>
+              </select>
+              <input id="ddMobile" type="tel" placeholder="Mobile number" [(ngModel)]="ddMobile"
+                [class.error]="!!ddMobileError" />
+            </div>
+            <span class="error-msg" *ngIf="ddMobileError">{{ ddMobileError }}</span>
+          </div>
+
+          <div class="input-group">
+            <label for="ddPAN">PAN Number <span class="req">*</span></label>
+            <input id="ddPAN" type="text" maxlength="10" placeholder="e.g. ABCDE1234F" [(ngModel)]="ddPAN"
+              [class.error]="!!ddPanError" />
+            <span class="error-msg" *ngIf="ddPanError">{{ ddPanError }}</span>
+          </div>
+
+          <div class="input-group">
+            <label for="ddEmail">Email <span>(optional)</span></label>
+            <input id="ddEmail" type="email" placeholder="your@email.com" [(ngModel)]="ddEmail" />
+          </div>
+
+        </div>
+
+        <div class="input-group">
+          <label for="ddAddress">Address <span class="req">*</span></label>
+          <textarea id="ddAddress" rows="2" maxlength="250" placeholder="House no, Street, City, State, Pincode"
+            [(ngModel)]="ddAddress" [class.error]="!!ddAddressError"></textarea>
+          <span class="error-msg" *ngIf="ddAddressError">{{ ddAddressError }}</span>
+        </div>
+
+        <div class="input-group">
+          <label for="ddMsg">Message <span>(optional)</span></label>
+          <textarea id="ddMsg" rows="2" maxlength="200" placeholder="Any message for the samiti..."
+            [(ngModel)]="ddMessage"></textarea>
+        </div>
+
+        <button class="btn-donate" type="button" (click)="ddProceedToConfirm()" [disabled]="ddFinalAmount < 1">
+          Continue →
+        </button>
+
+      </ng-container>
+
+      <!-- ── STEP: CONFIRM ── -->
+      <ng-container *ngIf="ddStep === 'confirm'">
+        <button class="back-btn" type="button" (click)="ddGoBack()">← Back</button>
+
+        <div class="dd-header">
+          <span class="dd-icon">💳</span>
+          <div>
+            <span class="label-chip">Confirm Donation</span>
+            <h3>Complete Your Donation</h3>
+            <p>Please review details before payment.</p>
+          </div>
+        </div>
+
+        <div class="donation-summary">
+          <div class="summary-item"><span>Organisation</span><strong>Shyam Ji Sewa Samiti</strong></div>
+          <div class="summary-item"><span>Amount</span><strong class="amount">{{ formatINR(ddFinalAmount) }}</strong>
+          </div>
+          <div class="summary-item" *ngIf="ddFullName"><span>Name</span><strong>{{ ddFullName }}</strong></div>
+          <div class="summary-item" *ngIf="ddMobile"><span>Mobile</span><strong>{{ ddCountryCode }} {{ ddMobile
+              }}</strong></div>
+          <div class="summary-item" *ngIf="ddPAN"><span>PAN</span><strong>{{ ddPAN }}</strong></div>
+          <div class="summary-item" *ngIf="ddAddress"><span>Address</span><strong>{{ ddAddress }}</strong></div>
+        </div>
+
+        <div class="payment-methods">
+          <strong>Secure Payment via Razorpay</strong>
+          <span>UPI • Card • Netbanking • Wallet</span>
+        </div>
+
+        <button class="btn-razorpay" type="button" (click)="ddInitiatePayment()"
+          [disabled]="ddSubmitting || gatewayLoading">
+          <span *ngIf="!ddSubmitting && !gatewayLoading">💰 Pay Now – {{ formatINR(ddFinalAmount) }}</span>
+          <span *ngIf="ddSubmitting || gatewayLoading" class="btn-loading-text">
+            <span class="btn-spinner"></span> Please wait...
+          </span>
+        </button>
+
+        <p class="secure-note">🔒 We never store your card or banking details.</p>
+        <div class="error-box" *ngIf="ddPaymentError">{{ ddPaymentError }}</div>
+      </ng-container>
+
+      <!-- ── STEP: SUCCESS / FAILED ── -->
+      <ng-container *ngIf="ddStep === 'success' && ddLastDonation">
+        <div class="success-box">
+          <div class="success-icon" [class.failed]="ddLastDonation.status === 'failed'">
+            {{ ddLastDonation.status === 'success' ? '🙏' : '❌' }}
+          </div>
+          <h3>{{ ddLastDonation.status === 'success' ? 'Jai Shree Shyam! Thank You 🙏' : 'Payment Failed' }}</h3>
+          <p class="success-msg" *ngIf="ddLastDonation.status === 'success'">
+            Your donation of <strong>{{ formatINR(ddLastDonation.amount) }}</strong>
+            to <strong>Shyam Ji Sewa Samiti</strong> has been recorded successfully.
+          </p>
+          <p class="success-msg" *ngIf="ddLastDonation.status === 'failed'">
+            Unfortunately, your payment could not be completed. Please try again.
+          </p>
+          <div class="invoice-summary" *ngIf="ddLastDonation.invoiceNumber">
+            <span><strong>Receipt:</strong> {{ ddLastDonation.invoiceNumber }}</span>
+            <button class="btn-secondary" type="button" (click)="ddDownloadInvoice()" [disabled]="ddPdfLoading">
+              {{ ddPdfLoading ? 'Generating...' : '📄 Download PDF' }}
+            </button>
+          </div>
+          <div class="receipt" *ngIf="ddLastDonation.status === 'success'">
+            <div class="receipt-header">🧾 Donation Receipt</div>
+            <table class="receipt-table">
+              <tr>
+                <td>Transaction ID</td>
+                <td><code>{{ ddLastDonation.txnId }}</code></td>
+              </tr>
+              <tr>
+                <td>Payment ID</td>
+                <td><code>{{ ddLastDonation.paymentId }}</code></td>
+              </tr>
+              <tr>
+                <td>Donor</td>
+                <td>{{ ddLastDonation.name }}</td>
+              </tr>
+              <tr>
+                <td>Organisation</td>
+                <td>Shyam Ji Sewa Samiti</td>
+              </tr>
+              <tr>
+                <td>Amount</td>
+                <td><strong>{{ formatINR(ddLastDonation.amount) }}</strong></td>
+              </tr>
+              <tr>
+                <td>Date & Time</td>
+                <td>{{ ddLastDonation.timestamp | date:'dd MMM yyyy, h:mm a' }}</td>
+              </tr>
+            </table>
+          </div>
+          <div class="success-actions">
+            <button class="btn-secondary" type="button" (click)="ddDownloadInvoice()" [disabled]="ddPdfLoading"
+              *ngIf="ddLastDonation.status === 'success'">
+              📄 Download PDF
+            </button>
+            <button class="btn-donate-again" type="button" (click)="ddDonateAgain()">
               🪔 Donate Again
             </button>
           </div>
@@ -284,5 +471,8 @@
       </ng-container>
 
     </div>
+    <!-- /dd-card -->
   </div>
+  <!-- /dd-section -->
+
 </section>
