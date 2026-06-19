@@ -13,6 +13,7 @@ import { CampaignService } from '../../services/campaign';
 import { ReceiptService } from '../../services/receipt';
 import { GalleryService, GalleryItem } from '../../services/gallery.service';
 import { AuthService } from '../../services/auth';
+import { InvoicePdf } from '../../services/invoice-pdf';
 
 // ── Chart.js controllers & elements register karo ───────────
 Chart.register(
@@ -233,7 +234,8 @@ export class Admin implements OnInit, OnDestroy {
     private campaignService: CampaignService,
     private receiptService: ReceiptService,
     private galleryService: GalleryService,
-    private auth: AuthService
+    private auth: AuthService,
+    private invoicePdf: InvoicePdf
   ) { }
 
   ngOnInit() {
@@ -610,8 +612,7 @@ export class Admin implements OnInit, OnDestroy {
 
   downloadInvoice(r: any) {
     if (!r || !r._id) return;
-    const url = `https://api.shyamjisewasamiti.org/api/receipts/${r._id}/invoice`;
-    window.open(url, '_blank');
+    this.invoicePdf.downloadPdf(r);
   }
 
   loadAdmins() {

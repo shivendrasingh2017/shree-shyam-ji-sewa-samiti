@@ -17,8 +17,8 @@ export class Hero implements OnInit, OnDestroy {
   banners = [
     
     'assets/home/banner_temple2.webp',
-    'assets/home/khatu.jpg',
-    'assets/home/banner1.webp',
+    'assets/home/banner3.jpg',
+    'assets/home/banner2.jpg',
     
     
   ];
