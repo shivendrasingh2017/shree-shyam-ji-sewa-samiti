@@ -4,15 +4,15 @@
 
   <div class="hero-overlay"></div>
 
-  <!-- Banner Image -->
   <img [src]="heroBanner" alt="Shyam Ji Sewa Samiti" class="hero-banner-img" />
 
-  <div class="hero-content-wrap container">
+  <!-- Custom layout — Bootstrap row/col nahi use kiya, no negative margin overflow -->
+  <div class="hero-content-wrap">
 
-    <div class="row align-items-center hero-row">
+    <div class="hero-row">
 
       <!-- LEFT CONTENT -->
-      <div class="col-lg-7">
+      <div class="hero-col-left">
 
         <div class="hero-content" data-aos="fade-right">
 
@@ -51,7 +51,7 @@
       </div>
 
       <!-- RIGHT CARD -->
-      <div class="col-lg-5">
+      <div class="hero-col-right">
 
         <div class="hero-card" data-aos="fade-left">
 
@@ -93,11 +93,12 @@
 
 <!-- ================= ABOUT SECTION ================= -->
 
-<section class="about-section py-5" id="about-section">
+<section class="about-section" id="about-section">
 
-  <div class="container">
+  <!-- FIX: container pe overflow-x hidden, g-5 → g-4 mobile friendly -->
+  <div class="container overflow-hidden">
 
-    <div class="row align-items-center g-5">
+    <div class="row align-items-center g-4">
 
       <div class="col-lg-6">
 
@@ -166,9 +167,9 @@
 
 <section class="section-space">
 
-  <div class="container">
+  <div class="container overflow-hidden">
 
-    <div class="row align-items-center g-5">
+    <div class="row align-items-center g-4">
 
       <div class="col-lg-6">
         <img [src]="whoWeAreImg" class="img-fluid about-image" alt="About NGO">
@@ -205,7 +206,7 @@
 
 <section class="section-space section-dark">
 
-  <div class="container">
+  <div class="container overflow-hidden">
 
     <div class="row g-4">
 
@@ -221,8 +222,7 @@
         <div class="info-card">
           <i class="fa-solid fa-eye"></i>
           <h3>Our Vision</h3>
-          <p>To build a compassionate society where spirituality and service work together for positive transformation.
-          </p>
+          <p>To build a compassionate society where spirituality and service work together for positive transformation.</p>
         </div>
       </div>
 
@@ -284,7 +284,7 @@
 
 <section class="section-space">
 
-  <div class="container">
+  <div class="container overflow-hidden">
 
     <div class="section-heading">
       <h2>Our Location</h2>
@@ -297,12 +297,8 @@
           <i class="fa-solid fa-location-dot"></i>
           <h4>Address</h4>
           <p>
-           E-810 SAGAR EDEN GARDEN PHASE-2, HOSHANGABAD ROAD, ASHIMA MALL JATKHEDI BHOPAL Madhya Pradesh, INDIA - 462026
-
+            E-810 SAGAR EDEN GARDEN PHASE-2, HOSHANGABAD ROAD, ASHIMA MALL JATKHEDI BHOPAL Madhya Pradesh, INDIA - 462026
           </p>
-
-          <!-- <i class="fa-solid fa-envelope"></i> -->
-
 
           <h4>Phone</h4>
           <p>

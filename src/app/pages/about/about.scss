@@ -1,5 +1,5 @@
 /* =========================
-   HERO SECTION — 510px, banner image visible
+   HERO SECTION
 ========================= */
 
 .about-hero {
@@ -8,10 +8,8 @@
   display: flex;
   align-items: center;
   overflow: hidden;
- 
 }
 
-/* Banner image —  hero cover */
 .hero-banner-img {
   position: absolute;
   inset: 0;
@@ -22,38 +20,49 @@
   z-index: 0;
 }
 
-/* banner ke upar, */
 .hero-overlay {
   position: absolute;
   inset: 0;
   z-index: 1;
-  background: linear-gradient(rgba(124, 123, 123, 0.65),
-      rgba(0, 0, 0, .65));
+  background: linear-gradient(rgba(124, 123, 123, 0.65), rgba(0, 0, 0, .65));
 }
 
-/* Radial glow overlay */
 .hero-overlay::after {
   content: '';
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at top right,
-      rgba(212, 162, 74, 0.2),
-      transparent 40%);
+  background: radial-gradient(circle at top right, rgba(212, 162, 74, 0.2), transparent 40%);
 }
 
-/* Content container — sab kuch banner ke upar */
+/* Custom hero layout — Bootstrap row/col nahi, no negative margins */
 .hero-content-wrap {
   position: relative;
   z-index: 2;
   width: 100%;
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 0 24px;
+  box-sizing: border-box;
 }
 
 .hero-row {
-  width: 100%;
-  min-height: 510px;
   display: flex;
   align-items: center;
+  gap: 40px;
+  min-height: 510px;
   padding: 40px 0;
+}
+
+.hero-col-left {
+  flex: 0 0 58.333%;
+  max-width: 58.333%;
+  min-width: 0;
+}
+
+.hero-col-right {
+  flex: 0 0 41.667%;
+  max-width: 41.667%;
+  min-width: 0;
 }
 
 /* ── LEFT CONTENT ── */
@@ -227,27 +236,32 @@
 ========================= */
 
 .about-section {
-  padding-top: 100px;
-  padding-bottom: 100px;
-  background: linear-gradient(45deg, var(--accent), rgb(31, 30, 30))
+  padding-top: clamp(50px, 8vw, 100px);
+  padding-bottom: clamp(50px, 8vw, 100px);
+  background: linear-gradient(45deg, var(--accent), rgb(31, 30, 30));
+  /* FIX: Bootstrap g-5 gutter overflow rok */
+  overflow-x: hidden;
 }
 
 .about-image-wrapper {
   position: relative;
+  padding-bottom: 30px;
 }
 
 .about-img {
   width: 100%;
   border-radius: var(--radius);
   object-fit: cover;
+  display: block;
+  min-height: 260px;
   box-shadow: 0 20px 50px rgba(0, 0, 0, .12);
 }
 
 .experience-badge {
   position: absolute;
-  bottom: -20px;
+  bottom: 0;
   right: 20px;
-  background: linear-gradient(135deg, var(--accent), rgb(31, 30, 30));
+  background: linear-gradient(135deg, var(--gold), var(--gold-2));
   border-radius: var(--radius);
   padding: 16px 24px;
   text-align: center;
@@ -261,6 +275,13 @@
   font-size: 2rem;
   font-weight: 400;
   margin: 0;
+  color: #1a0f08;
+}
+
+.experience-badge span {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1a0f08;
 }
 
 .section-chip {
@@ -315,6 +336,7 @@
   justify-content: center;
   color: #1a0f08;
   font-size: 13px;
+  flex-shrink: 0;
 }
 
 /* =========================
@@ -325,21 +347,25 @@
   display: block;
   background: var(--bg);
   color: var(--text);
+  /* FIX: global horizontal overflow band karo */
+  overflow-x: hidden;
 }
 
 .section-space {
   padding: clamp(48px, 6vw, 80px) 0;
-  background: linear-gradient(45deg, var(--accent), rgb(31, 30, 30))
+  background: linear-gradient(45deg, var(--accent), rgb(31, 30, 30));
+  /* FIX: har section mein overflow-x hidden */
+  overflow-x: hidden;
 }
-
 
 .section-dark {
   background: var(--bg-2);
+  overflow-x: hidden;
 }
 
 .section-heading {
   text-align: center;
-  margin-bottom: 3rem;
+  margin-bottom: clamp(1.5rem, 4vw, 3rem);
 }
 
 .section-heading h2 {
@@ -357,6 +383,8 @@
   border-radius: var(--radius);
   width: 100%;
   display: block;
+  min-height: 240px;
+  object-fit: cover;
 }
 
 .info-card,
@@ -369,6 +397,9 @@
   padding: 2rem;
   height: 100%;
   color: var(--text);
+  /* FIX: content overflow band */
+  overflow: hidden;
+  word-break: break-word;
 }
 
 .info-card i,
@@ -379,10 +410,11 @@
   display: block;
 }
 
+/* FIX: 3 col → 2 col → 1 col responsive grid */
 .services-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
+  gap: 20px;
 }
 
 .service-card {
@@ -394,10 +426,11 @@
   margin-right: 8px;
 }
 
+/* FIX: 4 col → 2 col → 1 col responsive */
 .impact-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 24px;
+  gap: 20px;
 }
 
 .stat-card {
@@ -463,7 +496,7 @@
 
   .about-hero {
     height: auto;
-    min-height: 510px;
+    min-height: 520px;
   }
 
   .hero-row {
@@ -471,6 +504,14 @@
     padding: 80px 0 50px;
     text-align: center;
     min-height: auto;
+    gap: 0;
+  }
+
+  .hero-col-left,
+  .hero-col-right {
+    flex: 0 0 100%;
+    max-width: 100%;
+    width: 100%;
   }
 
   .hero-desc {
@@ -482,19 +523,25 @@
   }
 
   .hero-card {
-    margin-top: 36px;
+    margin-top: 30px;
     max-width: 480px;
     margin-inline: auto;
+    margin-bottom: 10px;
   }
 
   .about-content {
     text-align: center;
   }
 
+  .feature-list {
+    align-items: center;
+  }
+
   .feature-item {
     justify-content: center;
   }
 
+  /* FIX: 2 col tablet */
   .services-grid {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -506,6 +553,10 @@
   .section-space {
     padding: clamp(40px, 8vw, 70px) 0;
   }
+
+  .about-image-wrapper {
+    padding-bottom: 40px;
+  }
 }
 
 /* =========================
@@ -516,10 +567,16 @@
 
   .about-hero {
     min-height: auto;
+    height: auto;
+  }
+
+  /* FIX: hero padding tight on small screens */
+  .hero-content-wrap {
+    padding: 0 16px;
   }
 
   .hero-row {
-    padding: 80px 0 40px;
+    padding: 70px 0 36px;
   }
 
   .hero-chip {
@@ -538,6 +595,7 @@
   .hero-btns {
     flex-direction: column;
     gap: 12px;
+    align-items: center;
   }
 
   .btn-primary-custom,
@@ -549,6 +607,9 @@
 
   .hero-card {
     padding: 22px 16px;
+    margin-top: 24px;
+    width: 100%;
+    max-width: 100%;
   }
 
   .hero-icon {
@@ -561,33 +622,99 @@
     padding: 12px 8px;
   }
 
+  /* FIX: experience-badge mobile pe flow mein aaye */
+  .about-image-wrapper {
+    padding-bottom: 0;
+    text-align: center;
+  }
+
   .experience-badge {
     position: relative;
     bottom: auto;
     right: auto;
-    margin: 20px auto 0;
+    margin: 16px auto 0;
     width: fit-content;
+    display: inline-block;
+  }
+
+  /* FIX: feature-item left aligned on mobile */
+  .feature-list {
+    align-items: flex-start;
   }
 
   .feature-item {
-    align-items: flex-start;
+    justify-content: flex-start;
+    text-align: left;
+    align-items: center;
+  }
+
+  .about-content {
     text-align: left;
   }
 
-  .services-grid {
-    grid-template-columns: 1fr;
+  .section-chip {
+    font-size: 12px;
+    padding: 7px 14px;
   }
 
+  /* FIX: cards padding reduce */
+  .info-card,
+  .service-card,
+  .stat-card,
+  .address-card {
+    padding: 1.25rem;
+  }
+
+  /* FIX: services 1 col on mobile */
+  .services-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  /* FIX: impact 2 col on mobile */
   .impact-grid {
     grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .stat-card h3 {
+    font-size: 1.6rem;
   }
 
   .map-wrapper iframe {
-    height: 300px;
+    height: 260px;
   }
 
   .section-space {
     padding: clamp(28px, 10vw, 40px) 0;
+  }
+
+  .section-heading {
+    margin-bottom: 1.5rem;
+  }
+
+  /* FIX: Bootstrap g-5 gutter override on mobile — overflow rok */
+  .about-section .row.g-5,
+  .section-space .row.g-5 {
+    --bs-gutter-x: 1rem;
+    --bs-gutter-y: 1.5rem;
+  }
+
+  /* FIX: Who We Are image overflow rok */
+  .about-image {
+    max-width: 100%;
+    height: auto;
+    min-height: unset;
+  }
+
+  /* FIX: address link wrap */
+  .address-card a {
+    word-break: break-all;
+  }
+
+  /* FIX: section title font size mobile */
+  .section-title {
+    font-size: 1.6rem;
   }
 }
 
@@ -596,16 +723,72 @@
 ========================= */
 
 @media (max-width: 480px) {
+
   .hero-title {
     font-size: 1.6rem;
   }
 
   .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .hero-card {
+    padding: 18px 12px;
+  }
+
+  /* FIX: impact 1 col on 480px */
+  .impact-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .map-wrapper iframe {
+    height: 220px;
+  }
+}
+
+/* =========================
+   VERY SMALL  (max 360px)
+========================= */
+
+@media (max-width: 360px) {
+
+  .hero-title {
+    font-size: 1.4rem;
+  }
+
+  .hero-chip {
+    font-size: 10px;
+    padding: 7px 12px;
+  }
+
+  .hero-content-wrap {
+    padding: 0 12px;
+  }
+
+  .btn-primary-custom,
+  .btn-outline-custom {
+    font-size: 13px;
+    padding: 11px 16px;
+  }
+
+  /* FIX: stats 1 col on 360px */
+  .stats-grid {
     grid-template-columns: 1fr;
   }
 
-  .impact-grid {
-    grid-template-columns: 1fr;
+  .info-card,
+  .service-card,
+  .stat-card,
+  .address-card {
+    padding: 1rem;
+  }
+
+  /* FIX: Bootstrap gutter aur bhi kam */
+  .about-section .row.g-5,
+  .section-space .row.g-5 {
+    --bs-gutter-x: 0.5rem;
+    --bs-gutter-y: 1rem;
   }
 }
 
