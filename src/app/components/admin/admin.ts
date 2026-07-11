@@ -294,7 +294,7 @@ export class Admin implements OnInit, OnDestroy {
 
   calculateStats() {
     this.totalRaised = this.campaigns.reduce((sum, c) => sum + (c.raised || 0), 0);
-    this.totalDonors = this.campaigns.reduce((sum, c) => sum + (c.donors || 0), 0);
+    this.totalDonors = this.receipts.length;
     this.avgDonation = this.totalDonors > 0 ? this.totalRaised / this.totalDonors : 0;
     this.activeCampaigns = this.campaigns.filter(c => c.active).length;
   }

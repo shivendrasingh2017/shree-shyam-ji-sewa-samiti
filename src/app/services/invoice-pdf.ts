@@ -110,6 +110,7 @@ export class InvoicePdf {
           <div style="text-align:center;margin-top:18px;font-size:13px;line-height:1.55;">
             <div> E-810 Sagar Eden Garden Phase-2, Hoshangabad Road, Ashima Mall, Jatkhedi</div>
             <div> Bhopal, Madhya Pradesh, INDIA - 462026</div>
+            <div> Society Reg. No.: 01/01/01/42149/25</div>
             <div> Pan No: AAEBS4366F</div>
             <div>E-Mail : info@shyamjisewasamiti.org</div>
           </div>
